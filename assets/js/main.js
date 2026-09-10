@@ -1,6 +1,6 @@
 // ברור משכנתאות — סקריפט אתר
 // מספר וואטסאפ עסקי — להחליף למספר האמיתי בפורמט בינלאומי ללא + (למשל 972501234567)
-const WA_NUMBER = "972500000000";
+const WA_NUMBER = "972507890222";
 
 function waLink(text) {
   return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text);
