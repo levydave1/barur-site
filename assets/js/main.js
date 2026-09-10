@@ -59,16 +59,77 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open(waLink(msg), "_blank");
   });
 
-  // הודעת עוגיות
+  // הודעת עוגיות — אישור/דחייה אמיתיים
   const cookieBar = document.querySelector("#cookie-bar");
-  const cookieOk = document.querySelector("#cookie-ok");
-  if (cookieBar && cookieOk) {
+  const cookieAccept = document.querySelector("#cookie-accept");
+  const cookieDecline = document.querySelector("#cookie-decline");
+  if (cookieBar && cookieAccept && cookieDecline) {
     try {
-      if (!localStorage.getItem("cookie-notice-ok")) cookieBar.classList.add("show");
+      const choice = localStorage.getItem("cookie-consent");
+      if (choice !== "accepted" && choice !== "declined") cookieBar.classList.add("show");
+      window.cookieConsent = choice || "declined"; // ברירת מחדל שמרנית: בלי הסכמה, בלי עוגיות לא-חיוניות
     } catch (e) {}
-    cookieOk.addEventListener("click", () => {
+    const setChoice = (val) => {
       cookieBar.classList.remove("show");
-      try { localStorage.setItem("cookie-notice-ok", "1"); } catch (e) {}
+      window.cookieConsent = val;
+      try { localStorage.setItem("cookie-consent", val); } catch (e) {}
+      // כרגע האתר לא טוען עוגיות מעקב/פרסום כלל, ללא קשר לבחירה.
+      // כל כלי כזה שיתווסף בעתיד יבדוק את window.cookieConsent === "accepted" לפני טעינה.
+    };
+    cookieAccept.addEventListener("click", () => setChoice("accepted"));
+    cookieDecline.addEventListener("click", () => setChoice("declined"));
+  }
+
+  // תפריט נגישות
+  const a11yToggle = document.querySelector("#a11y-toggle");
+  const a11yPanel = document.querySelector("#a11y-panel");
+  if (a11yToggle && a11yPanel) {
+    const TOGGLES = ["contrast", "grayscale", "underline", "stop-motion", "readable"];
+    const applyState = (state) => {
+      TOGGLES.forEach((key) => {
+        const on = !!state[key];
+        document.body.classList.toggle("a11y-" + key, on);
+        const btn = a11yPanel.querySelector(`[data-a11y-toggle="${key}"]`);
+        if (btn) { btn.classList.toggle("active", on); btn.textContent = on ? "כבוי" : "הפעל"; }
+      });
+      document.documentElement.classList.remove("a11y-fs-1", "a11y-fs-2", "a11y-fs-3");
+      if (state.fs && state.fs !== "0") document.documentElement.classList.add("a11y-fs-" + state.fs);
+      a11yPanel.querySelectorAll("[data-a11y-fs]").forEach((b) => b.classList.toggle("active", b.dataset.a11yFs === (state.fs || "0")));
+    };
+    let state = {};
+    try { state = JSON.parse(localStorage.getItem("a11y-state") || "{}"); } catch (e) {}
+    applyState(state);
+    const save = () => { try { localStorage.setItem("a11y-state", JSON.stringify(state)); } catch (e) {} };
+
+    a11yToggle.addEventListener("click", () => {
+      const open = a11yPanel.classList.toggle("open");
+      a11yToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    document.addEventListener("click", (e) => {
+      if (!a11yPanel.contains(e.target) && e.target !== a11yToggle && !a11yToggle.contains(e.target)) {
+        a11yPanel.classList.remove("open");
+        a11yToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+    a11yPanel.querySelectorAll("[data-a11y-toggle]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.a11yToggle;
+        state[key] = !state[key];
+        applyState(state);
+        save();
+      });
+    });
+    a11yPanel.querySelectorAll("[data-a11y-fs]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.fs = btn.dataset.a11yFs;
+        applyState(state);
+        save();
+      });
+    });
+    document.querySelector("#a11y-reset")?.addEventListener("click", () => {
+      state = {};
+      applyState(state);
+      save();
     });
   }
 });
