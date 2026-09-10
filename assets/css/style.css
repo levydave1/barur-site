@@ -61,6 +61,13 @@ p{margin:0 0 1em;text-wrap:pretty}
 .hero-card .v{font-size:44px;font-weight:700;line-height:1;color:#fff}
 .hero-card .d{font-size:15px;color:#C9CFD6}
 .hero-card hr{border:0;border-top:1px solid rgba(255,255,255,.15);margin:4px 0}
+.hero-card.compact{padding:28px 30px;gap:14px}
+.hero-card.compact .market-badge{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.hero-card.compact .market-badge .v{font-size:32px}
+.hero-card.compact .market-badge .k{font-size:12.5px;letter-spacing:.04em;text-transform:none}
+.hero-card.compact p{font-size:14.5px;color:#C9CFD6;margin:0}
+.hero-card .more-link{font-size:14px;font-weight:600;color:var(--teal-light)}
+.hero-card .more-link:hover{color:#fff}
 
 /* sections */
 .section{padding:48px 0;position:relative}
@@ -103,6 +110,18 @@ p{margin:0 0 1em;text-wrap:pretty}
 .step:nth-child(3) .step-num{background:var(--navy-2)}
 .step:nth-child(4) .step-num{background:var(--teal-dark)}
 .step p{font-size:15px;margin:0}
+.why-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:stretch}
+.why-list{display:flex;flex-direction:column}
+.why-item{display:flex;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.why-item:first-child{border-top:0;padding-top:0}
+.why-item .ico{width:44px;height:44px;border-radius:12px;background:var(--soft);color:var(--teal);display:flex;align-items:center;justify-content:center;flex:none}
+.why-item:nth-child(2) .ico{background:var(--navy-tint);color:var(--navy)}
+.why-item:nth-child(3) .ico{background:var(--soft);color:var(--teal-dark)}
+.why-item h3{margin:0 0 4px;font-size:18px}
+.why-item p{margin:0;font-size:15.5px}
+.facts-line{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:13.5px;letter-spacing:.02em;color:var(--stone)}
+.why-photo{border-radius:20px;overflow:hidden;box-shadow:0 20px 50px rgba(15,42,71,.16);min-height:100%}
+.why-photo img{width:100%;height:100%;min-height:420px;object-fit:cover;object-position:top center}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .stat .v{font-size:40px;font-weight:700;color:var(--teal);line-height:1}
 .stat .d{font-size:15px;margin-top:8px}
@@ -215,7 +234,8 @@ html.a11y-fs-2 body{font-size:19.5px}
 html.a11y-fs-3 body{font-size:21px}
 
 @media (max-width:900px){
-  .hero-grid,.grid-3,.grid-2,.steps,.stats,.calc,.about-grid,.contact-grid{grid-template-columns:1fr}
+  .hero-grid,.grid-3,.grid-2,.steps,.stats,.calc,.about-grid,.contact-grid,.why-grid{grid-template-columns:1fr}
+  .why-photo img{min-height:280px}
   .site-footer .wrap{grid-template-columns:1fr}
   .hero{padding:36px 0 32px}
   .section{padding:36px 0}
