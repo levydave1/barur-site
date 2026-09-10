@@ -150,3 +150,4 @@ p{margin:0 0 1em;text-wrap:pretty}
   .hero-card .v{font-size:36px}
   .result .big{font-size:38px}
 }
+.photo{aspect-ratio:4/5;border-radius:20px;width:100%;height:auto;object-fit:cover;object-position:top center;box-shadow:0 12px 32px rgba(15,42,71,.14)}
