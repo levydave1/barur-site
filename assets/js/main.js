@@ -58,4 +58,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const msg = `שלום, שמי ${f.get("name")}. ${f.get("topic")}. ${f.get("msg") || ""}`.trim();
     window.open(waLink(msg), "_blank");
   });
+
+  // הודעת עוגיות
+  const cookieBar = document.querySelector("#cookie-bar");
+  const cookieOk = document.querySelector("#cookie-ok");
+  if (cookieBar && cookieOk) {
+    try {
+      if (!localStorage.getItem("cookie-notice-ok")) cookieBar.classList.add("show");
+    } catch (e) {}
+    cookieOk.addEventListener("click", () => {
+      cookieBar.classList.remove("show");
+      try { localStorage.setItem("cookie-notice-ok", "1"); } catch (e) {}
+    });
+  }
 });
