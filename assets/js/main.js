@@ -59,6 +59,49 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open(waLink(msg), "_blank");
   });
 
+  // טופס פיילוט מיחזור → וואטסאפ
+  const pilotForm = document.querySelector("#pilot-form");
+  if (pilotForm) {
+    // ניקוי שגיאה בשדה ברגע שמתחילים למלא אותו
+    pilotForm.querySelectorAll(".field input[required]").forEach((input) => {
+      input.addEventListener("input", () => input.closest(".field").classList.remove("has-error"));
+    });
+
+    pilotForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // בדיקת שדות חובה — מציגים הערה אדומה ליד השדה הריק הראשון וגוללים אליו,
+      // בלי לגעת בשאר הנתונים שכבר מולאו
+      let firstInvalid = null;
+      pilotForm.querySelectorAll(".field input[required]").forEach((input) => {
+        const field = input.closest(".field");
+        const empty = !input.value.trim();
+        field.classList.toggle("has-error", empty);
+        if (empty && !firstInvalid) firstInvalid = input;
+      });
+      if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstInvalid.focus();
+        return;
+      }
+
+    const f = new FormData(pilotForm);
+    const lines = [
+      `שלום, שמי ${f.get("name")}. מגיע/ה מהפוסט על הפיילוט לבדיקת כדאיות מיחזור.`,
+      f.get("taken_year") ? `משכנתה נלקחה: ${f.get("taken_year")}` : "",
+      f.get("bank") ? `בנק: ${f.get("bank")}` : "",
+      f.get("balance") ? `יתרת הלוואה: ${f.get("balance")}` : "",
+      f.get("purpose") ? `מעניין לבדוק: ${f.get("purpose")}` : "",
+      f.get("contact_time") ? `זמן נוח לדבר: ${f.get("contact_time")}` : "",
+      f.get("self_rating") ? `הערכה עצמית כלקוח בבנק (1-10): ${f.get("self_rating")}` : "",
+      f.get("statement") === "on" ? "יודע/ת שצריך להוציא דוח יתרות" : "",
+      f.get("phone") ? `טלפון: ${f.get("phone")}` : "",
+      f.get("email") ? `אימייל: ${f.get("email")}` : "",
+    ].filter(Boolean);
+      window.open(waLink(lines.join("\n")), "_blank");
+    });
+  }
+
   // הודעת עוגיות — אישור/דחייה אמיתיים
   const cookieBar = document.querySelector("#cookie-bar");
   const cookieAccept = document.querySelector("#cookie-accept");
