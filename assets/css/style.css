@@ -88,7 +88,8 @@ p{margin:0 0 1em;text-wrap:pretty}
 .section.dark h2,.section.dark h3{color:#fff}
 .section.dark .label{color:var(--teal-light)}
 .section-head{max-width:640px;margin-bottom:26px}
-.section-head p.muted{margin-top:8px}
+.section-head h1{margin-bottom:.15em}
+.section-head p.muted{margin-top:2px}
 .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px}
@@ -138,9 +139,7 @@ p{margin:0 0 1em;text-wrap:pretty}
 .field input:focus,.field textarea:focus{outline:none;border-color:var(--teal)}
 .field .hint{font-size:13px;color:var(--stone)}
 .field .req-star{color:var(--error)}
-.field-error{display:none;color:var(--error);font-size:13px;margin-top:2px}
 .field.has-error input,.field.has-error select{border-color:var(--error)}
-.field.has-error .field-error{display:block}
 .result{background:var(--navy);border-radius:16px;padding:26px;color:#C9CFD6;display:flex;flex-direction:column;gap:16px;height:100%}
 .result .big{font-size:46px;font-weight:700;color:var(--teal-light);line-height:1}
 .result .row{display:flex;justify-content:space-between;gap:12px;font-size:15px;border-top:1px solid rgba(255,255,255,.12);padding-top:12px}
