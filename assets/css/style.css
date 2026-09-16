@@ -10,7 +10,7 @@
 :root{
   --navy:#0F2A47; --navy-2:#1B3F63; --navy-tint:#E8ECF1; --teal:#11978A; --teal-dark:#0D7A70; --teal-light:#4FB3A2;
   --paper:#F5F3EE; --soft:#DCEFEB; --stone:#7C8794; --line:#DCD8CF; --ink:#2B3A4A; --white:#FFFFFF;
-  --max:1120px; --radius:14px;
+  --max:1120px; --radius:14px; --error:#B3261E;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -137,6 +137,10 @@ p{margin:0 0 1em;text-wrap:pretty}
 .field input,.field select,.field textarea{font:inherit;font-size:17px;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);width:100%}
 .field input:focus,.field textarea:focus{outline:none;border-color:var(--teal)}
 .field .hint{font-size:13px;color:var(--stone)}
+.field .req-star{color:var(--error)}
+.field-error{display:none;color:var(--error);font-size:13px;margin-top:2px}
+.field.has-error input,.field.has-error select{border-color:var(--error)}
+.field.has-error .field-error{display:block}
 .result{background:var(--navy);border-radius:16px;padding:26px;color:#C9CFD6;display:flex;flex-direction:column;gap:16px;height:100%}
 .result .big{font-size:46px;font-weight:700;color:var(--teal-light);line-height:1}
 .result .row{display:flex;justify-content:space-between;gap:12px;font-size:15px;border-top:1px solid rgba(255,255,255,.12);padding-top:12px}
