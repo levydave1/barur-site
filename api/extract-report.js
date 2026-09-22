@@ -6,7 +6,7 @@
 // project (Project Settings -> Environment Variables). Never hard-code the
 // key here and never send it to the client.
 
-const MODEL = 'gemini-2.5-flash';
+const MODEL = 'gemini-3.8-flash';
 
 const EXTRACTION_PROMPT = `אתה מקבל דוח יתרות לסילוק של משכנתא מבנק ישראלי (PDF או תמונה סרוקה).
 המשימה שלך: לחלץ מהדוח את הנתונים הבאים, ולהחזיר אך ורק JSON תקין במבנה הבא, בלי טקסט נוסף:
