@@ -254,6 +254,7 @@
   details ol li{margin-bottom:4px}
 
   .upload-box{border:1.5px dashed var(--accent);border-radius:14px;padding:30px 18px;text-align:center;background:var(--surface-2)}
+  .upload-box.drag-over{outline:2px solid var(--accent);outline-offset:2px}
   .upload-box input[type=file]{display:none}
   .upload-box .file-btn{
     display:inline-block;margin-top:14px;background:var(--accent);color:var(--accent-ink);
@@ -320,7 +321,7 @@
     <h1 style="font-size:26px">העלה את דוח היתרות לסילוק</h1>
     <p class="sub">קובץ PDF או תמונה של הדוח מהבנק. לא בטוח איך מוציאים אותו? פתח את ההוראות לפי הבנק שלך למטה.</p>
 
-    <div class="upload-box">
+    <div class="upload-box" id="upload-box">
       <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0-12 4 4m-4-4-4 4M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <div style="font-size:15.5px;font-weight:700;margin-top:8px">גרור לכאן את הדוח</div>
       <div style="font-size:13.5px;color:var(--text-2);margin-top:2px">PDF או תמונה</div>
@@ -715,7 +716,28 @@
 
   async function handleUpload(input){
     if(!input.files || !input.files[0]) return;
-    const file = input.files[0];
+    processFile(input.files[0]);
+  }
+
+  function setupDragAndDrop(){
+    const box = document.getElementById('upload-box');
+    if(!box) return;
+    ['dragenter','dragover'].forEach(evt => box.addEventListener(evt, (e) => {
+      e.preventDefault(); e.stopPropagation();
+      box.classList.add('drag-over');
+    }));
+    ['dragleave','drop'].forEach(evt => box.addEventListener(evt, (e) => {
+      e.preventDefault(); e.stopPropagation();
+      box.classList.remove('drag-over');
+    }));
+    box.addEventListener('drop', (e) => {
+      const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) processFile(file);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', setupDragAndDrop);
+
+  async function processFile(file){
     const status = document.getElementById('upload-status');
     startScanAnimation();
 
@@ -974,7 +996,7 @@
           <div class="label"><span class="dot" style="background:var(--amber)"></span>מינימום עלות כוללת</div>
           <div class="num">${ils(tTotalSavings)} <small>חיסכון כולל משוער</small></div>
           <div class="diff">באותו החזר חודשי בערך — מסיימים לשלם כ-${((currentYearsM-tMonths)/12).toFixed(1)} שנים מוקדם יותר</div>
-          <div class="mini">
+          <div class="mini">${mbar('עלות כוללת היום', currentTotal, Math.max(currentTotal, payment*tMonths), 'var(--text-2)') + mbar('עלות כוללת חדשה', payment*tMonths, Math.max(currentTotal, payment*tMonths), 'var(--amber)')}
             <div class="timeline"><div class="fill" style="width:${(tMonths/currentYearsM*100).toFixed(1)}%"></div></div>
             <div class="timeline-lbl"><span>0</span><span>מסיימים בשנה ${(tMonths/12).toFixed(1)}</span><span>${years} (היום)</span></div>
           </div>
