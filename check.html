@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>בדיקת כדאיות מיחזור</title>
-<meta name="description" content="דף נחיתה — בדיקת כדאיות מיחזור משכנתא, עם או בלי דוח יתרות, לפני השארת פרטים">
+<meta name="description" content="דף נחיתה לפרסום — בדיקת כדאיות מיחזור משכנתא, עם או בלי דוח יתרות, לפני השארת פרטים">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -106,6 +106,7 @@
     padding:22px;
   }
   .stack{display:flex;flex-direction:column;gap:14px}
+
   .choice{
     display:flex;flex-direction:column;gap:6px;align-items:flex-start;
     text-align:right;width:100%;
@@ -258,7 +259,14 @@
     display:inline-block;margin-top:14px;background:var(--accent);color:var(--accent-ink);
     padding:10px 20px;border-radius:10px;font-weight:700;font-size:14.5px;cursor:pointer;
   }
-  .upload-status{font-size:14px;color:var(--accent);margin-top:10px;font-weight:600}
+  .upload-status{font-size:14px;color:var(--accent);margin-top:10px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+  .upload-status.error{color:var(--danger)}
+  .spinner{
+    width:15px;height:15px;border-radius:50%;flex:none;
+    border:2.5px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    border-top-color:var(--accent);animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
 
   footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);font-size:13px;color:var(--text-2)}
   footer a{color:var(--text-2);text-decoration:underline}
@@ -271,6 +279,7 @@
   .privacy-body p, .privacy-body li{font-size:14px;color:var(--text-2);line-height:1.6}
   .privacy-body{margin-top:12px}
 </style>
+
 </head>
 <body>
 <div class="wrap">
@@ -384,6 +393,11 @@
     <div class="step-eyebrow">שלב 3 מתוך 5 · דוח ביניים</div>
     <h1 style="font-size:26px">המצב הקיים שלך</h1>
 
+    <div class="warn-box" id="verify-box" hidden>
+      הנתונים למטה חולצו אוטומטית מהדוח שהעלית. בדקו שהם נכונים לפני שממשיכים — טעות בסריקה תשפיע על ההערכה.
+      <button class="btn-link" onclick="prefillManualFromData(); goTo('step-2-manual')">לא מדויק? עריכה ידנית</button>
+    </div>
+
     <div class="card">
       <table class="summary" id="summary-table"></table>
       <table class="tracks" id="tracks-table" hidden></table>
@@ -460,6 +474,7 @@
       <button class="btn-link" onclick="goTo('step-1')">בדיקה חדשה</button>
     </div>
   </section>
+
   <!-- PRIVACY POLICY -->
   <section id="step-privacy" hidden>
     <div class="step-eyebrow">מדיניות פרטיות</div>
@@ -503,17 +518,20 @@
   </footer>
 </div>
 <script>
-  // ---- Demo configuration -------------------------------------------------
-  // Telegram lead delivery. NOTE: this fetch call will not run inside the
-  // published Artifact preview — its sandbox only allows outbound requests
-  // to a small CDN allowlist. It's wired here for when this same file is
-  // deployed on your own site (Vercel). Even there, the bot token must be
-  // held by a serverless function, never shipped in this client-side file.
-  const TELEGRAM_BOT_TOKEN = "REPLACE_WITH_BOT_TOKEN";
-  const TELEGRAM_CHAT_ID   = "REPLACE_WITH_CHAT_ID";
+  // ---- Configuration --------------------------------------------------------
+  // Report extraction and lead delivery both go through this site's own
+  // serverless functions (/api/extract-report, /api/send-lead) — no key or
+  // token ever lives in this client-side file.
 
-  // Placeholder market-average annual rates (%). Update regularly.
-  const MARKET_RATES = { low: 3.65, mid: 4.3, high: 5.35 };
+  // Market-average annual rates (%) — refreshed automatically once a week by
+  // a GitHub Action that reads market-rates.json; these are just the
+  // fallback used until that file loads (or if it ever fails to load).
+  let MARKET_RATES = { low: 3.65, mid: 4.3, high: 5.35 };
+  fetch('/market-rates.json', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(j => { if (j && j.low && j.mid && j.high) MARKET_RATES = j; })
+    .catch(() => {});
+
   const TRACK_COLORS = ['var(--turq)','var(--amber)','var(--azure)'];
 
   const BANKS = [
@@ -572,6 +590,7 @@
       'ניתן להזמין גם דרך מוקד הבנק 3533*, א׳–ה׳ 08:00–15:30',
     ]},
   ];
+
   function renderBankGrid(){
     const grid = document.getElementById('bank-grid');
     if(!grid) return;
@@ -661,32 +680,97 @@
     }
     return out;
   }
-  // ---- Upload path (demo simulation) --------------------------------------
-  function handleUpload(input){
-    if(!input.files || !input.files[0]) return;
+
+  // ---- Upload path: real extraction via /api/extract-report ---------------
+  const SCAN_MESSAGES = [
+    'טוענים את הדוח...',
+    'מזהים את הבנק ואת המסלולים...',
+    'קוראים יתרות וריביות...',
+    'מחשבים כמה שנים נותרו...',
+    'מרכיבים את דוח הביניים...',
+  ];
+  let scanTimer = null;
+
+  function startScanAnimation(){
     const status = document.getElementById('upload-status');
     status.hidden = false;
-    status.textContent = 'קורא את הדוח...';
-    setTimeout(() => {
-      // DEMO ONLY: simulated extraction. In production this calls a backend
-      // function that sends the file to a document-AI service and returns
-      // structured fields, shown to the user for confirmation before use.
-      status.textContent = 'הנתונים חולצו מהדוח (הדגמה)';
-      data = {
-        payment: 3450, years: 16, value: null, source: 'upload',
-        tracks: [
-          { name:'פריים', balance:180000, rate:5.75, term:280 },
-          { name:'קבועה לא צמודה', balance:250000, rate:5.05, term:287 },
-          { name:'קבועה צמודה', balance:182000, rate:3.65, term:250 },
-        ],
-      };
-      data.balance = data.tracks.reduce((s,t)=>s+t.balance,0);
+    status.classList.remove('error');
+    let i = 0;
+    const render = () => { status.innerHTML = `<span class="spinner"></span><span>${SCAN_MESSAGES[i]}</span>`; };
+    render();
+    scanTimer = setInterval(() => { i = (i+1) % SCAN_MESSAGES.length; render(); }, 1500);
+  }
+  function stopScanAnimation(){
+    if (scanTimer){ clearInterval(scanTimer); scanTimer = null; }
+  }
+
+  function fileToBase64(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+      reader.onerror = () => reject(new Error('file_read_failed'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleUpload(input){
+    if(!input.files || !input.files[0]) return;
+    const file = input.files[0];
+    const status = document.getElementById('upload-status');
+    startScanAnimation();
+
+    try {
+      const base64 = await fileToBase64(file);
+      const res = await fetch('/api/extract-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: base64, mimeType: file.type || 'application/pdf' }),
+      });
+      if (!res.ok) throw new Error('extract_failed_' + res.status);
+      const extracted = await res.json();
+
+      stopScanAnimation();
+      status.textContent = 'הנתונים חולצו מהדוח — בדקו אותם בשלב הבא';
+
+      const tracks = extracted.tracks.map(t => ({
+        name: t.name || 'מסלול',
+        balance: Number(t.balance) || 0,
+        rate: Number(t.rate) || 0,
+        term: Number(t.termMonths) || 240,
+      }));
+      const balance = tracks.reduce((s,t) => s + t.balance, 0);
+      const years = Math.round(Math.max(...tracks.map(t => t.term)) / 12) || 20;
+      const payment = Number(extracted.payment) || Math.round(
+        tracks.reduce((s,t) => s + pmtFor(t.balance, t.rate, t.term/12), 0)
+      );
+
+      data = { payment, years, value: null, source: 'upload', tracks, balance };
+      document.getElementById('verify-box').hidden = false;
       renderInterim();
       goTo('step-3');
-    }, 900);
+    } catch (err) {
+      stopScanAnimation();
+      status.classList.add('error');
+      status.textContent = 'לא הצלחנו לקרוא את הדוח הזה. אפשר לנסות קובץ אחר, או לעבור לשאלון הקצר.';
+      console.error(err);
+    }
+  }
+
+  // Best-effort carry-over of upload-extracted numbers into the manual form,
+  // for when the user wants to correct something the scan got wrong.
+  function prefillManualFromData(){
+    if (!data || data.source !== 'upload') return;
+    const set = (id, rangeId, val) => {
+      const t = document.getElementById(id), r = document.getElementById(rangeId);
+      if (t && val){ t.value = Math.round(val).toLocaleString('he-IL'); r.value = val; }
+    };
+    set('f-balance','f-balance-range', data.balance);
+    set('f-payment','f-payment-range', data.payment);
+    set('f-years','f-years-range', data.years);
   }
 
   function submitManual(){
+    document.getElementById('verify-box').hidden = true;
     const balance = fieldNum('f-balance');
     const payment = fieldNum('f-payment');
     const years   = fieldNum('f-years');
@@ -798,6 +882,7 @@
         ${xTicks}
       </svg>`;
   }
+
   // ---- Validation -----------------------------------------------------------
   function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }
   function isValidPhone(v){ const d = v.replace(/\D/g,''); return /^0\d{8,9}$/.test(d); }
@@ -823,23 +908,21 @@
     if(!consent){ alert('נדרש אישור מדיניות הפרטיות כדי להמשיך'); return; }
 
     data.name = name; data.phone = phone; data.email = email; data.pref = pref;
-    sendLeadToTelegram(data);
+    sendLeadToBackend(data);
     renderResults();
     goTo('step-5');
   }
 
-  function sendLeadToTelegram(lead){
-    if (TELEGRAM_BOT_TOKEN.startsWith('REPLACE')) return;
-    const text = [
-      'ליד חדש — ברור משכנתאות',
-      'שם: ' + lead.name, 'טלפון: ' + lead.phone, 'אימייל: ' + lead.email,
-      'העדפה: ' + lead.pref, 'יתרה: ' + ils(lead.balance), 'החזר נוכחי: ' + ils(lead.payment),
-    ].join('\n');
-    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
-    }).catch(()=>{});
+  // Fire-and-forget: don't make the user wait on this before seeing their
+  // results. The token itself lives only in the serverless function.
+  function sendLeadToBackend(lead){
+    fetch('/api/send-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(lead),
+    }).catch(err => console.error('lead delivery failed', err));
   }
+
   // ---- Scenarios --------------------------------------------------------
   function mbar(label, val, max, color){
     return `<div class="mbar-row"><div class="mbar-label">${label}</div>
@@ -859,7 +942,6 @@
     const pTerm = Math.min(years + 5, 30);
     const pPayment = pmtFor(balance, MARKET_RATES.low, pTerm);
     const pBenefit = pPayment < payment * (1 - MIN_MEANINGFUL);
-
     // total-cost-minimizing scenario: hold payment ~constant, solve shorter term
     const tMonths = solveTermMonths(balance, MARKET_RATES.mid, payment);
     const tFeasible = tMonths && isFinite(tMonths) && tMonths < currentYearsM * (1 - MIN_MEANINGFUL);
@@ -921,5 +1003,6 @@
     document.getElementById('scen-list').innerHTML = lead + order.map(k => cards[k]).join('');
   }
 </script>
+
 </body>
 </html>
