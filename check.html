@@ -892,7 +892,12 @@
     const area = line + ` L ${x(pts.length-1).toFixed(1)} ${y(0).toFixed(1)} L ${x(0).toFixed(1)} ${y(0).toFixed(1)} Z`;
     const gridY = [0, maxV*0.5, maxV].map(v => `<line x1="${padL}" x2="${w-padR}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" stroke="var(--border)" stroke-width="1"/>
       <text x="${padL-8}" y="${(y(v)+4).toFixed(1)}" text-anchor="end" font-size="11" fill="var(--text-2)">${ils(v)}</text>`).join('');
-    const xTicks = [0, Math.round((pts.length-1)/2), pts.length-1].map(i => `<text x="${x(i).toFixed(1)}" y="${h-6}" text-anchor="middle" font-size="11" fill="var(--text-2)">שנה ${i}</text>`).join('');
+    const xTicks = [0, Math.round((pts.length-1)/2), pts.length-1].map((i, idx, arr) => {
+      let tx = x(i);
+      if (idx === 0) tx = Math.max(tx, padL + 16);
+      if (idx === arr.length-1) tx = Math.min(tx, w - padR - 16);
+      return `<text x="${tx.toFixed(1)}" y="${h-6}" text-anchor="middle" font-size="11" fill="var(--text-2)">שנה ${i}</text>`;
+    }).join('');
 
     holder.innerHTML = `
       <div style="font-weight:700;font-size:13.5px;margin-bottom:8px">תחזית יתרה יורדת עד לסיום ${data.tracks ? '(סך כל המסלולים)' : ''}</div>
@@ -957,17 +962,27 @@
   function renderResults(){
     const { balance, payment, years } = data;
     const currentYearsM = years*12;
-    const currentTotal = payment * currentYearsM;
+    // True cost of "doing nothing": each track keeps its OWN fixed payment until
+    // ITS OWN term ends (tracks end at different times), not the full combined
+    // payment continuing for the longest track's term. Using payment*years
+    // overstates the status-quo cost hugely whenever tracks have different
+    // remaining terms (common — e.g. a short fixed track + a long variable one).
+    const currentTotal = data.tracks
+      ? data.tracks.reduce((s,t) => s + pmtFor(t.balance, t.rate, t.term/12) * t.term, 0)
+      : payment * currentYearsM;
     const MIN_MEANINGFUL = 0.02; // treat <2% improvement as "no clear benefit"
 
     // payment-minimizing scenario
     const pTerm = Math.min(years + 5, 30);
     const pPayment = pmtFor(balance, MARKET_RATES.low, pTerm);
     const pBenefit = pPayment < payment * (1 - MIN_MEANINGFUL);
+    const pTotal = pPayment*pTerm*12;
+    const pTotalSavings = pBenefit ? (currentTotal - pTotal) : null;
     // total-cost-minimizing scenario: hold payment ~constant, solve shorter term
     const tMonths = solveTermMonths(balance, MARKET_RATES.mid, payment);
     const tFeasible = tMonths && isFinite(tMonths) && tMonths < currentYearsM * (1 - MIN_MEANINGFUL);
-    const tTotalSavings = tFeasible ? payment*(currentYearsM - tMonths) : null;
+    const tTotal = payment*tMonths;
+    const tTotalSavings = tFeasible ? (currentTotal - tTotal) : null;
 
     // balanced scenario
     const bRate = (MARKET_RATES.low+MARKET_RATES.mid)/2;
@@ -976,6 +991,28 @@
     const bTotal = bPayment*bTerm*12;
     const bSavings = currentTotal - bTotal;
     const bBenefit = bPayment < payment * (1 - MIN_MEANINGFUL) || bSavings > currentTotal * MIN_MEANINGFUL;
+
+    // A scenario can look attractive on the monthly payment while actually
+    // costing more overall (a longer term outweighing a similar/lower rate) —
+    // surface that plainly instead of only ever showing a savings number.
+    const costNote = (delta) => delta >= 0
+      ? `<div class="diff" style="margin-top:2px">חיסכון בעלות הכוללת לעומת היום: ${ils(delta)}</div>`
+      : `<div class="diff" style="margin-top:2px;color:var(--danger)">שימו לב: בגלל הארכת התקופה, העלות הכוללת דווקא עולה בכ-${ils(Math.abs(delta))} לעומת היום, למרות ההחזר החודשי הנמוך יותר</div>`;
+    const URGENT_THRESHOLD = 200000;
+    const urgentNote = (delta) => delta >= URGENT_THRESHOLD
+      ? `<div class="diff" style="margin-top:2px;color:var(--danger);font-weight:700">פער משמעותי (מעל 200,000₪) — מומלץ לתעדף פנייה ללקוח</div>` : '';
+
+    // Whichever scenario saves the most over the full period gets a "most worthwhile" badge,
+    // so the best option doesn't get lost among three similarly-styled cards.
+    const savingsByKey = {
+      payment: pBenefit ? Math.max(pTotalSavings, 0) : -1,
+      total: tFeasible ? Math.max(tTotalSavings, 0) : -1,
+      both: bBenefit ? Math.max(bSavings, 0) : -1,
+    };
+    let bestKey = null, bestVal = -1;
+    for (const k in savingsByKey){ if (savingsByKey[k] > bestVal){ bestVal = savingsByKey[k]; bestKey = k; } }
+    if (bestVal <= 0) bestKey = null;
+    const recBadge = (key) => key === bestKey ? '<span class="badge-rec">הכי משתלם</span>' : '';
 
     const noBenefitCard = (label, color) => `
         <div class="scen">
@@ -986,26 +1023,28 @@
     const cards = {
       payment: pBenefit ? `
         <div class="scen">
-          <div class="label"><span class="dot" style="background:var(--turq)"></span>מינימום החזר חודשי</div>
+          <div class="label"><span class="tag-row"><span class="dot" style="background:var(--turq)"></span>מינימום החזר חודשי ${recBadge('payment')}</span></div>
           <div class="num">${ils(pPayment)} <small>/ לחודש</small></div>
           <div class="diff">לעומת ${ils(payment)} היום — הקטנה של ${ils(payment-pPayment)} בחודש</div>
+          ${costNote(pTotalSavings)}${urgentNote(pTotalSavings)}
           <div class="mini">${mbar('היום', payment, Math.max(payment,pPayment), 'var(--text-2)') + mbar('חדש', pPayment, Math.max(payment,pPayment), 'var(--turq)')}</div>
         </div>` : noBenefitCard('מינימום החזר חודשי', 'var(--turq)'),
       total: tFeasible ? `
         <div class="scen">
-          <div class="label"><span class="dot" style="background:var(--amber)"></span>מינימום עלות כוללת</div>
-          <div class="num">${ils(tTotalSavings)} <small>חיסכון כולל משוער</small></div>
+          <div class="label"><span class="tag-row"><span class="dot" style="background:var(--amber)"></span>מינימום עלות כוללת ${recBadge('total')}</span></div>
+          <div class="num">${ils(tTotalSavings)} <small>חיסכון כולל משוער (קרן + ריבית לאורך התקופה)</small></div>
           <div class="diff">באותו החזר חודשי בערך — מסיימים לשלם כ-${((currentYearsM-tMonths)/12).toFixed(1)} שנים מוקדם יותר</div>
-          <div class="mini">${mbar('עלות כוללת היום', currentTotal, Math.max(currentTotal, payment*tMonths), 'var(--text-2)') + mbar('עלות כוללת חדשה', payment*tMonths, Math.max(currentTotal, payment*tMonths), 'var(--amber)')}
+          ${urgentNote(tTotalSavings)}
+          <div class="mini">${mbar('עלות כוללת היום', currentTotal, Math.max(currentTotal, tTotal), 'var(--text-2)') + mbar('עלות כוללת חדשה', tTotal, Math.max(currentTotal, tTotal), 'var(--amber)')}
             <div class="timeline"><div class="fill" style="width:${(tMonths/currentYearsM*100).toFixed(1)}%"></div></div>
             <div class="timeline-lbl"><span>0</span><span>מסיימים בשנה ${(tMonths/12).toFixed(1)}</span><span>${years} (היום)</span></div>
           </div>
         </div>` : noBenefitCard('מינימום עלות כוללת', 'var(--amber)'),
       both: bBenefit ? `
         <div class="scen">
-          <div class="label"><span class="dot" style="background:var(--azure)"></span>איזון בין השניים</div>
+          <div class="label"><span class="tag-row"><span class="dot" style="background:var(--azure)"></span>איזון בין השניים ${recBadge('both')}</span></div>
           <div class="num">${ils(bPayment)} <small>/ לחודש</small></div>
-          <div class="diff">חיסכון כולל משוער לאורך התקופה: ${ils(Math.max(bSavings,0))}</div>
+          ${costNote(bSavings)}${urgentNote(bSavings)}
           <div class="mini">${mbar('החזר היום', payment, Math.max(payment,bPayment), 'var(--text-2)') + mbar('החזר חדש', bPayment, Math.max(payment,bPayment), 'var(--azure)')}
             <div class="timeline"><div class="fill" style="width:${(years/bTerm*100).toFixed(1)}%;background:var(--azure)"></div></div>
             <div class="timeline-lbl"><span>0</span><span>תקופה חדשה: ${bTerm} שנה</span></div>
@@ -1019,8 +1058,9 @@
 
     const anyBenefit = pBenefit || tFeasible || bBenefit;
     document.getElementById('caution-frame').hidden = anyBenefit;
-    const lead = anyBenefit ? '' :
-      `<div class="warn-box">לא מצאנו חיסכון ברור בנתונים שהוזנו מול ריבית השוק הממוצעת. ייתכן שהריבית שאתה משלם כיום כבר טובה, או שיש טעות באחד הנתונים — כדאי לוודא זאת איתנו בשיחה קצרה.</div>`;
+    const explainer = `<div class="diff" style="margin-bottom:10px">"עלות כוללת" למטה = כל התשלומים העתידיים (קרן + ריבית) לאורך התקופה — לא יתרת הקרן הנוכחית (${ils(balance)}). על פני עשרות שנים סכום זה תמיד גדול משמעותית מהיתרה, זה תקין.</div>`;
+    const lead = explainer + (anyBenefit ? '' :
+      `<div class="warn-box">לא מצאנו חיסכון ברור בנתונים שהוזנו מול ריבית השוק הממוצעת. ייתכן שהריבית שאתה משלם כיום כבר טובה, או שיש טעות באחד הנתונים — כדאי לוודא זאת איתנו בשיחה קצרה.</div>`);
 
     document.getElementById('scen-list').innerHTML = lead + order.map(k => cards[k]).join('');
   }
