@@ -1,0 +1,40 @@
+name: Update mortgage rates
+
+on:
+  schedule:
+    # Every Monday 06:00 UTC. Bank of Israel publishes monthly, on a date
+    # that isn't fixed in advance, so we check weekly and only commit when
+    # a new plausible value is actually found (see scripts/update_mortgage_rates.py).
+    - cron: '0 6 * * 1'
+  workflow_dispatch: {}
+
+jobs:
+  update-rates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests pandas xlrd openpyxl
+
+      - name: Fetch and parse rates
+        run: python scripts/update_mortgage_rates.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add market-rates.json
+          if git diff --cached --quiet; then
+            echo "No change in market-rates.json"
+          else
+            git commit -m "chore: update average mortgage rates"
+            git push
+          fi
+
