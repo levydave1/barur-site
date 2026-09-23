@@ -11,6 +11,33 @@ function ils(n) {
   return '₪' + Math.round(n).toLocaleString('he-IL');
 }
 
+// TEMPORARY debug block — includes the raw extracted tracks and the computed
+// savings scenarios in the Telegram message, so we can QA the extraction
+// pipeline against the real bank document without asking the customer for
+// anything. Remove once we trust the extraction (see check.html for context).
+function debugLines(lead) {
+  const out = [];
+  if (Array.isArray(lead.tracks) && lead.tracks.length) {
+    out.push('', '🔍 נתונים גולמיים שחולצו (מסלולים):');
+    lead.tracks.forEach((t, i) => {
+      out.push(`  ${i + 1}. ${t.name || '—'} | יתרה: ${ils(t.balance)} | ריבית: ${t.rate ?? '—'}% | תקופה: ${t.term ? Math.round(t.term / 12) + ' שנה' : '—'}`);
+    });
+  }
+  const sc = lead.scenarios;
+  if (sc) {
+    out.push('', '🔍 תרחישי חיסכון שחושבו:');
+    out.push(`  עלות כוללת היום: ${ils(sc.currentTotal)}`);
+    const scenarioLabel = { payment: 'מינימום החזר חודשי', total: 'מינימום עלות כוללת', both: 'גם וגם' };
+    ['payment', 'total', 'both'].forEach((key) => {
+      const s = sc[key];
+      if (!s) { out.push(`  ${scenarioLabel[key]}: לא רלוונטי / ללא הבדל משמעותי`); return; }
+      const rec = sc.bestKey === key ? ' ⭐ הכי משתלם' : '';
+      out.push(`  ${scenarioLabel[key]}${rec}: החזר חדש ${ils(s.newPayment)} | עלות כוללת חדשה ${ils(s.newTotal)} | חיסכון ${ils(s.totalSavings)}`);
+    });
+  }
+  return out;
+}
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   if (req.method === 'OPTIONS') {
@@ -63,6 +90,7 @@ module.exports = async (req, res) => {
     `יתרת משכנתא: ${ils(lead.balance)}`,
     `החזר חודשי נוכחי: ${ils(lead.payment)}`,
     lead.years ? `שנים שנותרו: ${lead.years}` : null,
+    ...debugLines(lead),
   ].filter(Boolean);
 
   try {
@@ -82,4 +110,3 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'internal_error' });
   }
 };
-
