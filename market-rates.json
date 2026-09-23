@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2026-09-22",
-  "low": 3.65,
-  "mid": 4.3,
-  "high": 5.35,
-  "source": "seed defaults — awaiting first automated update"
+  "low": 3.41,
+  "mid": 3.5,
+  "high": 4.5,
+  "linkedRate": 3.41,
+  "unlinkedRate": 3.5,
+  "source": "boi.org.il (linked + unlinked mortgage rate files)",
+  "updatedAt": "2026-09-23"
 }
-
