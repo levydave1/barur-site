@@ -20,7 +20,8 @@ function debugLines(lead) {
   if (Array.isArray(lead.tracks) && lead.tracks.length) {
     out.push('', '🔍 נתונים גולמיים שחולצו (מסלולים):');
     lead.tracks.forEach((t, i) => {
-      out.push(`  ${i + 1}. ${t.name || '—'} | יתרה: ${ils(t.balance)} | ריבית: ${t.rate ?? '—'}% | תקופה: ${t.term ? Math.round(t.term / 12) + ' שנה' : '—'}`);
+      const origin = (t.originRate != null && t.originRate !== t.rate) ? ` (מקורית בעת מתן ההלוואה: ${t.originRate}%)` : '';
+      out.push(`  ${i + 1}. ${t.name || '—'} | יתרה: ${ils(t.balance)} | ריבית נוכחית: ${t.rate ?? '—'}%${origin} | תקופה: ${t.term ? Math.round(t.term / 12) + ' שנה' : '—'}`);
     });
   }
   const sc = lead.scenarios;
