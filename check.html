@@ -802,9 +802,13 @@
       }));
       const balance = tracks.reduce((s,t) => s + t.balance, 0);
       const years = Math.round(Math.max(...tracks.map(t => t.term)) / 12) || 20;
-      const payment = Number(extracted.payment) || Math.round(
+      // ההחזר החודשי תמיד מחושב מהיתרה/ריבית/תקופה של כל מסלול (מתמטיקה ודאית),
+      // ולא מהשדה "payment" שמוחזר מהמודל — לדוחות סילוק רבים אין בהם כלל סכום
+      // חודשי כולל מפורש, והמודל נוטה "להמציא" מספר במקום להחזיר null כמבוקש.
+      const computedPayment = Math.round(
         tracks.reduce((s,t) => s + pmtFor(t.balance, t.rate, t.term/12), 0)
       );
+      const payment = computedPayment || Number(extracted.payment) || 0;
 
       data = { payment, years, value: null, source: 'upload', tracks, balance };
       document.getElementById('verify-box').hidden = false;
