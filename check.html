@@ -979,8 +979,8 @@
     if(!consent){ alert('נדרש אישור מדיניות הפרטיות כדי להמשיך'); return; }
 
     data.name = name; data.phone = phone; data.email = email; data.pref = pref;
+    renderResults(); // computes data.scenarios as a side effect, needed below
     sendLeadToBackend(data);
-    renderResults();
     goTo('step-5');
   }
 
@@ -1057,6 +1057,18 @@
     for (const k in savingsByKey){ if (savingsByKey[k] > bestVal){ bestVal = savingsByKey[k]; bestKey = k; } }
     if (bestVal <= 0) bestKey = null;
     const recBadge = (key) => key === bestKey ? '<span class="badge-rec">הכי משתלם</span>' : '';
+
+    // Debug/QA snapshot: everything behind these results, attached to the lead
+    // sent to Telegram so we can spot-check extraction + scenario math against
+    // the real bank document without asking the customer for anything.
+    // TEMPORARY — remove once we trust the extraction pipeline.
+    data.scenarios = {
+      currentTotal: Math.round(currentTotal),
+      payment: pBenefit ? { newPayment: Math.round(pPayment), termYears: pTerm, newTotal: Math.round(pTotal), totalSavings: Math.round(pTotalSavings) } : null,
+      total: tFeasible ? { newPayment: Math.round(payment), termMonths: Math.round(tMonths), newTotal: Math.round(tTotal), totalSavings: Math.round(tTotalSavings) } : null,
+      both: bBenefit ? { newPayment: Math.round(bPayment), termYears: bTerm, newTotal: Math.round(bTotal), totalSavings: Math.round(bSavings) } : null,
+      bestKey,
+    };
 
     const noBenefitCard = (label, color) => `
         <div class="scen">
