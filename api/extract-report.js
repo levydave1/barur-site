@@ -121,6 +121,12 @@ module.exports = async (req, res) => {
       }
     }
 
+    // TEMPORARY — logs every successful extraction so it's visible in Vercel's
+    // function logs (Project -> Deployments -> Functions -> Logs, or `vercel
+    // logs`), as a second, independent place to cross-check against the
+    // Telegram debug lines while we're still validating the extraction.
+    console.log('extract-report success', JSON.stringify(parsed));
+
     return res.status(200).json(parsed);
   } catch (err) {
     console.error('extract-report failed', err);
