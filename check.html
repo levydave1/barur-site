@@ -797,7 +797,10 @@
       const tracks = extracted.tracks.map(t => ({
         name: t.name || 'מסלול',
         balance: Number(t.balance) || 0,
-        rate: Number(t.rate) || 0,
+        rate: Number(t.currentRate ?? t.rate) || 0,
+        // נשמר רק לצורך תצוגת דיבוג בליד (QA מול הריבית שנבחרה בפועל) — לא
+        // משמש בשום חישוב.
+        originRate: t.originRate != null ? Number(t.originRate) : null,
         term: Number(t.termMonths) || 240,
       }));
       const balance = tracks.reduce((s,t) => s + t.balance, 0);
