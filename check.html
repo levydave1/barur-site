@@ -295,6 +295,7 @@
   .privacy-body{margin-top:12px}
 </style>
 
+<script src="/assets/js/track.js" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -458,11 +459,12 @@
       <div class="err" id="err-phone">מספר טלפון לא תקין</div>
     </div>
     <div class="field">
-      <label for="f-email">אימייל</label>
+      <label for="f-email">אימייל (לא חובה)</label>
       <input type="email" id="f-email" inputmode="email" placeholder="name@example.com">
       <div class="err" id="err-email">כתובת אימייל לא תקינה</div>
     </div>
 
+    <p class="sub" style="margin:4px 0 12px">אם לא משתלם, נגיד לך. ולא נתקשר שוב.</p>
     <label class="consent">
       <input type="checkbox" id="f-consent">
       <span>קראתי ואני מסכים/ה <button class="btn-link" type="button" onclick="goTo('step-privacy')" style="font-size:13.5px">למדיניות הפרטיות ותנאי השימוש</button></span>
@@ -524,8 +526,10 @@
       <h4>8. הסכמה</h4>
       <p>מילוי הנתונים או העלאת הדוח מהווה אישור לאמור לעיל.</p>
 
+      <h4>9. עוגיות מדידה ופרסום</h4>
+      <p>אם אישרתם עוגיות, הדף משתמש ב-Meta Pixel וב-Google Analytics כדי למדוד ביקורים והתקדמות בשלבי הבדיקה, לצורך מדידת יעילות הפרסום. נתוני המשכנתא, השם, הטלפון והאימייל אינם נשלחים לכלים אלה. ללא אישור, הכלים לא נטענים. פרטים ב<a href="/cookies">מדיניות העוגיות</a>.</p>
       <h4>יצירת קשר בנושא פרטיות</h4>
-      <p>ברור משכנתאות · דוד לוי · info@barur-mashkanta.co.il</p>
+      <p>ברור משכנתאות · דוד לוי · barur.mashkanta@gmail.com</p>
     </div>
 
     <button class="btn-link" style="margin-top:18px" onclick="goTo('step-4')">חזרה</button>
@@ -654,7 +658,20 @@
 
   let data = {}; // collected form / upload data
 
+  // ---- Funnel tracking (Meta/GA4 via /assets/js/track.js, only after cookie consent)
+  const TRACK_STEPS = {
+    'step-2-upload': ['CheckStart', {path:'upload'}],
+    'step-2-manual': ['CheckStart', {path:'manual'}],
+    'step-3': ['CheckInterim', {}],
+    'step-4': ['CheckForm', {}],
+  };
+  const trackedSteps = new Set();
+  function track(name, params){ try { if (window.barurTrack) window.barurTrack(name, params || {}); else (window.__barurQ = window.__barurQ || []).push([name, params || {}]); } catch(e){} }
+  track('ViewContent', {content_name:'refinance_check'});
+
   function goTo(id){
+    const t = TRACK_STEPS[id];
+    if (t && !trackedSteps.has(t[0])) { trackedSteps.add(t[0]); track(t[0], t[1]); }
     document.querySelectorAll('section[id^="step-"]').forEach(s => s.hidden = true);
     document.getElementById(id).hidden = false;
     window.scrollTo({top:0, behavior:'smooth'});
@@ -971,7 +988,7 @@
     const consent = document.getElementById('f-consent').checked;
     const pref = document.querySelector('input[name="pref"]:checked').value;
 
-    const phoneOk = isValidPhone(phone), emailOk = isValidEmail(email);
+    const phoneOk = isValidPhone(phone), emailOk = !email || isValidEmail(email);
     phoneEl.classList.toggle('invalid', !phoneOk);
     emailEl.classList.toggle('invalid', !emailOk);
     document.getElementById('err-phone').classList.toggle('show', !phoneOk);
@@ -984,6 +1001,7 @@
     data.name = name; data.phone = phone; data.email = email; data.pref = pref;
     renderResults(); // computes data.scenarios as a side effect, needed below
     sendLeadToBackend(data);
+    track('Lead', {content_name:'refinance_check', pref: pref});
     goTo('step-5');
   }
 
