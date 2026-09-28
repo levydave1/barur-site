@@ -3,7 +3,7 @@
 // ונשלחים ברגע האישור (באותו ביקור בלבד). בלי אישור — שום דבר לא נטען ולא נשלח.
 (function () {
   var META_PIXEL_ID = "1776166563647834";
-  var GA4_ID = ""; // למלא כשיהיה מזהה G-XXXXXXX. ריק = GA4 כבוי.
+  var GA4_ID = "G-D0Z2T0P9EX";
 
   var loaded = false;
   var queue = [];
