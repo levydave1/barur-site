@@ -1,0 +1,52 @@
+name: Publish social posts
+
+on:
+  schedule:
+    # Every hour at :07 (off the top of the hour, when GitHub is busiest).
+    - cron: '7 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (log only, publish nothing)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: publish-social
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Publish due posts
+        env:
+          META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: python scripts/publish_social.py
+
+      - name: Save post statuses
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add social/posts.json
+          if git diff --cached --quiet; then
+            echo "No status changes"
+          else
+            git commit -m "chore: update social post statuses"
+            git pull --rebase
+            git push
+          fi

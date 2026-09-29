@@ -1,0 +1,14 @@
+{
+  "live": false,
+  "posts": [
+    {
+      "id": "test-001",
+      "publish_at": "2026-09-29T12:00",
+      "text": "פוסט בדיקה — ברור משכנתאות",
+      "image": "social/img/test-001.jpg",
+      "link": "https://barur-mashkanta.co.il/check.html",
+      "platforms": ["facebook", "instagram"],
+      "status": "draft"
+    }
+  ]
+}
