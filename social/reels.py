@@ -118,7 +118,80 @@ def counter_audio(duration):
     return (out * 32767).astype(np.int16)
 
 
-TEMPLATES = {"counter": (counter_html, counter_audio, 16.0, 10.6)}  # html, audio, seconds, cover time
+
+# ---------- template: "אל תבדוק" (reverse psychology, kinetic type) ----------
+
+DONT_BEATS = [0.3, 1.9, 3.4, 5.6, 6.9, 8.9]  # each phrase lands on a beat; 8.9 = end card
+
+
+def dont_check_html():
+    return f"""<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><style>
+@font-face{{font-family:Plex;src:url({A}/fonts/plex-he-400.woff2);font-weight:400}}
+@font-face{{font-family:Plex;src:url({A}/fonts/plex-he-600.woff2);font-weight:600}}
+@font-face{{font-family:Plex;src:url({A}/fonts/plex-he-700.woff2);font-weight:700}}
+*{{margin:0;padding:0;box-sizing:border-box}}
+body{{width:{W}px;height:{H}px;background:#0F2A47;color:#F5F3EE;font-family:Plex,Arial,sans-serif;overflow:hidden;position:relative}}
+.scene{{position:absolute;inset:0;padding:230px 90px 420px;display:flex;flex-direction:column;justify-content:center;gap:36px;opacity:0}}
+.xl{{font-size:170px;font-weight:700;line-height:1.05}}
+.l{{font-size:120px;font-weight:700;line-height:1.1}}
+.m{{font-size:84px;font-weight:600;line-height:1.2;color:#AEB8C4}}
+.teal{{color:#4FB3A2}}
+.w{{display:inline-block;opacity:0}}
+#end{{background:#F5F3EE;color:#0F2A47;gap:40px}}
+#end h1{{font-size:118px;line-height:1.1;font-weight:700}}
+#end .sub{{font-size:46px;color:#7C8794;line-height:1.4}}
+#end .cta{{font-size:44px;font-weight:600;color:#11978A;direction:ltr;text-align:right}}
+#end img{{height:120px;align-self:flex-start;margin-top:30px}}
+</style></head><body>
+<div class="scene" id="s1"><div class="xl w" data-t="{DONT_BEATS[0]}">אל תבדוק.</div><div class="m w" data-t="{DONT_BEATS[1]}">באמת.</div></div>
+<div class="scene" id="s2"><div class="l w" data-t="{DONT_BEATS[2]}">הבנק<br>מעדיף<br>שלא.</div></div>
+<div class="scene" id="s3"><div class="l w" data-t="{DONT_BEATS[3]}">כי מי שבודק,</div><div class="xl w" data-t="{DONT_BEATS[4]}">מגלה <span class="teal">כמה.</span></div></div>
+<div class="scene" id="end"><h1>הבנק לא יגיד.<br>הבדיקה כן.</h1><div class="sub">3 דקות. בלי מסמכים.<br>אם לא משתלם, נגיד לך.</div>
+  <div class="cta">barur-mashkanta.co.il/check</div><img src="{A}/img/logo-horizontal-color.svg"></div>
+<script>
+const B = {json.dumps(DONT_BEATS)};
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => 1 - Math.pow(1 - clamp(x), 3);
+const scenes = [["s1", B[0], B[2] - 0.15], ["s2", B[2], B[3] - 0.15], ["s3", B[3], B[5] - 0.15], ["end", B[5], 99]];
+window.renderFrame = (t) => {{
+  scenes.forEach(([id, a, b]) => {{
+    document.getElementById(id).style.opacity = (t >= a - 0.01 && t < b) ? 1 : (t >= b ? 1 - ease((t - b) / 0.15) : 0);
+  }});
+  document.querySelectorAll('.w').forEach((el) => {{
+    const k = ease((t - parseFloat(el.dataset.t)) / 0.22);
+    el.style.opacity = k;
+    el.style.transform = `scale(${{1.08 - 0.08 * k}})`;
+    el.style.transformOrigin = 'right center';
+  }});
+  document.getElementById('end').style.opacity = ease((t - B[5]) / 0.35);
+}};
+</script></body></html>"""
+
+
+def dont_check_audio(duration):
+    """A deep hit on every phrase, a warm resolve on the end card."""
+    n = int(duration * SR)
+    out = np.zeros(n)
+    m = int(0.6 * SR)
+    tt = np.arange(m) / SR
+    hit = (np.sin(2 * np.pi * 70 * tt * (1 - 0.25 * tt)) * np.exp(-tt * 7) * 0.7
+           + np.random.default_rng(1).normal(0, 1, m) * np.exp(-tt * 60) * 0.08)
+    for b in DONT_BEATS[:-1]:
+        i = int(b * SR)
+        out[i:i + m] += hit[: max(0, min(m, n - i))]
+    k = int(3.8 * SR)
+    tt = np.arange(k) / SR
+    env = np.minimum(1, tt / 0.3) * np.exp(-tt * 0.8)
+    tone = sum(np.sin(2 * np.pi * f * tt) for f in (220, 277.2, 330, 440)) / 4 * env * 0.12
+    i = int(DONT_BEATS[-1] * SR)
+    out[i:i + k] += tone[: max(0, min(k, n - i))]
+    return (np.clip(out, -1, 1) * 32767).astype(np.int16)
+
+
+TEMPLATES = {  # html, audio, seconds, cover time
+    "counter": (counter_html, counter_audio, 16.0, 10.6),
+    "dont-check": (dont_check_html, dont_check_audio, 13.0, 3.9),
+}
 
 
 # ---------- render ----------
