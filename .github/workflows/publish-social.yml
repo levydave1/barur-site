@@ -2,8 +2,8 @@ name: Publish social posts
 
 on:
   schedule:
-    # Every hour at :07 (off the top of the hour, when GitHub is busiest).
-    - cron: '7 * * * *'
+    # Every 30 min at :07 and :37 (off the top of the hour, when GitHub is busiest).
+    - cron: '7,37 * * * *'
   # Also run when the queue or the publisher changes (includes a Meta connection check).
   # Commits made by this workflow itself don't retrigger it.
   push:
