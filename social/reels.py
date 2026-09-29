@@ -62,14 +62,14 @@ body{{width:{W}px;height:{H}px;background:#0F2A47;color:#F5F3EE;font-family:Plex
 #end .fine{{position:absolute;bottom:330px;right:90px;left:90px;font-size:26px;color:#7C8794}}
 </style></head><body>
 <div class="layer" id="count">
-  <div class="label">משכנתא של מיליון ₪.<br>פער ריבית של 0.75%.</div>
+  <div class="label">משכנתה של מיליון ₪.<br>פער ריבית של 0.75%.</div>
   <div class="block" id="block">{items}</div>
 </div>
 <div class="total" id="totalRow"><small>יצא מהכיס עד עכשיו</small><b id="total">0 ₪</b></div>
-<div class="layer" id="punch"><div class="t">וזה ממשיך כל יום,<br>עד סוף המשכנתא.</div><div class="big">כ-128,000 ₪</div><div class="s">לאורך 25 שנה.</div></div>
+<div class="layer" id="punch"><div class="t">וזה ממשיך כל יום,<br>עד סוף המשכנתה.</div><div class="big">כ-128,000 ₪</div><div class="s">לאורך 25 שנה.</div></div>
 <div class="layer" id="end"><h1>הבנק לא יגיד.<br>הבדיקה כן.</h1><div class="sub">3 דקות. בלי מסמכים.<br>אם לא משתלם, נגיד לך.</div>
   <div class="cta">barur-mashkanta.co.il/check</div><img src="{A}/img/logo-horizontal-color.svg">
-  <div class="fine">להמחשה: משכנתא של מיליון ₪, 25 שנה, פער ריבית של 0.75%.</div></div>
+  <div class="fine">להמחשה: משכנתה של מיליון ₪, 25 שנה, פער ריבית של 0.75%.</div></div>
 <script>
 const beats = {json.dumps(beats)};
 const its = [...document.querySelectorAll('.it')];
