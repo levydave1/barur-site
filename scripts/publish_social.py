@@ -103,6 +103,19 @@ def image_url(post):
     return f"{SITE}/{img.lstrip('/')}"
 
 
+def wait_for_image(url, attempts=18, pause=10):
+    """New images go live only after Vercel finishes deploying (~1 min). Wait up to ~3 min."""
+    for _ in range(attempts):
+        try:
+            r = requests.head(url, timeout=15, allow_redirects=True)
+            if r.status_code == 200 and r.headers.get("content-type", "").startswith("image/"):
+                return True
+        except requests.RequestException:
+            pass
+        time.sleep(pause)
+    return False
+
+
 def parse_time(s):
     dt = datetime.fromisoformat(s)
     return dt if dt.tzinfo else dt.replace(tzinfo=TZ)
@@ -290,6 +303,12 @@ def main():
             log("    " + post["text"][:120].replace("\n", " ") + ("…" if len(post["text"]) > 120 else ""))
             continue
 
+        img = image_url(post)
+        if img and not wait_for_image(img):
+            log(f"[{post['id']}] image not reachable yet ({img}); will retry next run")
+            annotate("warning", f"{post['id']}: image not reachable yet, retrying next hour")
+            continue
+
         results = post.setdefault("results", {})
         errors = []
         for plat in post["platforms"]:
@@ -304,6 +323,8 @@ def main():
                 errors.append(f"{plat}: {scrub(e)}")
                 log(f"[{post['id']}] {plat}: FAILED {scrub(e)}")
         changed = True
+        for plat, res in results.items():
+            annotate("error" if "error" in res else "notice", f"{post['id']} {plat}: {res.get('error') or 'published ' + str(res.get('id'))}")
         if errors:
             post["status"] = "failed"
             post["error"] = " | ".join(errors)

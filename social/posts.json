@@ -1,14 +1,13 @@
 {
-  "live": false,
+  "live": true,
   "posts": [
     {
-      "id": "test-001",
-      "publish_at": "2026-09-29T12:00",
-      "text": "פוסט בדיקה — ברור משכנתאות",
-      "image": "social/img/test-001.jpg",
-      "link": "https://barur-mashkanta.co.il/check.html",
+      "id": "2026-09-29-first-post",
+      "publish_at": "2026-09-29T10:20",
+      "text": "הריבית ירדה. ההחזר החודשי נשאר איפה שהיה. ואף אחד לא מתכוון לספר על זה.\n\nזה לא שלא שמת לב. המערכת בנויה כך שלא תשים לב. והיא עושה את זה מצוין.\n\n3 דקות בדף הבדיקה, ואתה יודע כמה. בלי מסמכים ובלי נציג. אם שווה לזוז, אני עושה את העבודה מול הבנקים. אם לא, אני אומר לך. ולא מתקשר שוב.\n\nהבדיקה כאן: barur-mashkanta.co.il/check",
+      "image": "social/img/post-001.jpg",
       "platforms": ["facebook", "instagram"],
-      "status": "draft"
+      "status": "pending"
     }
   ]
 }
