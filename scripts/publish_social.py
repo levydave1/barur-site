@@ -103,12 +103,19 @@ def image_url(post):
     return f"{SITE}/{img.lstrip('/')}"
 
 
+def video_url(post):
+    vid = (post.get("video") or "").strip()
+    if not vid:
+        return None
+    return vid if vid.startswith("http") else f"{SITE}/{vid.lstrip('/')}"
+
+
 def wait_for_image(url, attempts=18, pause=10):
-    """New images go live only after Vercel finishes deploying (~1 min). Wait up to ~3 min."""
+    """New media goes live only after Vercel finishes deploying (~1 min). Wait up to ~3 min."""
     for _ in range(attempts):
         try:
             r = requests.head(url, timeout=15, allow_redirects=True)
-            if r.status_code == 200 and r.headers.get("content-type", "").startswith("image/"):
+            if r.status_code == 200 and r.headers.get("content-type", "").startswith(("image/", "video/")):
                 return True
         except requests.RequestException:
             pass
@@ -135,8 +142,8 @@ def validate(post):
     if not plats or any(p not in ("facebook", "instagram") for p in plats):
         problems.append(f"bad platforms: {plats}")
     if "instagram" in plats:
-        if not post.get("image"):
-            problems.append("instagram needs an image")
+        if not post.get("image") and not post.get("video"):
+            problems.append("instagram needs an image or a video")
         if len(post.get("text", "")) > IG_CAPTION_MAX:
             problems.append("caption longer than 2200 chars")
     return problems
@@ -170,6 +177,8 @@ def ig_account():
 
 def post_facebook(post):
     tok = page_token()
+    if video_url(post):
+        return post_facebook_reel(post, tok)
     img = image_url(post)
     text = post["text"]
     if img:
@@ -183,17 +192,42 @@ def post_facebook(post):
     return graph("POST", f"{PAGE_ID}/feed", tok, **params)["id"]
 
 
+def post_facebook_reel(post, tok):
+    """Facebook Reels: start an upload session, hand Meta the public URL, then publish."""
+    vid = graph("POST", f"{PAGE_ID}/video_reels", tok, upload_phase="start")["video_id"]
+    try:
+        r = requests.post(f"https://rupload.facebook.com/video-upload/v21.0/{vid}",
+                          headers={"Authorization": f"OAuth {tok}", "file_url": video_url(post)}, timeout=120)
+    except requests.RequestException as e:
+        raise RuntimeError(scrub(f"reel upload network error: {type(e).__name__}"))
+    if r.status_code >= 400:
+        raise RuntimeError(scrub(f"reel upload failed: {r.status_code} {r.text[:200]}"))
+    graph("POST", f"{PAGE_ID}/video_reels", tok, upload_phase="finish", video_id=vid,
+          video_state="PUBLISHED", description=post["text"])
+    return vid
+
+
 def post_instagram(post):
     tok = page_token()
     ig = ig_account()
-    container = graph("POST", f"{ig}/media", tok, image_url=image_url(post), caption=post["text"])["id"]
-    for _ in range(20):  # wait for Meta to fetch and process the image
+    if video_url(post):
+        params = dict(media_type="REELS", video_url=video_url(post), caption=post["text"], share_to_feed="true")
+        if image_url(post):
+            params["cover_url"] = image_url(post)
+        tries, pause = 60, 10  # video processing can take a few minutes
+    else:
+        params = dict(image_url=image_url(post), caption=post["text"])
+        tries, pause = 20, 3
+    container = graph("POST", f"{ig}/media", tok, **params)["id"]
+    for _ in range(tries):  # wait for Meta to fetch and process the media
         status = graph("GET", container, tok, fields="status_code").get("status_code")
         if status == "FINISHED":
             break
         if status in ("ERROR", "EXPIRED"):
             raise RuntimeError(f"instagram media container {status}")
-        time.sleep(3)
+        time.sleep(pause)
+    else:
+        raise RuntimeError("instagram media still processing after the wait; will need a retry")
     return graph("POST", f"{ig}/media_publish", tok, creation_id=container)["id"]
 
 
@@ -299,14 +333,14 @@ def main():
             continue
 
         if not live:
-            log(f"[{post['id']}] WOULD publish to {post['platforms']} | image: {image_url(post)}")
+            log(f"[{post['id']}] WOULD publish to {post['platforms']} | image: {image_url(post)} | video: {video_url(post)}")
             log("    " + post["text"][:120].replace("\n", " ") + ("…" if len(post["text"]) > 120 else ""))
             continue
 
-        img = image_url(post)
-        if img and not wait_for_image(img):
-            log(f"[{post['id']}] image not reachable yet ({img}); will retry next run")
-            annotate("warning", f"{post['id']}: image not reachable yet, retrying next hour")
+        media = [u for u in (image_url(post), video_url(post)) if u]
+        if any(not wait_for_image(u) for u in media):
+            log(f"[{post['id']}] media not reachable yet ({media}); will retry next run")
+            annotate("warning", f"{post['id']}: media not reachable yet, retrying next run")
             continue
 
         results = post.setdefault("results", {})
