@@ -187,9 +187,71 @@ def post_instagram(post):
 PUBLISHERS = {"facebook": post_facebook, "instagram": post_instagram}
 
 
+# ---------- connection check (no posting) ----------
+
+REQUIRED_PERMS = {"pages_manage_posts", "pages_read_engagement", "pages_show_list",
+                  "instagram_basic", "instagram_content_publish"}
+
+
+def annotate(level, msg):
+    """GitHub annotation: visible on the run page (and via the public checks API)."""
+    print(f"::{level}::{msg}", flush=True)
+
+
+def check_connection():
+    ok = True
+    lines = []
+    try:
+        perms = graph("GET", "me/permissions", TOKEN).get("data", [])
+        granted = {p["permission"] for p in perms if p.get("status") == "granted"}
+        missing = REQUIRED_PERMS - granted
+        if missing:
+            ok = False
+            lines.append(f"missing permissions: {', '.join(sorted(missing))}")
+        else:
+            lines.append("permissions OK")
+    except Exception as e:
+        lines.append(f"could not read permissions: {e}")  # not fatal on its own
+
+    try:
+        page = graph("GET", PAGE_ID, TOKEN, fields="name,access_token")
+        if not page.get("access_token"):
+            ok = False
+            lines.append(f"page '{page.get('name')}' reachable but no page token (assign the page to the system user)")
+        else:
+            global _page_token
+            _page_token = page["access_token"]
+            lines.append(f"page OK: {page.get('name')}")
+    except Exception as e:
+        ok = False
+        lines.append(f"page FAILED: {e}")
+
+    if ok:
+        try:
+            data = graph("GET", PAGE_ID, page_token(), fields="instagram_business_account{username}")
+            acct = data.get("instagram_business_account")
+            if acct:
+                lines.append(f"instagram OK: @{acct.get('username')}")
+            else:
+                ok = False
+                lines.append("instagram FAILED: no professional Instagram account linked to the page")
+        except Exception as e:
+            ok = False
+            lines.append(f"instagram FAILED: {e}")
+
+    for line in lines:
+        annotate("notice" if ok else "error", f"meta check: {line}")
+    notify(("✅ חיבור למטא תקין\n" if ok else "❌ בעיה בחיבור למטא\n") + "\n".join(lines))
+    return ok
+
+
 # ---------- main ----------
 
 def main():
+    if TOKEN and os.environ.get("GITHUB_EVENT_NAME", "schedule") != "schedule":
+        # Manual or push-triggered run: verify the Meta connection first.
+        if not check_connection():
+            return 1
     queue = json.loads(QUEUE.read_text(encoding="utf-8"))
     live = bool(queue.get("live")) and not FORCE_DRY
     if live and not TOKEN:

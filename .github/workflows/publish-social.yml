@@ -4,6 +4,13 @@ on:
   schedule:
     # Every hour at :07 (off the top of the hour, when GitHub is busiest).
     - cron: '7 * * * *'
+  # Also run when the queue or the publisher changes (includes a Meta connection check).
+  # Commits made by this workflow itself don't retrigger it.
+  push:
+    branches: [main]
+    paths:
+      - 'social/posts.json'
+      - 'scripts/publish_social.py'
   workflow_dispatch:
     inputs:
       dry_run:
