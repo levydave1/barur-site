@@ -32,8 +32,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "2144847422772766",
+          "at": "2026-09-29T11:22+03:00"
+        },
+        "instagram": {
+          "id": "18115327820585178",
+          "at": "2026-09-29T11:23+03:00"
+        }
+      }
     },
     {
       "id": "2026-10-04-after-holidays",
