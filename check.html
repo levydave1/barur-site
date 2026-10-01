@@ -581,7 +581,8 @@
       <p>מילוי הנתונים או העלאת הדוח מהווה אישור לאמור לעיל.</p>
 
       <h4>9. עוגיות מדידה ופרסום</h4>
-      <p>אם אישרתם עוגיות, הדף משתמש ב-Meta Pixel וב-Google Analytics כדי למדוד ביקורים והתקדמות בשלבי הבדיקה, לצורך מדידת יעילות הפרסום. נתוני המשכנתא, השם, הטלפון והאימייל אינם נשלחים לכלים אלה. ללא אישור, הכלים לא נטענים. פרטים ב<a href="/cookies">מדיניות העוגיות</a>.</p>
+      <p>אם אישרתם עוגיות, הדף משתמש ב-Meta Pixel וב-Google Analytics כדי למדוד ביקורים והתקדמות בשלבי הבדיקה, לצורך מדידת יעילות הפרסום. נתוני המשכנתא והשם אינם נשלחים לכלים אלה. ללא אישור, הכלים לא נטענים.</p>
+      <p>בנוסף, כששולחים את הטופס, אנחנו מדווחים ל-Meta שהתבצעה פנייה, כדי למדוד אילו מודעות הביאו פניות. לדיווח הזה מצורפים הטלפון והאימייל בצורה מוצפנת חד-כיוונית (Hash), כך שהם אינם נחשפים כטקסט. הדיווח לא נשלח אם דחיתם עוגיות באתר. פרטים ב<a href="/cookies">מדיניות העוגיות</a>.</p>
       <h4>יצירת קשר בנושא פרטיות</h4>
       <p>ברור משכנתאות · דוד לוי · barur.mashkanta@gmail.com</p>
     </div>
@@ -1053,14 +1054,32 @@
     if(!consent){ alert('נדרש אישור מדיניות הפרטיות כדי להמשיך'); return; }
 
     data.name = name; data.phone = phone; data.email = email; data.pref = pref;
+    // Shared id so Meta de-duplicates the browser Pixel event and the server
+    // (Conversions API) event for the same lead.
+    data.eventId = 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+    data.pageUrl = location.href;
+    data.fbp = readCookie('_fbp');
+    data.fbc = readCookie('_fbc') || fbcFromUrl();
+    try { data.cookieConsent = localStorage.getItem('cookie-consent') || ''; } catch(e){ data.cookieConsent = ''; }
     renderResults(); // computes data.scenarios as a side effect, needed below
     sendLeadToBackend(data);
-    track('Lead', {content_name:'refinance_check', pref: pref});
+    track('Lead', {content_name:'refinance_check', pref: pref, event_id: data.eventId});
     goTo('step-5');
   }
 
   // Fire-and-forget: don't make the user wait on this before seeing their
   // results. The token itself lives only in the serverless function.
+  function readCookie(n){
+    const m = document.cookie.match('(?:^|; )' + n + '=([^;]*)');
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+  // If the visitor came from a Meta ad (fbclid in the URL) but the Pixel
+  // never set _fbc (no cookie consent yet), build the same value Meta expects.
+  function fbcFromUrl(){
+    const id = new URLSearchParams(location.search).get('fbclid');
+    return id ? ('fb.1.' + Date.now() + '.' + id) : '';
+  }
+
   function sendLeadToBackend(lead){
     fetch('/api/send-lead', {
       method: 'POST',

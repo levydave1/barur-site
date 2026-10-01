@@ -45,8 +45,17 @@
 
   function send(name, params) {
     params = params || {};
+    // event_id is for Meta de-duplication (Pixel + Conversions API), not a
+    // reporting parameter, so it travels as the 4th fbq argument.
+    var eventId = params.event_id;
+    if (eventId) {
+      params = Object.assign({}, params);
+      delete params.event_id;
+    }
     if (window.fbq) {
-      window.fbq(META_STANDARD[name] ? "track" : "trackCustom", name, params);
+      var method = META_STANDARD[name] ? "track" : "trackCustom";
+      if (eventId) window.fbq(method, name, params, { eventID: eventId });
+      else window.fbq(method, name, params);
     }
     if (window.gtag) {
       window.gtag("event", GA_NAMES[name] || name, params);

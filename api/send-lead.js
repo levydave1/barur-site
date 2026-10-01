@@ -4,7 +4,70 @@
 // environment variables (Project Settings -> Environment Variables):
 //   TELEGRAM_BOT_TOKEN
 //   TELEGRAM_CHAT_ID
+//   META_CAPI_TOKEN        (optional) Conversions API access token
+//   META_TEST_EVENT_CODE   (optional) only while testing in Events Manager
 // They are never sent to, or readable from, the browser.
+
+const crypto = require('crypto');
+const META_PIXEL_ID = '1776166563647834';
+const META_API_VERSION = 'v21.0';
+
+function sha256(v) {
+  return crypto.createHash('sha256').update(v).digest('hex');
+}
+
+// Israeli phone to E.164 digits without '+': 0501234567 -> 972501234567
+function normPhone(phone) {
+  const d = String(phone || '').replace(/\D/g, '');
+  if (!d) return '';
+  if (d.startsWith('972')) return d;
+  if (d.startsWith('0')) return '972' + d.slice(1);
+  return d;
+}
+
+// Server-side Lead event for Meta (Conversions API). Shares event_id with the
+// browser Pixel event so Meta counts the lead once. Skipped entirely when the
+// visitor declined cookies, or when the token isn't configured. Never throws.
+async function sendMetaLead(req, lead, phone, email) {
+  const capiToken = process.env.META_CAPI_TOKEN;
+  if (!capiToken || lead.cookieConsent === 'declined') return;
+  const fwd = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  const userData = {
+    ph: [sha256(normPhone(phone))],
+    client_user_agent: String(req.headers['user-agent'] || ''),
+  };
+  if (email) userData.em = [sha256(email.trim().toLowerCase())];
+  if (fwd) userData.client_ip_address = fwd;
+  if (lead.fbp) userData.fbp = String(lead.fbp);
+  if (lead.fbc) userData.fbc = String(lead.fbc);
+  const payload = {
+    data: [{
+      event_name: 'Lead',
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: lead.eventId ? String(lead.eventId) : undefined,
+      action_source: 'website',
+      event_source_url: lead.pageUrl ? String(lead.pageUrl) : 'https://barur-mashkanta.co.il/check',
+      user_data: userData,
+      custom_data: { content_name: 'refinance_check' },
+    }],
+  };
+  if (process.env.META_TEST_EVENT_CODE) payload.test_event_code = process.env.META_TEST_EVENT_CODE;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 4000);
+  try {
+    const r = await fetch(`https://graph.facebook.com/${META_API_VERSION}/${META_PIXEL_ID}/events?access_token=${encodeURIComponent(capiToken)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: ctrl.signal,
+    });
+    if (!r.ok) console.error('Meta CAPI failed', r.status, await r.text());
+  } catch (err) {
+    console.error('Meta CAPI error', err && err.message);
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 function ils(n) {
   if (typeof n !== 'number' || !isFinite(n)) return '—';
@@ -94,6 +157,9 @@ module.exports = async (req, res) => {
     ...debugLines(lead),
   ].filter(Boolean);
 
+  // Runs in parallel with Telegram; its outcome never affects the response.
+  const metaPromise = sendMetaLead(req, lead, phone, email);
+
   try {
     const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
@@ -103,8 +169,10 @@ module.exports = async (req, res) => {
     if (!tgRes.ok) {
       const errText = await tgRes.text();
       console.error('Telegram send failed', tgRes.status, errText);
+      await metaPromise;
       return res.status(502).json({ error: 'telegram_send_failed' });
     }
+    await metaPromise;
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.error('send-lead failed', err);
