@@ -331,6 +331,60 @@
         <p>4 שאלות פשוטות, חצי דקה. הערכה גסה יותר, אבל אפשר להתחיל מיד.</p>
       </button>
     </div>
+<!-- BARUR COUNTER (start) -->
+<style>
+  .counter-card{position:relative;margin:26px 0 8px;border-radius:18px;overflow:hidden;
+    background:linear-gradient(160deg,var(--night),#163f61);color:#F5F3EE;padding:22px 20px 18px;min-height:250px}
+  .counter-wall{position:absolute;inset:0;padding:14px 18px;display:flex;flex-direction:column;gap:2px;pointer-events:none}
+  .counter-wall span{font-weight:700;font-size:22px;line-height:1.35;opacity:0;transform:translateY(6px);
+    transition:opacity .35s ease, transform .35s ease;color:rgba(245,243,238,.18);white-space:nowrap}
+  .counter-wall span.on{opacity:1;transform:none}
+  .counter-wall span.hot{color:var(--turq-dark)}
+  .counter-main{position:relative;z-index:1;margin-top:118px;background:rgba(11,32,56,.82);border-radius:14px;padding:14px 16px;
+    opacity:0;transition:opacity .5s ease}
+  .counter-main.on{opacity:1}
+  .counter-main b{font-size:19px;display:block;line-height:1.35}
+  .counter-main .nums{margin-top:6px;font-size:15px;color:#C9D4DD}
+  .counter-main .nums strong{color:var(--turq-dark);font-weight:700}
+  .counter-fine{position:relative;z-index:1;margin-top:10px;font-size:11.5px;color:#A9B4C0;line-height:1.45}
+  @media (prefers-reduced-motion: reduce){
+    .counter-wall span,.counter-main{transition:none;opacity:1;transform:none}
+  }
+</style>
+<div class="counter-card" id="barur-counter" aria-label="המחשה: 14 ₪ ביום, כ-430 ₪ בחודש">
+  <div class="counter-wall" aria-hidden="true"></div>
+  <div class="counter-main">
+    <b>14 ₪ ביום נשמע כמו כלום.</b>
+    <div class="nums">זה כ-<strong>430 ₪</strong> בחודש, וכ-<strong>128,000 ₪</strong> לאורך 25 שנה.</div>
+  </div>
+  <div class="counter-fine">דוגמה: משכנתה של 1,000,000 ₪ ל-25 שנה, פער ריבית של 0.75%. להמחשה בלבד.</div>
+</div>
+<script>
+(function(){
+  var card=document.getElementById('barur-counter'); if(!card) return;
+  var wall=card.querySelector('.counter-wall'), main=card.querySelector('.counter-main');
+  var N=6, lines=[];
+  for(var i=0;i<N;i++){var s=document.createElement('span');s.textContent='עוד 14 ₪.';wall.appendChild(s);lines.push(s);}
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){lines.forEach(function(l){l.classList.add('on')});main.classList.add('on');return;}
+  var timers=[],running=false;
+  function clear(){timers.forEach(clearTimeout);timers=[];}
+  function cycle(){
+    lines.forEach(function(l){l.classList.remove('on','hot')});main.classList.remove('on');
+    lines.forEach(function(l,i){timers.push(setTimeout(function(){
+      lines.forEach(function(x){x.classList.remove('hot')});l.classList.add('on','hot');},400+i*450));});
+    timers.push(setTimeout(function(){lines.forEach(function(x){x.classList.remove('hot')});main.classList.add('on');},400+N*450+200));
+    timers.push(setTimeout(cycle,400+N*450+4800));
+  }
+  if(!('IntersectionObserver' in window)){cycle();return;}
+  new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting&&!running){running=true;cycle();}
+    else if(!e.isIntersecting&&running){running=false;clear();}
+  });},{threshold:.4}).observe(card);
+})();
+</script>
+<!-- BARUR COUNTER (end) -->
+
   </section>
 
   <!-- STEP 2A: UPLOAD -->
