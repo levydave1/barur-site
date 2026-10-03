@@ -10,7 +10,7 @@
 :root{
   --navy:#0F2A47; --navy-2:#1B3F63; --navy-tint:#E8ECF1; --teal:#11978A; --teal-dark:#0D7A70; --teal-light:#4FB3A2;
   --paper:#F5F3EE; --soft:#DCEFEB; --stone:#7C8794; --line:#DCD8CF; --ink:#2B3A4A; --white:#FFFFFF;
-  --max:1120px; --radius:14px; --error:#B3261E;
+  --max:1120px; --radius:14px; --error:#B3261E; --cookie-bar-h:0px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -27,6 +27,10 @@ p{margin:0 0 1em;text-wrap:pretty}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
 .label{font-size:13px;font-weight:600;letter-spacing:.14em;color:var(--teal);margin-bottom:12px}
 .num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+
+/* תשובה קצרה — תיבת תשובה ישירה בראש עמוד שירות, לטובת מודלי AI ומנועי חיפוש שמצטטים תשובה ישירה */
+.quick-answer{background:var(--soft);border-inline-start:4px solid var(--teal);border-radius:10px;padding:14px 18px;margin:18px 0;font-size:15.5px;color:var(--ink);max-width:560px}
+.quick-answer b{color:var(--navy)}
 
 /* header */
 .site-header{position:sticky;top:0;z-index:50;background:rgba(245,243,238,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
@@ -198,7 +202,9 @@ p{margin:0 0 1em;text-wrap:pretty}
 .site-footer .fine-links a{display:inline;padding:0;color:#8A9099}
 .site-footer .fine-links a:hover{color:#fff}
 .site-footer .fine-disclaimer{margin-top:8px}
-.wa-float{position:fixed;bottom:22px;left:22px;z-index:60;width:56px;height:56px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(15,42,71,.25)}
+/* פוטר: רווח תחתון דינמי כך שבאנר העוגיות (fixed) לא "בולע" לצמיתות את השורה האחרונה — ראו גם .cookie-bar למטה */
+.site-footer{padding-bottom:calc(28px + var(--cookie-bar-h));transition:padding-bottom .2s ease}
+.wa-float{position:fixed;bottom:calc(22px + var(--cookie-bar-h));left:22px;z-index:60;width:56px;height:56px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(15,42,71,.25);transition:bottom .2s ease}
 .wa-float:hover{background:var(--teal-dark);color:#fff}
 
 /* cookie notice */
@@ -211,12 +217,12 @@ p{margin:0 0 1em;text-wrap:pretty}
 .cookie-bar .btn{min-height:42px;padding:0 18px;font-size:14px}
 .btn-ghost{background:transparent;color:#C9CFD6;border-color:rgba(255,255,255,.25)}
 .btn-ghost:hover{background:rgba(255,255,255,.08);color:#fff}
-@media (max-width:600px){.cookie-bar-inner{flex-direction:column;align-items:stretch;text-align:center}}
+@media (max-width:600px){.cookie-bar-inner{flex-direction:column;align-items:stretch;text-align:center;padding:12px 18px}.cookie-bar p{font-size:13px}}
 
-/* accessibility widget */
-.a11y-float{position:fixed;bottom:88px;left:22px;z-index:65;width:52px;height:52px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(15,42,71,.3);border:0;cursor:pointer}
+/* accessibility widget — בתוספת ה-bottom הדינמי כדי שלא יוסתר מאחורי באנר העוגיות במובייל */
+.a11y-float{position:fixed;bottom:calc(88px + var(--cookie-bar-h));left:22px;z-index:65;width:52px;height:52px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(15,42,71,.3);border:0;cursor:pointer;transition:bottom .2s ease}
 .a11y-float:hover{background:var(--navy-2)}
-.a11y-panel{position:fixed;bottom:150px;left:22px;z-index:66;width:290px;max-width:calc(100vw - 44px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px rgba(15,42,71,.22);padding:16px;display:none}
+.a11y-panel{position:fixed;bottom:calc(150px + var(--cookie-bar-h));left:22px;z-index:66;width:290px;max-width:calc(100vw - 44px);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px rgba(15,42,71,.22);padding:16px;display:none;transition:bottom .2s ease}
 .a11y-panel.open{display:block}
 .a11y-panel h2{font-size:16px;margin:0 0 12px}
 .a11y-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
