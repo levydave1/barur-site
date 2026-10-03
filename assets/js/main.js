@@ -107,15 +107,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const cookieAccept = document.querySelector("#cookie-accept");
   const cookieDecline = document.querySelector("#cookie-decline");
   if (cookieBar && cookieAccept && cookieDecline) {
+    // מודד את הגובה האמיתי של הבאנר (הוא משתנה לפי רוחב מסך/גודל טקסט) וכותב
+    // אותו למשתנה CSS, כדי שכפתורי הוואטסאפ/נגישות הצפים והפוטר "יתפנו" לו
+    // במקום שהוא יכסה אותם — במיוחד רלוונטי במובייל שבו הבאנר גבוה יותר.
+    const syncBarHeight = () => {
+      const h = cookieBar.classList.contains("show") ? cookieBar.offsetHeight : 0;
+      document.documentElement.style.setProperty("--cookie-bar-h", h + "px");
+    };
     try {
       const choice = localStorage.getItem("cookie-consent");
       if (choice !== "accepted" && choice !== "declined") cookieBar.classList.add("show");
       window.cookieConsent = choice || "declined"; // ברירת מחדל שמרנית: בלי הסכמה, בלי עוגיות לא-חיוניות
     } catch (e) {}
+    syncBarHeight();
+    window.addEventListener("resize", syncBarHeight);
     const setChoice = (val) => {
       cookieBar.classList.remove("show");
       window.cookieConsent = val;
       try { localStorage.setItem("cookie-consent", val); } catch (e) {}
+      syncBarHeight();
       // כרגע האתר לא טוען עוגיות מעקב/פרסום כלל, ללא קשר לבחירה.
       // כל כלי כזה שיתווסף בעתיד יבדוק את window.cookieConsent === "accepted" לפני טעינה.
     };
