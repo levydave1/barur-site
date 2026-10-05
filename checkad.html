@@ -957,7 +957,7 @@
   function setPreciseBox(){
     const has = leadInfo && leadInfo.email;
     document.getElementById('precise-text').textContent = has
-      ? `נשלח ל-${leadInfo.email} קישור להעלאת דוח יתרות לסילוק מהבנק, והבדיקה תתעדכן לפי המסלולים והריביות האמיתיים שלכם.`
+      ? `שלחנו ל-${leadInfo.email} קישור להעלאת דוח יתרות לסילוק מהבנק, והבדיקה תתעדכן לפי המסלולים והריביות האמיתיים שלכם. לא רואים את המייל? כדאי לבדוק גם בספאם.`
       : 'נשלח לכם למייל קישור להעלאת דוח יתרות לסילוק מהבנק, והבדיקה תתעדכן לפי המסלולים והריביות האמיתיים שלכם.';
     document.getElementById('precise-ask').hidden = !!has;
   }
@@ -976,7 +976,7 @@
       balance: data.balance, payment: data.payment, years: data.years });
     track('EmailAdded', {variant:'checkad'});
     setPreciseBox();
-    document.getElementById('precise-text').textContent = `תודה. נשלח ל-${email} קישור להעלאת דוח יתרות לסילוק.`;
+    document.getElementById('precise-text').textContent = `תודה. שלחנו ל-${email} קישור להעלאת דוח יתרות לסילוק. לא רואים את המייל? כדאי לבדוק גם בספאם.`;
   }
 
   function weightedRate(tracks){
