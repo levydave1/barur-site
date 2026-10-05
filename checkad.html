@@ -377,7 +377,7 @@
   <!-- STEP 2A: UPLOAD -->
   <section id="step-2-upload" hidden>
     <div class="step-eyebrow">בדיקה מדויקת · העלאת דוח</div>
-    <h1 style="font-size:26px">העלה את דוח היתרות לסילוק</h1>
+    <h1 style="font-size:26px" id="upload-title">העלו את דוח היתרות לסילוק</h1>
     <p class="sub">קובץ PDF או תמונה של הדוח מהבנק. לא בטוח איך מוציאים אותו? פתח את ההוראות לפי הבנק שלך למטה.</p>
 
     <div class="upload-box" id="upload-box">
@@ -396,7 +396,7 @@
     </div>
 
     <div style="margin-top:20px">
-      <button class="btn-link" onclick="goTo('step-5')">חזרה</button>
+      <button class="btn-link" onclick="goTo(leadInfo && leadInfo.token ? 'step-1' : 'step-5')">חזרה</button>
     </div>
   </section>
 
@@ -418,7 +418,7 @@
       </div>
 
       <h2 style="font-size:20px;margin:0 0 6px">לאן לחזור אליכם?</h2>
-      <p class="sub" style="margin-bottom:16px">השאירו פרטים, ותראו את הפירוט המלא עכשיו. אם לא משתלם, נגיד. ולא נתקשר שוב.</p>
+      <p class="sub" style="margin-bottom:16px">השאירו פרטים, ותראו את הפירוט המלא עכשיו. אם לא משתלם, נגיד.</p>
     </div>
 
     <div id="teaser-cold" hidden>
@@ -497,7 +497,7 @@
   <!-- STEP COLD THANKS -->
   <section id="step-cold" hidden>
     <h1 style="font-size:26px">רשמנו. נעדכן אם זה משתנה.</h1>
-    <p class="sub">לא נתקשר סתם. רק אם הריביות יזוזו מספיק כדי שמחזור יהיה שווה לכם.</p>
+    <p class="sub">נחזור אליכם כשהריביות יזוזו מספיק כדי שמחזור יהיה שווה לכם.</p>
     <div class="precise">
       <b>רוצים לוודא?</b>
       <p>החישוב כאן גס. אם יש לכם דוח יתרות לסילוק, העלו אותו ונבדוק לפי המסלולים האמיתיים.</p>
@@ -929,6 +929,7 @@
     data.name = prev.name; data.phone = prev.phone; data.email = prev.email || '';
     data.pref = 'payment'; data.variant = 'checkad'; data.leadType = prev.leadType;
     data.reportUpdate = true;
+    if (prev.token) data.u = prev.token;
     data.eventId = 'report-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
     data.pageUrl = location.href;
     data.cookieConsent = 'declined'; // never count a report update as a second Meta lead
@@ -941,6 +942,17 @@
   }
 
   function renderInterim(){}
+
+  // Arrived from the personal link in the email: go straight to the upload.
+  (function fromEmailLink(){
+    const u = new URLSearchParams(location.search).get('u');
+    if (!u) return;
+    // The token is encrypted; the server reads the lead's details from it.
+    leadInfo = { name: '', phone: '', email: '', leadType: 'hot', token: u };
+    document.getElementById('upload-title').textContent = 'שלום שוב. העלו את דוח היתרות לסילוק';
+    track('EmailLinkOpen', {variant:'checkad'});
+    goTo('step-2-upload');
+  })();
 
   function setPreciseBox(){
     const has = leadInfo && leadInfo.email;

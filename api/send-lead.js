@@ -9,6 +9,7 @@
 // They are never sent to, or readable from, the browser.
 
 const crypto = require('crypto');
+const { readToken, uploadLink, sendPreciseEmail } = require('./_mail');
 const META_PIXEL_ID = '1776166563647834';
 const META_API_VERSION = 'v21.0';
 
@@ -32,7 +33,7 @@ async function sendMetaLead(req, lead, phone, email) {
   const capiToken = process.env.META_CAPI_TOKEN;
   // Cold leads (no savings right now) and report updates are not counted as
   // Meta leads, so the ads optimise for people who actually have a gap.
-  if (!capiToken || lead.cookieConsent === 'declined' || lead.leadType === 'cold' || lead.reportUpdate) return;
+  if (!capiToken || lead.cookieConsent === 'declined' || lead.leadType === 'cold' || lead.reportUpdate || lead.emailUpdate) return;
   const fwd = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
   const userData = {
     ph: [sha256(normPhone(phone))],
@@ -127,8 +128,16 @@ module.exports = async (req, res) => {
   }
   const lead = body || {};
 
+  // A report uploaded from a personal email link carries a signed token:
+  // trust the name/phone/email in it over whatever the browser sent.
+  const fromLink = lead.u ? readToken(lead.u) : null;
+  if (fromLink) { lead.name = fromLink.name; lead.phone = fromLink.phone; lead.email = lead.email || fromLink.email; }
+
   const name = String(lead.name || '').trim();
-  const phone = String(lead.phone || '').trim();
+  // Accept +972 / spaces / dashes from autofill; store as 05XXXXXXXX.
+  let phone = String(lead.phone || '').replace(/\D/g, '');
+  if (phone.startsWith('972')) phone = '0' + phone.slice(3);
+  if (phone.length === 9 && phone[0] !== '0') phone = '0' + phone;
   const email = String(lead.email || '').trim();
 
   if (!name || !phone) {
@@ -146,8 +155,9 @@ module.exports = async (req, res) => {
   const prefLabel = { payment: 'הקטנת החזר חודשי', total: 'הקטנת עלות כוללת', both: 'גם וגם' }[lead.pref] || lead.pref || '—';
   const source = lead.source === 'upload' ? 'העלאת דוח' : 'שאלון ידני';
 
-  const header = lead.reportUpdate ? '📄 עדכון ליד: הועלה דוח יתרות — ברור משכנתאות'
-    : lead.leadType === 'cold' ? '🧊 ליד קר (אין פער כרגע, לעדכן כשהריבית זזה) — ברור משכנתאות'
+  const header = lead.emailUpdate ? '📧 עדכון ליד: נוסף מייל לשליחת קישור — ברור משכנתאות'
+    : lead.reportUpdate ? '📄 עדכון ליד: הועלה דוח יתרות — ברור משכנתאות'
+    : lead.leadType === 'cold' ? '⏳ ליד למעקב: לפי הנתונים שהזין אין כרגע פער (ביקש עדכון) — ברור משכנתאות'
     : '📩 ליד חדש — ברור משכנתאות';
   const teaser = lead.teaser && lead.leadType !== 'cold'
     ? `טעימה שהוצגה: ${ils(lead.teaser.lo)}–${ils(lead.teaser.hi)} בחודש` : null;
@@ -167,14 +177,28 @@ module.exports = async (req, res) => {
     ...debugLines(lead),
   ].filter(Boolean);
 
+  // Email with the personal upload link: automatically for every lead that
+  // has a gap (not cold), and when an email is added from the results page.
+  const isCold = lead.leadType === 'cold';
+  // Everyone with an email gets the precise-check link, including leads whose
+  // rough numbers showed no gap: the real report may tell a different story.
+  const wantsEmail = email && !lead.reportUpdate;
+  const link = !lead.reportUpdate ? uploadLink({ name, phone, email }) : null;
+
   // Runs in parallel with Telegram; its outcome never affects the response.
   const metaPromise = sendMetaLead(req, lead, phone, email);
+  const mail = wantsEmail ? await sendPreciseEmail({ name, phone, email }) : null;
+  if (lead.reportUpdate) lines.push(fromLink ? '✔️ הגיע מקישור אישי (מאומת)' : 'הגיע מאותו ביקור באתר');
+  if (mail) lines.push(mail.ok ? `📧 נשלח מייל עם קישור ל-${email}` : `⚠️ המייל לא נשלח (${mail.reason})`);
+  if (link) lines.push('', 'קישור אישי להעלאת דוח (אפשר לשלוח גם בווטסאפ):', link);
+  const replyMarkup = email && !lead.reportUpdate
+    ? { inline_keyboard: [[{ text: '📧 שלח שוב קישור במייל', callback_data: 'mail' }]] } : undefined;
 
   try {
     const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text: lines.join('\n') }),
+      body: JSON.stringify({ chat_id: chatId, text: lines.join('\n'), reply_markup: replyMarkup, disable_web_page_preview: true }),
     });
     if (!tgRes.ok) {
       const errText = await tgRes.text();
