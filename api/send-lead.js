@@ -30,7 +30,9 @@ function normPhone(phone) {
 // visitor declined cookies, or when the token isn't configured. Never throws.
 async function sendMetaLead(req, lead, phone, email) {
   const capiToken = process.env.META_CAPI_TOKEN;
-  if (!capiToken || lead.cookieConsent === 'declined') return;
+  // Cold leads (no savings right now) and report updates are not counted as
+  // Meta leads, so the ads optimise for people who actually have a gap.
+  if (!capiToken || lead.cookieConsent === 'declined' || lead.leadType === 'cold' || lead.reportUpdate) return;
   const fwd = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
   const userData = {
     ph: [sha256(normPhone(phone))],
@@ -144,13 +146,21 @@ module.exports = async (req, res) => {
   const prefLabel = { payment: 'הקטנת החזר חודשי', total: 'הקטנת עלות כוללת', both: 'גם וגם' }[lead.pref] || lead.pref || '—';
   const source = lead.source === 'upload' ? 'העלאת דוח' : 'שאלון ידני';
 
+  const header = lead.reportUpdate ? '📄 עדכון ליד: הועלה דוח יתרות — ברור משכנתאות'
+    : lead.leadType === 'cold' ? '🧊 ליד קר (אין פער כרגע, לעדכן כשהריבית זזה) — ברור משכנתאות'
+    : '📩 ליד חדש — ברור משכנתאות';
+  const teaser = lead.teaser && lead.leadType !== 'cold'
+    ? `טעימה שהוצגה: ${ils(lead.teaser.lo)}–${ils(lead.teaser.hi)} בחודש` : null;
   const lines = [
-    '📩 ליד חדש — ברור משכנתאות',
+    header,
     `שם: ${name}`,
     `טלפון: ${phone}`,
     email ? `אימייל: ${email}` : null,
     `מקור: ${source}`,
-    `העדפה: ${prefLabel}`,
+    lead.variant ? `דף: ${lead.variant}` : null,
+    lead.estimatedRate ? `ריבית משוערת היום: ${Number(lead.estimatedRate).toFixed(2)}%` : null,
+    teaser,
+    lead.variant ? null : `העדפה: ${prefLabel}`,
     `יתרת משכנתא: ${ils(lead.balance)}`,
     `החזר חודשי נוכחי: ${ils(lead.payment)}`,
     lead.years ? `שנים שנותרו: ${lead.years}` : null,

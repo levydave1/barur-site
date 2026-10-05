@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>בדיקת חיסכון במשכנתה</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="דף נחיתה לפרסום — בדיקת כדאיות מיחזור משכנתא, עם או בלי דוח יתרות, לפני השארת פרטים">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#0F2A47;
+    --night-2:#16324f;
+    --turq:#11978A;
+    --turq-dark:#4FB3A2;
+    --paper:#F5F3EE;
+    --turq-soft:#DCEFEB;
+    --stone:#7C8794;
+    --line:#DCD8CF;
+    --white:#FFFFFF;
+    --amber:#C98A3E;
+    --amber-soft:#F5E6CE;
+    --azure:#3E7CA6;
+    --azure-soft:#DCE9F2;
+
+    --bg: var(--paper);
+    --surface: var(--white);
+    --surface-2: var(--turq-soft);
+    --text: var(--night);
+    --text-2: var(--stone);
+    --accent: var(--turq);
+    --accent-ink: #ffffff;
+    --border: var(--line);
+    --hero-a: var(--night);
+    --hero-b: #163f61;
+    --danger: #B33C3C;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B2038;
+      --surface:#132c48;
+      --surface-2:rgba(79,179,162,.14);
+      --text:#F1EFE8;
+      --text-2:#A9B4C0;
+      --accent: var(--turq-dark);
+      --accent-ink:#062621;
+      --border:rgba(255,255,255,.14);
+      --amber-soft:rgba(201,138,62,.16);
+      --azure-soft:rgba(62,124,166,.18);
+      --danger:#E08A6C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B2038;
+    --surface:#132c48;
+    --surface-2:rgba(79,179,162,.14);
+    --text:#F1EFE8;
+    --text-2:#A9B4C0;
+    --accent: var(--turq-dark);
+    --accent-ink:#062621;
+    --border:rgba(255,255,255,.14);
+    --amber-soft:rgba(201,138,62,.16);
+    --azure-soft:rgba(62,124,166,.18);
+    --danger:#E08A6C;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"IBM Plex Sans Hebrew", Arial, sans-serif;
+    padding-inline:20px;
+    padding-block:0 32px;
+    direction:rtl;
+    font-size:16px;
+    line-height:1.55;
+  }
+  .wrap{max-width:640px;margin:0 auto}
+  a{color:var(--accent)}
+
+  .hero{
+    margin:0 -20px 26px;
+    padding:22px 20px 30px;
+    background:linear-gradient(160deg,var(--hero-a),var(--hero-b));
+    border-radius:0 0 22px 22px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+  .brand svg{flex:none}
+  .brand-name{font-weight:700;font-size:16px;letter-spacing:.01em;color:#fff}
+
+  .site-header{display:flex;align-items:center;gap:8px;padding:16px 0 0}
+  .site-header svg{flex:none}
+  .site-header .brand-name{color:var(--night);font-size:14.5px}
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:6px;
+    font-weight:600;font-size:12.5px;letter-spacing:.03em;color:var(--turq-dark);
+    background:rgba(79,179,162,.16);padding:5px 11px;border-radius:20px;margin-bottom:14px;
+  }
+  h1{font-weight:700;font-size:clamp(26px,6vw,32px);line-height:1.22;margin:0 0 10px;text-wrap:balance;color:var(--text)}
+  .hero h1{color:#fff}
+  .hero .sub{color:#C9D4DD;font-size:15.5px;margin:0;max-width:52ch}
+  .sub{color:var(--text-2);font-size:15.5px;margin:0 0 24px;max-width:52ch}
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px;
+  }
+  .stack{display:flex;flex-direction:column;gap:14px}
+
+  .choice{
+    display:flex;flex-direction:column;gap:6px;align-items:flex-start;
+    text-align:right;width:100%;
+    background:var(--surface);border:1.5px solid var(--border);border-radius:14px;
+    padding:20px;cursor:pointer;font-family:inherit;color:var(--text);
+    transition:border-color .15s ease, transform .1s ease;
+  }
+  .choice:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .choice .tag{font-weight:600;font-size:12.5px;color:var(--accent);letter-spacing:.02em}
+  .choice h3{margin:2px 0 0;font-size:18px;font-weight:700}
+  .choice p{margin:2px 0 0;color:var(--text-2);font-size:14.5px}
+  .badge-rec{background:var(--amber-soft);color:var(--amber);font-weight:700;font-size:11.5px;padding:3px 9px;border-radius:20px}
+  .tag-row{display:flex;align-items:center;gap:8px}
+
+  .fact-gallery{background:var(--surface-2);border-radius:14px;padding:14px 16px;margin:16px 0;min-height:64px;display:flex;align-items:center;gap:10px}
+  .fact-gallery .fact-icon{flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .fact-gallery .fact-text{font-size:13.5px;line-height:1.5;color:var(--text)}
+  .fact-gallery .fact-text b{color:var(--accent)}
+  .fact-gallery .fact-text.fade{animation:factFade .5s ease}
+  @keyframes factFade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+  .fact-dots{display:flex;gap:5px;margin-top:10px;justify-content:center}
+  .fact-dots span{width:6px;height:6px;border-radius:50%;background:var(--border)}
+  .fact-dots span.on{background:var(--accent)}
+
+  .warn-box{background:var(--amber-soft);border-radius:12px;padding:14px 16px;margin:14px 0;font-size:14px;color:var(--text)}
+  .warn-box .btn-link{font-size:13.5px;margin-top:6px;display:inline-block}
+
+  .bank-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media (max-width:420px){.bank-grid{grid-template-columns:1fr}}
+  .bank-btn{
+    border:1.5px solid var(--border);border-inline-start:4px solid var(--bank-color,var(--accent));
+    border-radius:10px;padding:12px 14px;background:var(--surface);cursor:pointer;
+    font-family:inherit;font-weight:600;font-size:14px;color:var(--text);text-align:right;
+  }
+  .bank-btn.active{background:var(--surface-2)}
+  .bank-panel{margin-top:14px;border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+  .bank-panel h4{margin:0 0 8px;font-size:15px}
+  .bank-panel ol{margin:0;padding-inline-start:20px;font-size:14px;color:var(--text-2)}
+  .bank-panel ol li{margin-bottom:5px}
+
+  label{display:block;font-weight:600;font-size:13.5px;margin-bottom:6px}
+  .field{margin-bottom:16px}
+  input[type=text],input[type=tel],input[type=email],input[type=number]{
+    width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);
+    background:var(--bg);color:var(--text);font-family:inherit;font-size:16px;
+  }
+  input:focus{outline:2px solid var(--accent);outline-offset:1px}
+  input.invalid{border-color:#B33C3C}
+  .err{color:#B33C3C;font-size:12.5px;margin-top:5px;display:none}
+  .err.show{display:block}
+  .hint{color:var(--text-2);font-size:13px;margin-top:5px}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--accent);color:var(--accent-ink);border:none;border-radius:11px;
+    padding:14px 22px;font-family:inherit;font-weight:700;font-size:16px;cursor:pointer;
+    width:100%;
+  }
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn-link{
+    background:none;border:none;color:var(--accent);font-family:inherit;font-weight:600;
+    font-size:14.5px;cursor:pointer;padding:0;text-decoration:underline;
+  }
+
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:480px){.row2{grid-template-columns:1fr}}
+
+  .slider-field .amount-row{display:flex;align-items:center;gap:8px}
+  .slider-field input[type=text]{text-align:center;font-weight:700;font-size:17px;font-variant-numeric:tabular-nums}
+  .slider-field .unit{color:var(--text-2);font-weight:600;font-size:14px}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:4px;
+    background:var(--surface-2);margin-top:12px;accent-color:var(--accent);
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);
+    border:3px solid var(--surface);box-shadow:0 0 0 1px var(--border);cursor:pointer;
+  }
+  .range-hint{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-2);margin-top:5px}
+
+  .segmented{display:flex;gap:8px;margin-top:6px}
+  .segmented label{
+    flex:1;text-align:center;border:1.5px solid var(--border);border-radius:10px;
+    padding:10px 8px;cursor:pointer;font-size:13.5px;font-weight:600;color:var(--text-2);
+  }
+  .segmented input{position:absolute;opacity:0;pointer-events:none}
+  .segmented input:checked + span{color:var(--accent)}
+  .segmented label:has(input:checked){border-color:var(--accent);background:var(--surface-2);color:var(--accent)}
+
+  .caution-frame{
+    border:1.5px solid var(--danger);border-radius:12px;padding:14px 16px;
+    margin:4px 0 20px;font-size:13.5px;color:var(--text);line-height:1.5;
+    background:color-mix(in srgb, var(--danger) 10%, var(--surface));
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--danger) 14%, transparent);
+  }
+  .caution-frame button.btn-link{color:var(--danger);font-size:13.5px}
+
+  .summary{border-collapse:collapse;width:100%}
+  .summary td{padding:9px 0;border-bottom:1px solid var(--border);font-size:15px}
+  .summary td:first-child{color:var(--text-2)}
+  .summary td:last-child{text-align:left;font-weight:600;font-variant-numeric:tabular-nums}
+
+  .tracks{width:100%;border-collapse:collapse;margin:14px 0 4px;font-size:14px}
+  .tracks th{text-align:right;color:var(--text-2);font-weight:600;font-size:12.5px;padding:0 0 8px;border-bottom:1px solid var(--border)}
+  .tracks td{padding:10px 0;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+  .tracks td:first-child{font-weight:600}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:7px}
+
+  .signal{
+    background:var(--surface-2);border-radius:12px;padding:16px 18px;margin:18px 0 6px;
+    font-size:15px;
+  }
+
+  .disclaimer{
+    background:var(--surface-2);border-right:3px solid var(--accent);
+    border-radius:10px;padding:16px 18px;font-size:14px;color:var(--text);margin-bottom:20px;
+  }
+  .disclaimer b{color:var(--accent)}
+
+  fieldset{border:none;padding:0;margin:0 0 18px}
+  .radio-row{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+  .radio-opt{
+    display:flex;align-items:center;gap:10px;border:1.5px solid var(--border);
+    border-radius:10px;padding:11px 14px;cursor:pointer;font-size:15px;
+  }
+  .radio-opt input{accent-color:var(--accent)}
+  .consent{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:var(--text-2);margin-bottom:18px}
+  .consent input{margin-top:3px;accent-color:var(--accent)}
+
+  .scen{border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+  .scen .label{font-weight:600;font-size:13px;color:var(--text-2);letter-spacing:.02em;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+  .scen .num{font-weight:600;font-size:29px;color:var(--accent);font-variant-numeric:tabular-nums}
+  .scen .num small{font-size:14.5px;font-weight:600;color:var(--text-2)}
+  .scen .diff{font-size:13.5px;color:var(--text-2);margin-top:3px}
+  .scen .mini{margin-top:14px}
+
+  .mbar-row{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+  .mbar-label{width:64px;flex:none;font-size:12.5px;color:var(--text-2)}
+  .mbar-track{flex:1;background:var(--surface-2);border-radius:6px;height:16px;overflow:hidden}
+  .mbar-fill{height:100%;border-radius:6px}
+  .mbar-val{width:70px;flex:none;text-align:left;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums}
+
+  .timeline{position:relative;height:10px;border-radius:6px;background:var(--surface-2);margin:10px 0 6px}
+  .timeline .fill{position:absolute;inset-inline-start:0;top:0;bottom:0;border-radius:6px;background:var(--amber)}
+  .timeline-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--text-2)}
+
+  details{border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-top:6px}
+  details + details{margin-top:8px}
+  summary{cursor:pointer;font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:9px}
+  .bank-badge{
+    display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    border-radius:8px;font-size:11px;font-weight:700;color:#fff;flex:none;
+  }
+  details ol{margin:10px 0 4px;padding-inline-start:20px;font-size:14px;color:var(--text-2)}
+  details ol li{margin-bottom:4px}
+
+  .upload-box{border:1.5px dashed var(--accent);border-radius:14px;padding:30px 18px;text-align:center;background:var(--surface-2)}
+  .upload-box.drag-over{outline:2px solid var(--accent);outline-offset:2px}
+  .upload-box input[type=file]{display:none}
+  .upload-box .file-btn{
+    display:inline-block;margin-top:14px;background:var(--accent);color:var(--accent-ink);
+    padding:10px 20px;border-radius:10px;font-weight:700;font-size:14.5px;cursor:pointer;
+  }
+  .upload-status{font-size:14px;color:var(--accent);margin-top:10px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+  .upload-status.error{color:var(--danger)}
+  .spinner{
+    width:15px;height:15px;border-radius:50%;flex:none;
+    border:2.5px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    border-top-color:var(--accent);animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);font-size:13px;color:var(--text-2)}
+  footer a{color:var(--text-2);text-decoration:underline}
+
+  .step-eyebrow{font-size:13px;color:var(--text-2);font-weight:600;margin-bottom:6px}
+  .next-card{background:var(--surface-2);border-radius:12px;padding:18px 20px;margin-top:8px;font-size:14.5px}
+  .next-card b{color:var(--accent)}
+
+  .privacy-body h4{font-size:15px;margin:18px 0 6px}
+  .privacy-body p, .privacy-body li{font-size:14px;color:var(--text-2);line-height:1.6}
+  .privacy-body{margin-top:12px}
+
+  .hero.compact{padding:20px 20px 18px}
+  .hero.compact h1{font-size:26px;line-height:1.25;margin:10px 0 6px}
+  .hero.compact .sub{font-size:14.5px}
+  .quick .field{margin-bottom:10px}
+  .quick .slider-field label{font-size:14.5px;margin-bottom:4px}
+  .quick .slider-field input[type=text]{padding:8px 10px;font-size:16px}
+  .quick .range-hint{margin-top:2px}
+  .quick{margin-top:16px}
+  .quick .hint{font-size:13px;color:var(--text-2);margin:-4px 0 16px}
+  .teaser{background:linear-gradient(160deg,var(--hero-a),var(--hero-b));color:#F5F3EE;border-radius:18px;padding:22px 20px;margin-bottom:18px}
+  .teaser .t-label{font-size:13.5px;color:#C9D4DD;font-weight:600}
+  .teaser .t-num{font-size:34px;font-weight:700;color:var(--turq-dark);line-height:1.2;margin-top:4px;font-variant-numeric:tabular-nums}
+  .teaser .t-num small{font-size:16px;color:#C9D4DD;font-weight:600}
+  .teaser .t-total{font-size:15px;margin-top:6px}
+  .teaser .t-total b{color:var(--turq-dark)}
+  .teaser .t-fine{font-size:11.5px;color:#A9B4C0;margin-top:12px;line-height:1.5}
+  .locked{position:relative;margin:4px 0 18px}
+  .locked .ghost{filter:blur(6px);opacity:.55;pointer-events:none;user-select:none}
+  .locked .ghost .scen{margin-bottom:10px}
+  .locked .lock-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;font-size:15.5px;padding:0 24px}
+  .locked .lock-msg span{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px}
+  .precise{border:1.5px solid var(--accent);border-radius:14px;padding:16px 18px;margin:6px 0 18px;background:var(--surface-2)}
+  .precise b{display:block;font-size:16px;margin-bottom:4px}
+  .precise p{margin:0 0 12px;font-size:14px;color:var(--text-2)}
+  .cold-box{background:var(--surface-2);border-radius:14px;padding:18px 20px;margin-bottom:18px;font-size:15px}
+  .cold-box b{color:var(--accent)}
+</style>
+
+<script src="/assets/js/track.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="site-header">
+    <svg width="26" height="26" viewBox="0 0 141.8 112.0"><g transform="translate(6.00 6.00) scale(0.11111) translate(-157.0 -126.0)"><path d="M292.5 1015.9 C284.3 1014.7 275.4 1010.1 269.1 1003.8 C262.5 997.2 259.2 991.6 256.8 983.1 C255.1 976.9 255.0 968.1 255.0 802.4 L255.0 628.3 L257.2 626.3 C259.2 624.6 283.0 606.6 306.0 589.6 C318.4 580.4 327.9 577.0 341.2 577.0 C367.6 577.0 394.8 598.9 442.1 658.5 C459.4 680.3 480.0 707.9 527.5 773.0 C561.2 819.1 582.5 844.7 609.9 872.0 C651.2 913.2 686.1 933.2 726.9 939.1 C732.0 939.8 740.9 940.1 749.9 939.7 C775.3 938.8 795.7 933.3 822.0 920.1 C848.0 907.1 868.9 891.9 894.9 867.2 C934.9 829.2 984.5 768.3 1037.4 692.2 C1041.9 685.8 1043.7 684.0 1045.5 684.0 C1047.2 684.0 1048.1 684.7 1048.5 686.2 C1048.8 687.5 1048.9 754.6 1048.8 835.5 L1048.5 982.5 L1046.3 988.0 C1043.4 995.2 1035.4 1004.9 1029.3 1008.8 C1026.5 1010.6 1021.7 1013.0 1018.4 1014.2 L1012.5 1016.5 L655.5 1016.6 C456.2 1016.7 295.8 1016.4 292.5 1015.9 Z M776.9 611.9 C770.8 610.5 762.1 606.2 755.1 601.3 C745.1 594.1 734.0 583.8 704.5 553.8 C632.5 480.8 608.3 457.2 595.3 447.5 C580.2 436.2 566.3 429.0 552.5 425.3 C543.5 422.9 540.8 422.6 525.0 422.6 C510.0 422.6 506.0 422.9 497.5 424.9 C465.4 432.5 432.4 449.3 394.5 477.5 C374.7 492.2 339.9 520.3 311.0 545.0 C303.5 551.3 291.2 561.7 283.6 568.0 C275.9 574.3 265.1 583.3 259.6 587.9 C246.6 598.7 240.9 602.5 233.5 605.0 C215.4 611.3 196.0 606.9 182.5 593.5 C165.7 576.8 162.3 552.4 174.1 532.3 C178.0 525.6 189.9 513.4 201.6 504.0 C206.0 500.4 221.3 488.1 235.5 476.5 C249.7 464.9 264.1 453.2 267.5 450.5 C271.0 447.8 277.4 442.6 281.7 439.0 C291.4 431.1 325.6 403.3 344.0 388.5 C351.4 382.5 361.3 374.5 366.0 370.7 C379.1 360.0 422.6 325.0 428.4 320.5 C431.3 318.3 438.6 312.4 444.6 307.4 C450.7 302.4 465.1 290.7 476.6 281.4 C504.8 258.7 504.3 259.1 514.5 250.8 C519.5 246.7 525.1 242.2 527.0 240.8 C528.9 239.3 534.8 234.6 540.1 230.3 C601.4 180.3 615.8 168.6 622.9 163.2 C639.5 150.3 659.4 146.5 677.5 152.8 C688.0 156.5 694.4 161.0 712.1 177.2 C720.1 184.5 735.8 198.8 747.0 209.0 C758.3 219.2 770.8 230.7 775.0 234.5 C779.2 238.3 791.1 249.2 801.5 258.5 C812.0 267.9 823.6 278.5 827.5 282.1 C831.3 285.7 839.0 292.7 844.5 297.6 C856.7 308.3 913.3 359.3 921.0 366.4 C924.1 369.2 934.4 378.5 944.0 387.0 C953.6 395.5 964.8 405.7 969.0 409.5 C973.1 413.4 979.5 419.2 983.2 422.4 C988.3 426.7 990.0 428.8 990.0 430.7 C990.0 432.8 979.5 443.9 937.7 485.9 C908.9 514.8 872.1 551.8 855.9 568.1 C825.7 598.5 819.0 604.3 810.5 608.1 C800.0 612.8 786.7 614.3 776.9 611.9 Z " fill="#0F2A47" fill-rule="evenodd"/><path d="M729.5 889.4 C685.7 882.1 643.3 846.0 592.0 772.5 C587.4 765.9 580.7 756.2 577.0 751.0 C573.4 745.8 563.6 731.4 555.3 719.0 C518.6 664.0 499.3 636.0 487.6 620.5 C458.5 582.0 433.3 555.6 412.2 541.2 C399.2 532.4 399.5 529.4 414.3 518.7 C433.0 505.1 448.8 496.7 466.8 490.9 C480.4 486.6 490.5 485.0 505.2 485.0 C524.6 485.0 535.1 487.7 551.5 497.1 C566.0 505.4 578.9 516.8 599.5 539.5 C609.1 550.1 615.1 557.2 636.0 582.0 C691.9 648.6 716.6 670.9 745.0 680.1 C767.4 687.4 789.1 684.5 813.0 670.9 C823.7 664.9 838.0 654.6 849.5 644.5 C869.3 627.3 906.5 589.4 930.0 562.5 C935.2 556.5 942.2 548.7 945.6 545.1 C948.9 541.5 952.7 537.1 954.1 535.4 C955.4 533.7 966.0 521.3 977.6 507.9 C989.2 494.5 1006.4 474.3 1015.9 463.0 C1025.4 451.7 1036.9 438.0 1041.5 432.5 C1046.2 427.0 1056.4 414.8 1064.2 405.4 C1072.1 396.0 1083.2 382.7 1088.8 375.9 C1094.5 369.1 1102.5 359.7 1106.5 355.0 C1114.6 345.6 1123.8 334.7 1134.5 322.0 C1193.7 251.2 1255.2 184.1 1285.0 157.6 C1303.0 141.6 1311.8 135.3 1314.6 136.4 C1316.4 137.1 1316.4 141.0 1314.5 143.7 C1310.7 149.1 1271.7 213.8 1255.3 242.0 C1240.6 267.3 1211.1 319.0 1192.0 353.0 C1139.7 446.3 1105.4 506.4 1088.0 535.0 C1084.9 540.2 1078.4 551.0 1073.7 559.0 C1066.3 571.5 1053.0 593.4 1038.4 616.9 C1036.3 620.4 1024.1 638.8 1011.5 657.9 C990.7 689.2 979.8 704.9 961.6 729.9 C953.3 741.3 931.6 769.4 926.4 775.5 C877.2 833.3 849.2 857.9 812.5 875.5 C789.2 886.8 771.5 891.1 749.6 890.9 C743.0 890.8 733.9 890.2 729.5 889.4 Z " fill="#11978A" fill-rule="evenodd"/></g></svg>
+    <span class="brand-name">ברור משכנתאות</span>
+  </div>
+
+  <!-- STEP 1: QUICK SLIDERS -->
+  <section id="step-1">
+    <div class="hero compact">
+      <div class="eyebrow">בדיקה חינם · 30 שניות</div>
+      <h1>כמה אפשר לחסוך בהחזר החודשי?</h1>
+      <p class="sub">3 נתונים, בערך. בלי מסמכים ובלי טלפון.</p>
+    </div>
+
+    <div class="quick">
+      <div class="field slider-field">
+        <label for="f-balance">כמה נשאר לשלם (יתרת המשכנתה)</label>
+        <div class="amount-row"><span class="unit">₪</span><input type="text" id="f-balance" inputmode="numeric"></div>
+        <input type="range" id="f-balance-range" min="300000" max="2500000" step="10000">
+        <div class="range-hint"><span>₪300K</span><span>₪2.5M</span></div>
+      </div>
+
+      <div class="field slider-field">
+        <label for="f-payment">כמה משלמים בחודש</label>
+        <div class="amount-row"><span class="unit">₪</span><input type="text" id="f-payment" inputmode="numeric"></div>
+        <input type="range" id="f-payment-range" min="1500" max="20000" step="100">
+        <div class="range-hint"><span>₪1,500</span><span>₪20,000</span></div>
+      </div>
+
+      <div class="field slider-field">
+        <label for="f-years">כמה שנים נשארו (בערך)</label>
+        <div class="amount-row"><input type="text" id="f-years" inputmode="numeric"><span class="unit">שנים</span></div>
+        <input type="range" id="f-years-range" min="5" max="30" step="1">
+        <div class="range-hint"><span>5</span><span>30</span></div>
+      </div>
+      <p class="hint">לא בטוחים? הערכה גסה מספיקה. את המספר המדויק בודקים אחר כך.</p>
+
+      <button class="btn" onclick="showTeaser()">הראו לי כמה אפשר לחסוך</button>
+    </div>
+  </section>
+
+  <!-- STEP 2A: UPLOAD -->
+  <section id="step-2-upload" hidden>
+    <div class="step-eyebrow">בדיקה מדויקת · העלאת דוח</div>
+    <h1 style="font-size:26px">העלה את דוח היתרות לסילוק</h1>
+    <p class="sub">קובץ PDF או תמונה של הדוח מהבנק. לא בטוח איך מוציאים אותו? פתח את ההוראות לפי הבנק שלך למטה.</p>
+
+    <div class="upload-box" id="upload-box">
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0-12 4 4m-4-4-4 4M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div style="font-size:15.5px;font-weight:700;margin-top:8px">גרור לכאן את הדוח</div>
+      <div style="font-size:13.5px;color:var(--text-2);margin-top:2px">PDF או תמונה</div>
+      <label class="file-btn" for="report-file">בחירת קובץ</label>
+      <input type="file" id="report-file" accept=".pdf,.png,.jpg,.jpeg" onchange="handleUpload(this)">
+      <div class="upload-status" id="upload-status" hidden></div>
+    </div>
+
+    <div style="margin-top:22px">
+      <div style="font-weight:700;font-size:15px;margin-bottom:10px">איך מוציאים דוח יתרות לסילוק — לפי בנק</div>
+      <div class="bank-grid" id="bank-grid"></div>
+      <div class="bank-panel" id="bank-panel" hidden></div>
+    </div>
+
+    <div style="margin-top:20px">
+      <button class="btn-link" onclick="goTo('step-5')">חזרה</button>
+    </div>
+  </section>
+
+  <!-- STEP 3: TEASER + LEAD -->
+  <section id="step-3" hidden>
+    <div id="teaser-hot">
+      <div class="teaser">
+        <div class="t-label">החיסכון המשוער בהחזר החודשי</div>
+        <div class="t-num" id="t-num"></div>
+        <div class="t-total" id="t-total"></div>
+        <div class="t-fine">הערכה לפי ריביות ממוצעות בשוק היום, לאותה תקופה שנותרה לכם, לפני עמלות פירעון ועלויות מחזור. לא הצעה ולא ייעוץ. המספר המדויק נקבע רק מול הבנקים.</div>
+      </div>
+
+      <div class="locked" aria-hidden="true">
+        <div class="ghost">
+          <div class="scen"><div class="label">מינימום החזר חודשי</div><div class="num">₪0,000 <small>/ לחודש</small></div><div class="diff">הקטנה של ₪000 בחודש</div></div>
+          <div class="scen"><div class="label">מינימום עלות כוללת</div><div class="num">₪000,000 <small>חיסכון כולל</small></div><div class="diff">מסיימים לשלם 0 שנים מוקדם יותר</div></div>
+        </div>
+        <div class="lock-msg"><span>3 תרחישים מפורטים מחכים לכם</span></div>
+      </div>
+
+      <h2 style="font-size:20px;margin:0 0 6px">לאן לחזור אליכם?</h2>
+      <p class="sub" style="margin-bottom:16px">השאירו שם וטלפון, ותראו את הפירוט המלא עכשיו. אם לא משתלם, נגיד. ולא נתקשר שוב.</p>
+    </div>
+
+    <div id="teaser-cold" hidden>
+      <div class="cold-box">
+        <b>לפי הנתונים, הריבית שלכם כבר קרובה לממוצע בשוק.</b><br>
+        מחזור כנראה לא משתלם לכם כרגע. אמרנו שנגיד, אז אנחנו אומרים.
+      </div>
+      <h2 style="font-size:20px;margin:0 0 6px">רוצים שנעדכן אם זה משתנה?</h2>
+      <p class="sub" style="margin-bottom:16px">כשהריביות זזות, הפער יכול להיפתח. השאירו שם וטלפון, ונחזור אליכם רק אם יש מה לחסוך.</p>
+    </div>
+
+    <div class="warn-box" id="teaser-warn" hidden>
+      משהו בנתונים לא מסתדר (למשל ספרה חסרה בסכום, או ההחזר החודשי גבוה מאוד ביחס ליתרה). כדאי לבדוק שוב.<br>
+      <button class="btn-link" onclick="goTo('step-1')">לתיקון הנתונים</button>
+    </div>
+
+    <div id="lead-form">
+      <div class="field">
+        <label for="f-name">שם</label>
+        <input type="text" id="f-name" autocomplete="name" placeholder="השם שלכם">
+      </div>
+      <div class="field">
+        <label for="f-phone">טלפון</label>
+        <input type="tel" id="f-phone" inputmode="tel" autocomplete="tel" placeholder="050-0000000">
+        <div class="err" id="err-phone">מספר טלפון לא תקין</div>
+      </div>
+      <label class="consent">
+        <input type="checkbox" id="f-consent">
+        <span>קראתי ואני מסכים/ה <button class="btn-link" type="button" onclick="goTo('step-privacy')" style="font-size:13.5px">למדיניות הפרטיות ותנאי השימוש</button></span>
+      </label>
+      <button class="btn" id="lead-submit" onclick="submitLead()">הראו לי את הפירוט</button>
+    </div>
+    <div style="margin-top:14px">
+      <button class="btn-link" onclick="goTo('step-1')">שינוי הנתונים</button>
+    </div>
+  </section>
+
+  <!-- STEP 5: RESULTS -->
+  <section id="step-5" hidden>
+    <div class="step-eyebrow" id="res-eyebrow">קיבלנו, נחזור אליכם בהקדם</div>
+    <h1 style="font-size:26px">שלושה תרחישים אפשריים</h1>
+    <div class="precise" id="precise-box">
+      <b>רוצים מספר מדויק?</b>
+      <p>יש לכם דוח יתרות לסילוק מהבנק? העלו אותו עכשיו, או מתי שנוח, והבדיקה תתעדכן לפי המסלולים והריביות האמיתיים שלכם.</p>
+      <button class="btn" style="margin:0" onclick="goTo('step-2-upload')">העלאת דוח יתרות</button>
+    </div>
+    <p class="sub">להמחשה בלבד, לפי ריביות ממוצעות בשוק היום. זה לא תמהיל מומלץ, לא הצעת מחיר ולא ייעוץ. המספרים המדויקים נקבעים רק מול הבנקים.</p>
+
+    <div class="caution-frame" id="caution-frame" hidden style="display:none">נתוני המשכנתא המקוריים משתנים לאורך התקופה. לתוצאה מדויקת יותר, כדאי לבדוק מול דוח יתרות לסילוק מעודכן — <button class="btn-link" onclick="goTo('step-2-upload')">להעלאת דוח יתרות</button></div>
+
+    <div id="scen-list"></div>
+
+    <div class="next-card">
+      התרחישים כאן הם הערכה גסה. בשיחה קצרה נבדוק את הנתונים המדויקים שלך מול הבנקים בפועל. <b>אנחנו ניצור קשר בהקדם.</b>
+    </div>
+
+    <div style="margin-top:14px">
+      <button class="btn-link" onclick="goTo('step-1')">בדיקה חדשה</button>
+    </div>
+  </section>
+
+  <!-- STEP COLD THANKS -->
+  <section id="step-cold" hidden>
+    <h1 style="font-size:26px">רשמנו. נעדכן אם זה משתנה.</h1>
+    <p class="sub">לא נתקשר סתם. רק אם הריביות יזוזו מספיק כדי שמחזור יהיה שווה לכם.</p>
+    <div class="precise">
+      <b>רוצים לוודא?</b>
+      <p>החישוב כאן גס. אם יש לכם דוח יתרות לסילוק, העלו אותו ונבדוק לפי המסלולים האמיתיים.</p>
+      <button class="btn" style="margin:0" onclick="goTo('step-2-upload')">העלאת דוח יתרות</button>
+    </div>
+  </section>
+
+  <!-- PRIVACY POLICY -->
+  <section id="step-privacy" hidden>
+    <div class="step-eyebrow">מדיניות פרטיות</div>
+    <h1 style="font-size:24px">תנאי שימוש ומדיניות פרטיות</h1>
+    <div class="privacy-body">
+      <p>השימוש בכלי זה מהווה הסכמה לתנאים הבאים. תנאים אלה מנוסחים כטיוטה לצורך בדיקה משפטית ואינם מהווים ייעוץ משפטי.</p>
+
+      <h4>1. מטרת השירות</h4>
+      <p>הכלי מאפשר למשתמש, מתוך בחירה חופשית והסכמה, למלא נתוני משכנתא או להעלות דוח יתרות לסילוק, לצורך קבלת בדיקה ראשונית של כדאיות מיחזור משכנתא. הנתונים מועברים ישירות לדוד לוי, בעל העסק "ברור משכנתאות" — ולא לגורם שלישי או ליועץ לפי בחירה מתוך רשימה. דוד רשאי לבצע ניתוח, חישובים והתאמות מקצועיות לפי שיקול דעתו, במסגרת פנייה חוזרת למשתמש.</p>
+
+      <h4>2. איזה מידע נאסף</h4>
+      <p>בעת השימוש בכלי נאסף מידע שהמשתמש מוסר ביוזמתו: נתוני משכנתא (יתרה, החזר חודשי, תקופה, שווי נכס), ובמסלול ההעלאה — קובץ דוח יתרות לסילוק, ולאחר מכן פרטים מזהים (שם, טלפון ואימייל) ורמת העדפה (הקטנת החזר / הקטנת עלות כוללת).</p>
+
+      <h4>3. עיבוד אוטומטי ו-AI, כולל העברת מידע לצד שלישי</h4>
+      <p>כאשר משתמש מעלה דוח יתרות לסילוק, קריאת הדוח וחילוץ הנתונים ממנו (יתרה, מסלולים, ריביות, תקופות) מתבצעים באמצעות שירותי בינה מלאכותית של ספקים חיצוניים (כגון Google או Anthropic). המשמעות: תוכן הדוח, לרבות פרטים מזהים שמופיעים בו, מועבר לעיבוד אצל אותם ספקים, וייתכן שהעיבוד מתבצע בשרתים מחוץ לישראל. המידע מועבר לצורך חילוץ נתונים בלבד, ולא לצורך אימון מודלים של אותם ספקים מעבר לשימוש הרגיל הנדרש לצורך מתן השירות עצמו, בכפוף למדיניות הספק הרלוונטי. תוצאות החילוץ מוצגות למשתמש לאימות לפני שהן משמשות לכל חישוב.</p>
+
+      <h4>4. שמירת מידע ומחיקה</h4>
+      <p>המידע נשמר במאגר מאובטח ונגיש רק לצוות מורשה, למשך הזמן הנדרש למתן השירות ועד 12 חודשים לאחר מכן, אלא אם התבקשה מחיקה מוקדם יותר. משתמש רשאי לבקש בכל עת עיון במידע שנמסר או מחיקתו, בפנייה לפרטי הקשר שבתחתית מסמך זה.</p>
+
+      <h4>5. אבטחת מידע</h4>
+      <p>הפעילות מתבצעת בהתאם לחוק הגנת הפרטיות, התשמ"א-1981, תקנות הגנת הפרטיות (אבטחת מידע), התשע"ז-2017, ותיקון 13 לחוק (2025), ובהתאם לעקרונות אבטחת מידע מקובלים.</p>
+
+      <h4>6. הבהרה חשובה — אין מדובר בייעוץ פיננסי</h4>
+      <p>המידע, החישובים, ההערכות והתרחישים המוצגים בכלי זה, לרבות בשיחה ראשונית עם דוד, הם אינפורמטיביים בלבד. אין לראות בהם ייעוץ פיננסי, ייעוץ מקצועי מחייב, הצעה לביצוע פעולה, או תחליף להתייעצות עם גורם מוסמך ולבדיקה מלאה מול הבנקים.</p>
+
+      <h4>7. אחריות</h4>
+      <p>השימוש בכלי ובמידע המוצג בו הוא באחריות המשתמש בלבד. מפעילי הכלי אינם אחראים לפעולה שתיעשה בעקבות המידע המוצג.</p>
+
+      <h4>8. הסכמה</h4>
+      <p>מילוי הנתונים או העלאת הדוח מהווה אישור לאמור לעיל.</p>
+
+      <h4>9. עוגיות מדידה ופרסום</h4>
+      <p>אם אישרתם עוגיות, הדף משתמש ב-Meta Pixel וב-Google Analytics כדי למדוד ביקורים והתקדמות בשלבי הבדיקה, לצורך מדידת יעילות הפרסום. נתוני המשכנתא והשם אינם נשלחים לכלים אלה. ללא אישור, הכלים לא נטענים.</p>
+      <p>בנוסף, כששולחים את הטופס, אנחנו מדווחים ל-Meta שהתבצעה פנייה, כדי למדוד אילו מודעות הביאו פניות. לדיווח הזה מצורפים הטלפון והאימייל בצורה מוצפנת חד-כיוונית (Hash), כך שהם אינם נחשפים כטקסט. הדיווח לא נשלח אם דחיתם עוגיות באתר. פרטים ב<a href="/cookies">מדיניות העוגיות</a>.</p>
+      <h4>יצירת קשר בנושא פרטיות</h4>
+      <p>ברור משכנתאות · דוד לוי · barur.mashkanta@gmail.com</p>
+    </div>
+
+    <button class="btn-link" style="margin-top:18px" onclick="goTo('step-3')">חזרה</button>
+  </section>
+
+  <footer>
+    ברור משכנתאות · <button class="btn-link" style="font-size:13px" onclick="goTo('step-privacy')">מדיניות פרטיות ותנאי שימוש</button>
+  </footer>
+</div>
+<script>
+  // ---- Configuration --------------------------------------------------------
+  // Report extraction and lead delivery both go through this site's own
+  // serverless functions (/api/extract-report, /api/send-lead) — no key or
+  // token ever lives in this client-side file.
+
+  // Market-average annual rates (%) — refreshed automatically once a week by
+  // a GitHub Action that reads market-rates.json; these are just the
+  // fallback used until that file loads (or if it ever fails to load).
+  let MARKET_RATES = { low: 3.65, mid: 4.3, high: 5.35 };
+  fetch('/market-rates.json', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(j => { if (j && j.low && j.mid && j.high) MARKET_RATES = j; })
+    .catch(() => {});
+
+  const TRACK_COLORS = ['var(--turq)','var(--amber)','var(--azure)'];
+
+  const BANKS = [
+    { name:'בנק לאומי', color:'#EF4136', steps:[
+      'היכנסו לאתר הבנק – איזור אישי',
+      'היכנסו ל"הלוואות ומשכנתאות" – בוחרים את המשכנתא שלכם',
+      'בוחרים ב"הזמנת מסמכי משכנתא"',
+      'במסך שנפתח מזמינים את המסמך "אישור יתרות לסילוק"',
+      'המסמך יתקבל ביום למחרת בתא הדואר באתר הבנק',
+      'לחלופין, ניתן להזמין ישירות ממוקד לאומי 6062*',
+    ]},
+    { name:'מזרחי טפחות', color:'#F7941D', steps:[
+      'היכנסו לאתר הבנק והתחברו לחשבון',
+      'ללקוחות שיש רק משכנתא — לוחצים על "כניסה ללקוחות טפחות", כניסה עם קוד חד פעמי',
+      'לוחצים על "הלוואות ומשכנתאות"',
+      'בוחרים ב"בקשות וטפסים" / "טפסים ואישורים" ובדף שנפתח — "הפקת יתרות לסילוק"',
+      'לחלופין, ניתן לפנות למוקד בטלפון 8860*',
+    ]},
+    { name:'בנק הפועלים', color:'#D2122E', steps:[
+      'היכנסו לאתר בנק הפועלים',
+      'לוחצים על לשונית "הלוואות ומשכנתא"',
+      'לוחצים על "ההלוואות והמשכנתא שלי"',
+      'בתחתית העמוד — "דוח פרטי משכנתאות"',
+      'מיד מתקבל דוח יתרות הסילוק',
+      'לחלופין, ניתן להזמין דרך מוקד הפועלים 2401*',
+    ]},
+    { name:'בנק דיסקונט', color:'#009845', steps:[
+      'היכנסו לאתר בנק דיסקונט',
+      'בתפריט מצד ימין בוחרים "משכנתאות"',
+      'לוחצים על "פירוט המשכנתא המלא כולל יתרה לסילוק"',
+      'מתקבל מיידית דוח היתרה לסילוק',
+      'לחלופין, ניתן להזמין דרך מוקד דיסקונט 2009*',
+    ]},
+    { name:'מרכנתיל', color:'#6D6E71', steps:[
+      'היכנסו לאתר בנק מרכנתיל',
+      'בתפריט מצד ימין בוחרים "משכנתאות"',
+      'לוחצים על "פירוט המשכנתא המלא כולל יתרה לסילוק"',
+      'מתקבל מיידית דוח היתרה לסילוק',
+      'לחלופין, ניתן להזמין דרך מוקד מרכנתיל 3477*',
+    ]},
+    { name:'בנק ירושלים', color:'#0072BC', steps:[
+      'היכנסו לאתר בנק ירושלים',
+      'הורידו את דוח יתרת המשכנתא',
+      'לחלופין, ניתן להזמין דרך מוקד הבנק 076-8095115',
+    ]},
+    { name:'אוצר החייל', color:'#1B3E6F', steps:[
+      'היכנסו לאתר בנק אוצר החייל',
+      'היכנסו לאזור משכנתאות',
+      'לחצו על כפתור הדפס, בחרו שמירה כ-PDF',
+      'ניתן להזמין גם דרך מוקד הבנק 185-700-1700, א׳–ה׳ 08:00–18:00',
+    ]},
+    { name:'הבינלאומי', color:'#7A3E9D', steps:[
+      'היכנסו לאתר בנק הבינלאומי',
+      'היכנסו לאזור משכנתאות',
+      'לחצו על כפתור הדפס, בחרו שמירה כ-PDF',
+      'ניתן להזמין גם דרך מוקד הבנק 3533*, א׳–ה׳ 08:00–15:30',
+    ]},
+  ];
+
+  function renderBankGrid(){
+    const grid = document.getElementById('bank-grid');
+    if(!grid) return;
+    grid.innerHTML = BANKS.map((b,i) =>
+      `<button class="bank-btn" style="--bank-color:${b.color}" onclick="showBank(${i})">${b.name}</button>`).join('');
+  }
+  function showBank(i){
+    const b = BANKS[i];
+    document.querySelectorAll('.bank-btn').forEach((el,idx)=>el.classList.toggle('active', idx===i));
+    const panel = document.getElementById('bank-panel');
+    panel.hidden = false;
+    panel.innerHTML = `<h4>${b.name}</h4><ol>${b.steps.map(s=>`<li>${s}</li>`).join('')}</ol>`;
+    panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  renderBankGrid();
+
+  function bindSlider(textId, rangeId, {min, max, step, def, optional}){
+    const text = document.getElementById(textId);
+    const range = document.getElementById(rangeId);
+    range.min = min; range.max = max; range.step = step;
+    function apply(n){ text.value = n.toLocaleString('he-IL'); range.value = n; }
+    text.addEventListener('input', () => {
+      const raw = text.value.replace(/[^\d]/g,'');
+      text.value = raw ? Number(raw).toLocaleString('he-IL') : '';
+      if (raw) range.value = Math.min(max, Math.max(min, Number(raw)));
+    });
+    text.addEventListener('blur', () => {
+      const raw = text.value.replace(/[^\d]/g,'');
+      if (!raw){ if (!optional) apply(def ?? min); return; }
+      apply(Math.min(max, Math.max(min, Number(raw))));
+    });
+    range.addEventListener('input', () => apply(Number(range.value)));
+    if (def !== undefined) apply(def); else range.value = min;
+  }
+  function fieldNum(id){
+    const raw = document.getElementById(id).value.replace(/[^\d]/g,'');
+    return raw ? parseInt(raw,10) : null;
+  }
+  bindSlider('f-balance','f-balance-range',{min:300000,max:2500000,step:10000,def:800000});
+  bindSlider('f-payment','f-payment-range',{min:1500,max:20000,step:100,def:5200});
+  bindSlider('f-years','f-years-range',{min:5,max:30,step:1,def:20});
+  
+  let data = {}; // collected form / upload data
+
+  // ---- Funnel tracking (Meta/GA4 via /assets/js/track.js, only after cookie consent)
+  const TRACK_STEPS = {
+    'step-3': ['CheckInterim', {variant:'checkad'}],
+    'step-2-upload': ['ReportUploadOpen', {variant:'checkad'}],
+  };
+  const trackedSteps = new Set();
+  function track(name, params){ try { if (window.barurTrack) window.barurTrack(name, params || {}); else (window.__barurQ = window.__barurQ || []).push([name, params || {}]); } catch(e){} }
+  track('ViewContent', {content_name:'refinance_check', variant:'checkad'});
+  let startTracked = false;
+  ['f-balance-range','f-payment-range','f-years-range','f-balance','f-payment','f-years'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => { if (!startTracked){ startTracked = true; track('CheckStart', {path:'sliders', variant:'checkad'}); } });
+  });
+
+  function goTo(id){
+    const t = TRACK_STEPS[id];
+    if (t && !trackedSteps.has(t[0])) { trackedSteps.add(t[0]); track(t[0], t[1]); }
+    document.querySelectorAll('section[id^="step-"]').forEach(s => s.hidden = true);
+    document.getElementById(id).hidden = false;
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function ils(n){ return '₪' + Math.round(n).toLocaleString('he-IL'); }
+
+  // ---- Amortization helpers -----------------------------------------------
+  function pmtFor(balance, annualRatePct, years){
+    const r = annualRatePct/100/12, n = years*12;
+    if (r === 0) return balance/n;
+    return balance * r / (1 - Math.pow(1+r, -n));
+  }
+  // Solve monthly rate r such that balance = pmt * (1-(1+r)^-n)/r
+  function solveRate(balance, payment, years){
+    const n = years*12;
+    if (payment*n <= balance) return null;
+    let lo = 0, hi = 0.03;
+    for(let i=0;i<60;i++){
+      const mid = (lo+hi)/2;
+      const pv = mid === 0 ? payment*n : payment*(1-Math.pow(1+mid,-n))/mid;
+      if (pv > balance) lo = mid; else hi = mid;
+    }
+    return ((lo+hi)/2) * 12 * 100;
+  }
+  // Solve term (months) such that a given payment fully amortizes balance at ratePct
+  function solveTermMonths(balance, ratePct, payment){
+    const r = ratePct/100/12;
+    if (r*balance >= payment) return null; // payment too low to ever amortize
+    return -Math.log(1 - (balance*r)/payment) / Math.log(1+r);
+  }
+  // Month-by-month remaining balance for one track
+  function schedule(balance, ratePct, termMonths){
+    const r = ratePct/100/12;
+    const pmt = pmtFor(balance, ratePct, termMonths/12);
+    const out = [balance];
+    let bal = balance;
+    for(let m=1;m<=termMonths;m++){
+      bal = bal + bal*r - pmt;
+      out.push(Math.max(bal,0));
+    }
+    return out;
+  }
+
+  // ---- Upload path: real extraction via /api/extract-report ---------------
+  const SCAN_MESSAGES = [
+    'טוענים את הדוח...',
+    'מזהים את הבנק ואת המסלולים...',
+    'קוראים יתרות וריביות...',
+    'מחשבים כמה שנים נותרו...',
+    'מעדכנים את החישוב...',
+  ];
+  let scanTimer = null;
+
+  function startScanAnimation(){
+    const status = document.getElementById('upload-status');
+    status.hidden = false;
+    status.classList.remove('error');
+    let i = 0;
+    const render = () => { status.innerHTML = `<span class="spinner"></span><span>${SCAN_MESSAGES[i]}</span>`; };
+    render();
+    scanTimer = setInterval(() => { i = (i+1) % SCAN_MESSAGES.length; render(); }, 1500);
+  }
+  function stopScanAnimation(){
+    if (scanTimer){ clearInterval(scanTimer); scanTimer = null; }
+  }
+
+  function fileToBase64(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+      reader.onerror = () => reject(new Error('file_read_failed'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleUpload(input){
+    if(!input.files || !input.files[0]) return;
+    processFile(input.files[0]);
+  }
+
+  function setupDragAndDrop(){
+    const box = document.getElementById('upload-box');
+    if(!box) return;
+    ['dragenter','dragover'].forEach(evt => box.addEventListener(evt, (e) => {
+      e.preventDefault(); e.stopPropagation();
+      box.classList.add('drag-over');
+    }));
+    ['dragleave','drop'].forEach(evt => box.addEventListener(evt, (e) => {
+      e.preventDefault(); e.stopPropagation();
+      box.classList.remove('drag-over');
+    }));
+    box.addEventListener('drop', (e) => {
+      const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) processFile(file);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', setupDragAndDrop);
+
+  const FACTS = [
+    'הידעת? מאז נובמבר 2025 בנק ישראל הוריד את הריבית <b>חמש פעמים ברציפות</b> — מ-4.5% ל-3.25%. משכנתא שנלקחה לפני ספטמבר 2025 כנראה עדיין נעולה על ריבית ישנה וגבוהה יותר.',
+    'הידעת? מיד אחרי הורדת ריבית הבנקים עדיין לא מספיקים להדק את המרווח שהם נותנים על משכנתאות חדשות. זו <b>תקופת ביניים נדירה</b> שבה אפשר לקבל גם ריבית בסיס נמוכה וגם מרווח נוח — לפני שהתחרות מצמצמת אותו.',
+    'הידעת? ירידה של <b>אחוז אחד בלבד</b> בריבית, על יתרת משכנתא של מיליון ₪, יכולה לחסוך עשרות אלפי שקלים לאורך חיי ההלוואה — לפעמים למעלה מ-100,000 ₪, תלוי בתקופה שנותרה.'
+  ];
+  function setupFactGallery(){
+    const textEl = document.getElementById('fact-text');
+    const dotsEl = document.getElementById('fact-dots');
+    if(!textEl || !dotsEl) return;
+    dotsEl.innerHTML = FACTS.map((_,i) => `<span${i===0?' class="on"':''}></span>`).join('');
+    let idx = 0;
+    const render = () => {
+      textEl.classList.remove('fade');
+      textEl.innerHTML = FACTS[idx];
+      void textEl.offsetWidth;
+      textEl.classList.add('fade');
+      [...dotsEl.children].forEach((d,i) => d.classList.toggle('on', i===idx));
+    };
+    render();
+    setInterval(() => { idx = (idx+1) % FACTS.length; render(); }, 5000);
+  }
+  document.addEventListener('DOMContentLoaded', setupFactGallery);
+
+  async function processFile(file){
+    const status = document.getElementById('upload-status');
+    startScanAnimation();
+
+    try {
+      const base64 = await fileToBase64(file);
+      const res = await fetch('/api/extract-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: base64, mimeType: file.type || 'application/pdf' }),
+      });
+      if (!res.ok) throw new Error('extract_failed_' + res.status);
+      const extracted = await res.json();
+
+      stopScanAnimation();
+      status.textContent = 'הנתונים חולצו מהדוח — בדקו אותם בשלב הבא';
+
+      const tracks = extracted.tracks.map(t => ({
+        name: t.name || 'מסלול',
+        balance: Number(t.balance) || 0,
+        rate: Number(t.currentRate ?? t.rate) || 0,
+        // נשמר רק לצורך תצוגת דיבוג בליד (QA מול הריבית שנבחרה בפועל) — לא
+        // משמש בשום חישוב.
+        originRate: t.originRate != null ? Number(t.originRate) : null,
+        term: Number(t.termMonths) || 240,
+      }));
+      const balance = tracks.reduce((s,t) => s + t.balance, 0);
+      const years = Math.round(Math.max(...tracks.map(t => t.term)) / 12) || 20;
+      // ההחזר החודשי תמיד מחושב מהיתרה/ריבית/תקופה של כל מסלול (מתמטיקה ודאית),
+      // ולא מהשדה "payment" שמוחזר מהמודל — לדוחות סילוק רבים אין בהם כלל סכום
+      // חודשי כולל מפורש, והמודל נוטה "להמציא" מספר במקום להחזיר null כמבוקש.
+      const computedPayment = Math.round(
+        tracks.reduce((s,t) => s + pmtFor(t.balance, t.rate, t.term/12), 0)
+      );
+      const payment = computedPayment || Number(extracted.payment) || 0;
+
+      const prev = leadInfo || {};
+      data = { payment, years, value: null, source: 'upload', tracks, balance };
+      if (leadInfo) { afterReport(prev); }
+      else { goTo('step-1'); }
+    } catch (err) {
+      stopScanAnimation();
+      status.classList.add('error');
+      status.textContent = 'לא הצלחנו לקרוא את הדוח הזה. אפשר לנסות קובץ אחר, או לעבור לשאלון הקצר.';
+      console.error(err);
+    }
+  }
+
+  // Best-effort carry-over of upload-extracted numbers into the manual form,
+  // for when the user wants to correct something the scan got wrong.
+  function prefillManualFromData(){
+    if (!data || data.source !== 'upload') return;
+    const set = (id, rangeId, val) => {
+      const t = document.getElementById(id), r = document.getElementById(rangeId);
+      if (t && val){ t.value = Math.round(val).toLocaleString('he-IL'); r.value = val; }
+    };
+    set('f-balance','f-balance-range', data.balance);
+    set('f-payment','f-payment-range', data.payment);
+    set('f-years','f-years-range', data.years);
+  }
+
+  // ---- Teaser (before lead) -------------------------------------------------
+  let leadInfo = null; // name/phone once the lead was sent, kept across a later report upload
+  const r50 = n => Math.round(n/50)*50;
+  const r1k = n => Math.round(n/1000)*1000;
+
+  function showTeaser(){
+    const balance = fieldNum('f-balance');
+    const payment = fieldNum('f-payment');
+    const years   = fieldNum('f-years');
+    if(!balance || !payment || !years){ alert('נא למלא את שלושת הנתונים'); return; }
+    data = { balance, payment, years, value: null, source: 'manual', tracks: null, linkage: 'unknown', variant: 'checkad' };
+
+    const rate = solveRate(balance, payment, years);
+    data.estimatedRate = rate;
+    const warn = document.getElementById('teaser-warn');
+    const hot = document.getElementById('teaser-hot');
+    const cold = document.getElementById('teaser-cold');
+    const form = document.getElementById('lead-form');
+
+    if (rate === null || rate < 1.2 || rate > 12){
+      warn.hidden = false; hot.hidden = true; cold.hidden = true; form.hidden = true;
+      goTo('step-3'); return;
+    }
+    warn.hidden = true; form.hidden = false;
+
+    // Same remaining term, market-average rates: savings come from the rate only,
+    // not from stretching the term.
+    const hi = payment - pmtFor(balance, MARKET_RATES.low, years);
+    const lo = payment - pmtFor(balance, MARKET_RATES.mid + 0.4, years); // conservative end: a realistic offer above the average
+    const meaningful = Math.max(150, payment * 0.03);
+
+    if (hi < meaningful){
+      data.leadType = 'cold';
+      data.teaser = { lo: Math.max(0, r50(lo)), hi: Math.max(0, r50(hi)) };
+      hot.hidden = true; cold.hidden = false;
+      document.getElementById('lead-submit').textContent = 'עדכנו אותי';
+    } else {
+      data.leadType = 'hot';
+      const hiR = r50(hi), loR = Math.max(0, r50(lo));
+      data.teaser = { lo: loR, hi: hiR };
+      const months = years * 12;
+      const numEl = document.getElementById('t-num');
+      const totEl = document.getElementById('t-total');
+      if (loR >= 100 && loR < hiR){
+        numEl.innerHTML = `${ils(loR)} עד ${ils(hiR)} <small>בחודש</small>`;
+        totEl.innerHTML = `כ-<b>${ils(r1k(loR*months))} עד ${ils(r1k(hiR*months))}</b> לאורך ${years} השנים שנותרו`;
+      } else {
+        numEl.innerHTML = `עד ${ils(hiR)} <small>בחודש</small>`;
+        totEl.innerHTML = `עד כ-<b>${ils(r1k(hiR*months))}</b> לאורך ${years} השנים שנותרו`;
+      }
+      hot.hidden = false; cold.hidden = true;
+      document.getElementById('lead-submit').textContent = 'הראו לי את הפירוט';
+    }
+    goTo('step-3');
+  }
+
+  // After the lead: a report uploaded from the results page refines the same lead.
+  function afterReport(prev){
+    data.name = prev.name; data.phone = prev.phone; data.email = '';
+    data.pref = 'payment'; data.variant = 'checkad'; data.leadType = prev.leadType;
+    data.reportUpdate = true;
+    data.eventId = 'report-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+    data.pageUrl = location.href;
+    data.cookieConsent = 'declined'; // never count a report update as a second Meta lead
+    renderResults();
+    sendLeadToBackend(data);
+    track('ReportUploaded', {variant:'checkad'});
+    document.getElementById('res-eyebrow').textContent = 'עודכן לפי הדוח שהעליתם';
+    document.getElementById('precise-box').hidden = true;
+    goTo('step-5');
+  }
+
+  function renderInterim(){}
+  function weightedRate(tracks){
+    const total = tracks.reduce((s,t)=>s+t.balance,0);
+    return tracks.reduce((s,t)=>s + t.rate*(t.balance/total), 0);
+  }
+
+  // scholarly line/area chart of declining balance over years
+  function drawProjection(totalsByMonth){
+    const holder = document.getElementById('chart-holder');
+    const months = totalsByMonth.length - 1;
+    const years = Math.ceil(months/12);
+    const pts = [];
+    for(let y=0;y<=years;y++){
+      const m = Math.min(y*12, months);
+      pts.push(totalsByMonth[m]);
+    }
+    const w = 560, h = 170, padL = 54, padB = 26, padT = 12, padR = 10;
+    const maxV = Math.max(...pts) || 1;
+    const x = i => padL + (i/(pts.length-1)) * (w-padL-padR);
+    const y = v => padT + (1 - v/maxV) * (h-padT-padB);
+    const line = pts.map((v,i) => `${i===0?'M':'L'} ${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+    const area = line + ` L ${x(pts.length-1).toFixed(1)} ${y(0).toFixed(1)} L ${x(0).toFixed(1)} ${y(0).toFixed(1)} Z`;
+    const gridY = [0, maxV*0.5, maxV].map(v => `<line x1="${padL}" x2="${w-padR}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" stroke="var(--border)" stroke-width="1"/>
+      <text x="${padL-8}" y="${(y(v)+4).toFixed(1)}" text-anchor="end" font-size="11" fill="var(--text-2)">${ils(v)}</text>`).join('');
+    const xTicks = [0, Math.round((pts.length-1)/2), pts.length-1].map((i, idx, arr) => {
+      let tx = x(i);
+      if (idx === 0) tx = Math.max(tx, padL + 16);
+      if (idx === arr.length-1) tx = Math.min(tx, w - padR - 16);
+      return `<text x="${tx.toFixed(1)}" y="${h-6}" text-anchor="middle" font-size="11" fill="var(--text-2)">שנה ${i}</text>`;
+    }).join('');
+
+    holder.innerHTML = `
+      <div style="font-weight:700;font-size:13.5px;margin-bottom:8px">תחזית יתרה יורדת עד לסיום ${data.tracks ? '(סך כל המסלולים)' : ''}</div>
+      <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto" role="img">
+        ${gridY}
+        <path d="${area}" fill="var(--accent)" opacity="0.14"/>
+        <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.4"/>
+        <circle cx="${x(0)}" cy="${y(pts[0])}" r="3.5" fill="var(--accent)"/>
+        ${xTicks}
+      </svg>`;
+  }
+
+  // ---- Validation -----------------------------------------------------------
+  function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }
+  function isValidPhone(v){ const d = v.replace(/\D/g,''); return /^0\d{8,9}$/.test(d); }
+
+  // ---- Lead submit + Telegram ----------------------------------------------
+  function submitLead(){
+    const name = document.getElementById('f-name').value.trim();
+    const phoneEl = document.getElementById('f-phone');
+    const phone = phoneEl.value.trim();
+    const consent = document.getElementById('f-consent').checked;
+    const phoneOk = isValidPhone(phone);
+    phoneEl.classList.toggle('invalid', !phoneOk);
+    document.getElementById('err-phone').classList.toggle('show', !phoneOk);
+    if(!name){ alert('נא למלא שם'); return; }
+    if(!phoneOk) return;
+    if(!consent){ alert('נדרש אישור מדיניות הפרטיות כדי להמשיך'); return; }
+
+    data.name = name; data.phone = phone; data.email = ''; data.pref = 'payment';
+    data.eventId = 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+    data.pageUrl = location.href;
+    data.fbp = readCookie('_fbp');
+    data.fbc = readCookie('_fbc') || fbcFromUrl();
+    try { data.cookieConsent = localStorage.getItem('cookie-consent') || ''; } catch(e){ data.cookieConsent = ''; }
+    leadInfo = { name, phone, leadType: data.leadType };
+
+    if (data.leadType === 'cold'){
+      sendLeadToBackend(data);
+      track('ColdLead', {content_name:'refinance_check', variant:'checkad'});
+      goTo('step-cold');
+      return;
+    }
+    renderResults(); // computes data.scenarios as a side effect, needed below
+    sendLeadToBackend(data);
+    track('Lead', {content_name:'refinance_check', variant:'checkad', event_id: data.eventId});
+    goTo('step-5');
+  }
+
+  // Fire-and-forget: don't make the user wait on this before seeing their
+  // results. The token itself lives only in the serverless function.
+  function readCookie(n){
+    const m = document.cookie.match('(?:^|; )' + n + '=([^;]*)');
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+  // If the visitor came from a Meta ad (fbclid in the URL) but the Pixel
+  // never set _fbc (no cookie consent yet), build the same value Meta expects.
+  function fbcFromUrl(){
+    const id = new URLSearchParams(location.search).get('fbclid');
+    return id ? ('fb.1.' + Date.now() + '.' + id) : '';
+  }
+
+  function sendLeadToBackend(lead){
+    fetch('/api/send-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(lead),
+    }).catch(err => console.error('lead delivery failed', err));
+  }
+
+  // ---- Scenarios --------------------------------------------------------
+  function mbar(label, val, max, color){
+    return `<div class="mbar-row"><div class="mbar-label">${label}</div>
+      <div class="mbar-track"><div class="mbar-fill" style="width:${Math.max(6,val/max*100)}%;background:${color}"></div></div>
+      <div class="mbar-val">${ils(val)}</div></div>`;
+  }
+
+  const noBenefitMsg = 'בנתונים שהוזנו, לא יצא הבדל משמעותי מול ריבית השוק הממוצעת בתרחיש הזה — כדאי לבדוק זאת בשיחה, לפי המסלולים בפועל.';
+
+  function renderResults(){
+    const { balance, payment, years } = data;
+    const currentYearsM = years*12;
+    // True cost of "doing nothing": each track keeps its OWN fixed payment until
+    // ITS OWN term ends (tracks end at different times), not the full combined
+    // payment continuing for the longest track's term. Using payment*years
+    // overstates the status-quo cost hugely whenever tracks have different
+    // remaining terms (common — e.g. a short fixed track + a long variable one).
+    const currentTotal = data.tracks
+      ? data.tracks.reduce((s,t) => s + pmtFor(t.balance, t.rate, t.term/12) * t.term, 0)
+      : payment * currentYearsM;
+    const MIN_MEANINGFUL = 0.02; // treat <2% improvement as "no clear benefit"
+
+    // payment-minimizing scenario
+    const pTerm = Math.min(years + 5, 30);
+    const pPayment = pmtFor(balance, MARKET_RATES.low, pTerm);
+    const pBenefit = pPayment < payment * (1 - MIN_MEANINGFUL);
+    const pTotal = pPayment*pTerm*12;
+    const pTotalSavings = pBenefit ? (currentTotal - pTotal) : null;
+    // total-cost-minimizing scenario: hold payment ~constant, solve shorter term
+    const tMonths = solveTermMonths(balance, MARKET_RATES.mid, payment);
+    const tFeasible = tMonths && isFinite(tMonths) && tMonths < currentYearsM * (1 - MIN_MEANINGFUL);
+    const tTotal = payment*tMonths;
+    const tTotalSavings = tFeasible ? (currentTotal - tTotal) : null;
+
+    // balanced scenario
+    const bRate = (MARKET_RATES.low+MARKET_RATES.mid)/2;
+    const bTerm = Math.min(years + 2, 30);
+    const bPayment = pmtFor(balance, bRate, bTerm);
+    const bTotal = bPayment*bTerm*12;
+    const bSavings = currentTotal - bTotal;
+    const bBenefit = bPayment < payment * (1 - MIN_MEANINGFUL) || bSavings > currentTotal * MIN_MEANINGFUL;
+
+    // A scenario can look attractive on the monthly payment while actually
+    // costing more overall (a longer term outweighing a similar/lower rate) —
+    // surface that plainly instead of only ever showing a savings number.
+    const costNote = (delta) => delta >= 0
+      ? `<div class="diff" style="margin-top:2px">חיסכון בעלות הכוללת לעומת היום: ${ils(delta)}</div>`
+      : `<div class="diff" style="margin-top:2px;color:var(--danger)">שימו לב: בגלל הארכת התקופה, העלות הכוללת דווקא עולה בכ-${ils(Math.abs(delta))} לעומת היום, למרות ההחזר החודשי הנמוך יותר</div>`;
+    const URGENT_THRESHOLD = 200000;
+    const urgentNote = (delta) => delta >= URGENT_THRESHOLD
+      ? `<div class="diff" style="margin-top:2px;color:var(--danger);font-weight:700">פער משמעותי (מעל 200,000₪) — מומלץ לתעדף פנייה ללקוח</div>` : '';
+
+    // Whichever scenario saves the most over the full period gets a "most worthwhile" badge,
+    // so the best option doesn't get lost among three similarly-styled cards.
+    const savingsByKey = {
+      payment: pBenefit ? Math.max(pTotalSavings, 0) : -1,
+      total: tFeasible ? Math.max(tTotalSavings, 0) : -1,
+      both: bBenefit ? Math.max(bSavings, 0) : -1,
+    };
+    let bestKey = null, bestVal = -1;
+    for (const k in savingsByKey){ if (savingsByKey[k] > bestVal){ bestVal = savingsByKey[k]; bestKey = k; } }
+    if (bestVal <= 0) bestKey = null;
+    const recBadge = (key) => key === bestKey ? '<span class="badge-rec">הכי משתלם</span>' : '';
+
+    // Debug/QA snapshot: everything behind these results, attached to the lead
+    // sent to Telegram so we can spot-check extraction + scenario math against
+    // the real bank document without asking the customer for anything.
+    // TEMPORARY — remove once we trust the extraction pipeline.
+    data.scenarios = {
+      currentTotal: Math.round(currentTotal),
+      payment: pBenefit ? { newPayment: Math.round(pPayment), termYears: pTerm, newTotal: Math.round(pTotal), totalSavings: Math.round(pTotalSavings) } : null,
+      total: tFeasible ? { newPayment: Math.round(payment), termMonths: Math.round(tMonths), newTotal: Math.round(tTotal), totalSavings: Math.round(tTotalSavings) } : null,
+      both: bBenefit ? { newPayment: Math.round(bPayment), termYears: bTerm, newTotal: Math.round(bTotal), totalSavings: Math.round(bSavings) } : null,
+      bestKey,
+    };
+
+    const noBenefitCard = (label, color) => `
+        <div class="scen">
+          <div class="label"><span class="dot" style="background:${color}"></span>${label}</div>
+          <div class="diff">${noBenefitMsg}</div>
+        </div>`;
+
+    const cards = {
+      payment: pBenefit ? `
+        <div class="scen">
+          <div class="label"><span class="tag-row"><span class="dot" style="background:var(--turq)"></span>מינימום החזר חודשי ${recBadge('payment')}</span></div>
+          <div class="num">${ils(pPayment)} <small>/ לחודש</small></div>
+          <div class="diff">לעומת ${ils(payment)} היום — הקטנה של ${ils(payment-pPayment)} בחודש</div>
+          ${costNote(pTotalSavings)}${urgentNote(pTotalSavings)}
+          <div class="mini">${mbar('היום', payment, Math.max(payment,pPayment), 'var(--text-2)') + mbar('חדש', pPayment, Math.max(payment,pPayment), 'var(--turq)')}</div>
+        </div>` : noBenefitCard('מינימום החזר חודשי', 'var(--turq)'),
+      total: tFeasible ? `
+        <div class="scen">
+          <div class="label"><span class="tag-row"><span class="dot" style="background:var(--amber)"></span>מינימום עלות כוללת ${recBadge('total')}</span></div>
+          <div class="num">${ils(tTotalSavings)} <small>חיסכון כולל משוער (קרן + ריבית לאורך התקופה)</small></div>
+          <div class="diff">באותו החזר חודשי בערך — מסיימים לשלם כ-${((currentYearsM-tMonths)/12).toFixed(1)} שנים מוקדם יותר</div>
+          ${urgentNote(tTotalSavings)}
+          <div class="mini">${mbar('עלות כוללת היום', currentTotal, Math.max(currentTotal, tTotal), 'var(--text-2)') + mbar('עלות כוללת חדשה', tTotal, Math.max(currentTotal, tTotal), 'var(--amber)')}
+            <div class="timeline"><div class="fill" style="width:${(tMonths/currentYearsM*100).toFixed(1)}%"></div></div>
+            <div class="timeline-lbl"><span>0</span><span>מסיימים בשנה ${(tMonths/12).toFixed(1)}</span><span>${years} (היום)</span></div>
+          </div>
+        </div>` : noBenefitCard('מינימום עלות כוללת', 'var(--amber)'),
+      both: bBenefit ? `
+        <div class="scen">
+          <div class="label"><span class="tag-row"><span class="dot" style="background:var(--azure)"></span>איזון בין השניים ${recBadge('both')}</span></div>
+          <div class="num">${ils(bPayment)} <small>/ לחודש</small></div>
+          ${costNote(bSavings)}${urgentNote(bSavings)}
+          <div class="mini">${mbar('החזר היום', payment, Math.max(payment,bPayment), 'var(--text-2)') + mbar('החזר חדש', bPayment, Math.max(payment,bPayment), 'var(--azure)')}
+            <div class="timeline"><div class="fill" style="width:${(years/bTerm*100).toFixed(1)}%;background:var(--azure)"></div></div>
+            <div class="timeline-lbl"><span>0</span><span>תקופה חדשה: ${bTerm} שנה</span></div>
+          </div>
+        </div>` : noBenefitCard('איזון בין השניים', 'var(--azure)'),
+    };
+
+    const order = data.pref === 'payment' ? ['payment','both','total']
+                : data.pref === 'total'   ? ['total','both','payment']
+                : ['both','payment','total'];
+
+    const anyBenefit = pBenefit || tFeasible || bBenefit;
+    document.getElementById('caution-frame').hidden = anyBenefit;
+    const explainer = `<div class="diff" style="margin-bottom:10px">"עלות כוללת" למטה = כל התשלומים העתידיים (קרן + ריבית) לאורך התקופה — לא יתרת הקרן הנוכחית (${ils(balance)}). על פני עשרות שנים סכום זה תמיד גדול משמעותית מהיתרה, זה תקין.</div>`;
+    const lead = explainer + (anyBenefit ? '' :
+      `<div class="warn-box">לא מצאנו חיסכון ברור בנתונים שהוזנו מול ריבית השוק הממוצעת. ייתכן שהריבית שאתה משלם כיום כבר טובה, או שיש טעות באחד הנתונים — כדאי לוודא זאת איתנו בשיחה קצרה.</div>`);
+
+    document.getElementById('scen-list').innerHTML = lead + order.map(k => cards[k]).join('');
+  }
+</script>
+
+</body>
+</html>
