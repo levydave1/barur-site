@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>בדיקת כדאיות מיחזור</title>
+<link rel="icon" href="/assets/img/icon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/img/icon-180.png">
 <meta name="description" content="דף נחיתה לפרסום — בדיקת כדאיות מיחזור משכנתא, עם או בלי דוח יתרות, לפני השארת פרטים">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1031,14 +1033,15 @@
 
   // ---- Validation -----------------------------------------------------------
   function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }
-  function isValidPhone(v){ const d = v.replace(/\D/g,''); return /^0\d{8,9}$/.test(d); }
+  function normPhone(v){ let d = String(v||'').replace(/\D/g,''); if (d.startsWith('972')) d = '0' + d.slice(3); if (d.length === 9 && d[0] !== '0') d = '0' + d; return d; }
+  function isValidPhone(v){ return /^0\d{8,9}$/.test(normPhone(v)); }
 
   // ---- Lead submit + Telegram ----------------------------------------------
   function submitLead(){
     const name = document.getElementById('f-name').value.trim();
     const phoneEl = document.getElementById('f-phone');
     const emailEl = document.getElementById('f-email');
-    const phone = phoneEl.value.trim();
+    const phone = normPhone(phoneEl.value);
     const email = emailEl.value.trim();
     const consent = document.getElementById('f-consent').checked;
     const pref = document.querySelector('input[name="pref"]:checked').value;

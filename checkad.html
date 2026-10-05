@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>בדיקת חיסכון במשכנתה</title>
 <meta name="robots" content="noindex">
+<link rel="icon" href="/assets/img/icon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/img/icon-180.png">
 <meta name="description" content="דף נחיתה לפרסום — בדיקת כדאיות מיחזור משכנתא, עם או בלי דוח יתרות, לפני השארת פרטים">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -319,6 +321,10 @@
   .precise{border:1.5px solid var(--accent);border-radius:14px;padding:16px 18px;margin:6px 0 18px;background:var(--surface-2)}
   .precise b{display:block;font-size:16px;margin-bottom:4px}
   .precise p{margin:0 0 12px;font-size:14px;color:var(--text-2)}
+  .fine-note{font-size:12px;color:var(--text-2);line-height:1.55;margin:12px 0 0}
+  .scen .s-title{font-weight:700;font-size:17px;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .scen .s-title .badge-rec{font-size:11.5px}
+  .scen .s-sub{font-size:13.5px;color:var(--text-2);margin-bottom:8px}
   .cold-box{background:var(--surface-2);border-radius:14px;padding:18px 20px;margin-bottom:18px;font-size:15px}
   .cold-box b{color:var(--accent)}
 </style>
@@ -350,7 +356,7 @@
       </div>
 
       <div class="field slider-field">
-        <label for="f-payment">כמה משלמים בחודש</label>
+        <label for="f-payment">החזר חודשי כיום (כמה משלמים בחודש?)</label>
         <div class="amount-row"><span class="unit">₪</span><input type="text" id="f-payment" inputmode="numeric"></div>
         <input type="range" id="f-payment-range" min="1500" max="20000" step="100">
         <div class="range-hint"><span>₪1,500</span><span>₪20,000</span></div>
@@ -398,10 +404,9 @@
   <section id="step-3" hidden>
     <div id="teaser-hot">
       <div class="teaser">
-        <div class="t-label">החיסכון המשוער בהחזר החודשי</div>
+        <div class="t-label">החיסכון המשוער* בהחזר החודשי</div>
         <div class="t-num" id="t-num"></div>
         <div class="t-total" id="t-total"></div>
-        <div class="t-fine">הערכה לפי ריביות ממוצעות בשוק היום, לאותה תקופה שנותרה לכם, לפני עמלות פירעון ועלויות מחזור. לא הצעה ולא ייעוץ. המספר המדויק נקבע רק מול הבנקים.</div>
       </div>
 
       <div class="locked" aria-hidden="true">
@@ -413,7 +418,7 @@
       </div>
 
       <h2 style="font-size:20px;margin:0 0 6px">לאן לחזור אליכם?</h2>
-      <p class="sub" style="margin-bottom:16px">השאירו שם וטלפון, ותראו את הפירוט המלא עכשיו. אם לא משתלם, נגיד. ולא נתקשר שוב.</p>
+      <p class="sub" style="margin-bottom:16px">השאירו פרטים, ותראו את הפירוט המלא עכשיו. אם לא משתלם, נגיד. ולא נתקשר שוב.</p>
     </div>
 
     <div id="teaser-cold" hidden>
@@ -440,11 +445,17 @@
         <input type="tel" id="f-phone" inputmode="tel" autocomplete="tel" placeholder="050-0000000">
         <div class="err" id="err-phone">מספר טלפון לא תקין</div>
       </div>
+      <div class="field">
+        <label for="f-email">אימייל <span style="font-weight:400;color:var(--text-2)">(לא חובה, לשליחת קישור לבדיקה מדויקת)</span></label>
+        <input type="email" id="f-email" inputmode="email" autocomplete="email" placeholder="name@example.com">
+        <div class="err" id="err-email">כתובת אימייל לא תקינה</div>
+      </div>
       <label class="consent">
         <input type="checkbox" id="f-consent">
         <span>קראתי ואני מסכים/ה <button class="btn-link" type="button" onclick="goTo('step-privacy')" style="font-size:13.5px">למדיניות הפרטיות ותנאי השימוש</button></span>
       </label>
       <button class="btn" id="lead-submit" onclick="submitLead()">הראו לי את הפירוט</button>
+      <p class="fine-note" id="teaser-fine">* הערכה לפי ריביות ממוצעות בשוק היום, לאותה תקופה שנותרה לכם, לפני עמלות פירעון ועלויות מחזור. לא הצעה ולא ייעוץ. המספר המדויק נקבע רק מול הבנקים.</p>
     </div>
     <div style="margin-top:14px">
       <button class="btn-link" onclick="goTo('step-1')">שינוי הנתונים</button>
@@ -455,20 +466,28 @@
   <section id="step-5" hidden>
     <div class="step-eyebrow" id="res-eyebrow">קיבלנו, נחזור אליכם בהקדם</div>
     <h1 style="font-size:26px">שלושה תרחישים אפשריים</h1>
-    <div class="precise" id="precise-box">
-      <b>רוצים מספר מדויק?</b>
-      <p>יש לכם דוח יתרות לסילוק מהבנק? העלו אותו עכשיו, או מתי שנוח, והבדיקה תתעדכן לפי המסלולים והריביות האמיתיים שלכם.</p>
-      <button class="btn" style="margin:0" onclick="goTo('step-2-upload')">העלאת דוח יתרות</button>
-    </div>
-    <p class="sub">להמחשה בלבד, לפי ריביות ממוצעות בשוק היום. זה לא תמהיל מומלץ, לא הצעת מחיר ולא ייעוץ. המספרים המדויקים נקבעים רק מול הבנקים.</p>
-
+    
     <div class="caution-frame" id="caution-frame" hidden style="display:none">נתוני המשכנתא המקוריים משתנים לאורך התקופה. לתוצאה מדויקת יותר, כדאי לבדוק מול דוח יתרות לסילוק מעודכן — <button class="btn-link" onclick="goTo('step-2-upload')">להעלאת דוח יתרות</button></div>
 
     <div id="scen-list"></div>
 
-    <div class="next-card">
-      התרחישים כאן הם הערכה גסה. בשיחה קצרה נבדוק את הנתונים המדויקים שלך מול הבנקים בפועל. <b>אנחנו ניצור קשר בהקדם.</b>
+    <div class="precise" id="precise-box">
+      <b>רוצים מספר מדויק?</b>
+      <p id="precise-text">נשלח לכם למייל קישור להעלאת דוח יתרות לסילוק מהבנק, והבדיקה תתעדכן לפי המסלולים והריביות האמיתיים שלכם.</p>
+      <div id="precise-ask" hidden>
+        <div class="field" style="margin-bottom:10px">
+          <input type="email" id="f-email2" inputmode="email" autocomplete="email" placeholder="המייל שלכם">
+          <div class="err" id="err-email2">כתובת אימייל לא תקינה</div>
+        </div>
+        <button class="btn" style="margin:0" onclick="sendEmailOnly()">שלחו לי את הקישור</button>
+      </div>
+      <button class="btn-link" style="margin-top:10px;font-size:13.5px" onclick="goTo('step-2-upload')">יש לכם את הדוח עכשיו? להעלאה כאן</button>
     </div>
+
+    <div class="next-card">
+      התרחישים כאן הם הערכה גסה. בשיחה קצרה נבדוק את הנתונים המדויקים שלכם מול הבנקים בפועל. <b>ניצור קשר בהקדם.</b>
+    </div>
+    <p class="fine-note" style="margin-top:18px">להמחשה בלבד, לפי ריביות ממוצעות בשוק היום. זה לא תמהיל מומלץ, לא הצעת מחיר ולא ייעוץ. המספרים המדויקים נקבעים רק מול הבנקים. "עלות כוללת" היא סך כל התשלומים העתידיים, קרן וריבית, לאורך התקופה.</p>
 
     <div style="margin-top:14px">
       <button class="btn-link" onclick="goTo('step-1')">בדיקה חדשה</button>
@@ -907,7 +926,7 @@
 
   // After the lead: a report uploaded from the results page refines the same lead.
   function afterReport(prev){
-    data.name = prev.name; data.phone = prev.phone; data.email = '';
+    data.name = prev.name; data.phone = prev.phone; data.email = prev.email || '';
     data.pref = 'payment'; data.variant = 'checkad'; data.leadType = prev.leadType;
     data.reportUpdate = true;
     data.eventId = 'report-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
@@ -922,6 +941,32 @@
   }
 
   function renderInterim(){}
+
+  function setPreciseBox(){
+    const has = leadInfo && leadInfo.email;
+    document.getElementById('precise-text').textContent = has
+      ? `נשלח ל-${leadInfo.email} קישור להעלאת דוח יתרות לסילוק מהבנק, והבדיקה תתעדכן לפי המסלולים והריביות האמיתיים שלכם.`
+      : 'נשלח לכם למייל קישור להעלאת דוח יתרות לסילוק מהבנק, והבדיקה תתעדכן לפי המסלולים והריביות האמיתיים שלכם.';
+    document.getElementById('precise-ask').hidden = !!has;
+  }
+
+  // Email given only on the results page: update the same lead, not a new one.
+  function sendEmailOnly(){
+    const el = document.getElementById('f-email2');
+    const email = el.value.trim();
+    const ok = isValidEmail(email);
+    el.classList.toggle('invalid', !ok);
+    document.getElementById('err-email2').classList.toggle('show', !ok);
+    if (!ok || !leadInfo) return;
+    leadInfo.email = email;
+    sendLeadToBackend({ name: leadInfo.name, phone: leadInfo.phone, email, variant: 'checkad',
+      leadType: leadInfo.leadType, emailUpdate: true, cookieConsent: 'declined',
+      balance: data.balance, payment: data.payment, years: data.years });
+    track('EmailAdded', {variant:'checkad'});
+    setPreciseBox();
+    document.getElementById('precise-text').textContent = `תודה. נשלח ל-${email} קישור להעלאת דוח יתרות לסילוק.`;
+  }
+
   function weightedRate(tracks){
     const total = tracks.reduce((s,t)=>s+t.balance,0);
     return tracks.reduce((s,t)=>s + t.rate*(t.balance/total), 0);
@@ -965,28 +1010,34 @@
 
   // ---- Validation -----------------------------------------------------------
   function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }
-  function isValidPhone(v){ const d = v.replace(/\D/g,''); return /^0\d{8,9}$/.test(d); }
+  function normPhone(v){ let d = String(v||'').replace(/\D/g,''); if (d.startsWith('972')) d = '0' + d.slice(3); if (d.length === 9 && d[0] !== '0') d = '0' + d; return d; }
+  function isValidPhone(v){ return /^0\d{8,9}$/.test(normPhone(v)); }
 
   // ---- Lead submit + Telegram ----------------------------------------------
   function submitLead(){
     const name = document.getElementById('f-name').value.trim();
     const phoneEl = document.getElementById('f-phone');
-    const phone = phoneEl.value.trim();
+    const phone = normPhone(phoneEl.value);
+    const emailEl = document.getElementById('f-email');
+    const email = emailEl.value.trim();
     const consent = document.getElementById('f-consent').checked;
-    const phoneOk = isValidPhone(phone);
+    const phoneOk = isValidPhone(phone), emailOk = !email || isValidEmail(email);
     phoneEl.classList.toggle('invalid', !phoneOk);
+    emailEl.classList.toggle('invalid', !emailOk);
     document.getElementById('err-phone').classList.toggle('show', !phoneOk);
+    document.getElementById('err-email').classList.toggle('show', !emailOk);
     if(!name){ alert('נא למלא שם'); return; }
-    if(!phoneOk) return;
+    if(!phoneOk || !emailOk) return;
     if(!consent){ alert('נדרש אישור מדיניות הפרטיות כדי להמשיך'); return; }
 
-    data.name = name; data.phone = phone; data.email = ''; data.pref = 'payment';
+    data.name = name; data.phone = phone; data.email = email; data.pref = 'payment';
     data.eventId = 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
     data.pageUrl = location.href;
     data.fbp = readCookie('_fbp');
     data.fbc = readCookie('_fbc') || fbcFromUrl();
     try { data.cookieConsent = localStorage.getItem('cookie-consent') || ''; } catch(e){ data.cookieConsent = ''; }
-    leadInfo = { name, phone, leadType: data.leadType };
+    leadInfo = { name, phone, email, leadType: data.leadType };
+    setPreciseBox();
 
     if (data.leadType === 'cold'){
       sendLeadToBackend(data);
@@ -1067,7 +1118,7 @@
     // costing more overall (a longer term outweighing a similar/lower rate) —
     // surface that plainly instead of only ever showing a savings number.
     const costNote = (delta) => delta >= 0
-      ? `<div class="diff" style="margin-top:2px">חיסכון בעלות הכוללת לעומת היום: ${ils(delta)}</div>`
+      ? `<div class="diff" style="margin-top:2px">חיסכון כולל לאורך התקופה: ${ils(delta)}</div>`
       : `<div class="diff" style="margin-top:2px;color:var(--danger)">שימו לב: בגלל הארכת התקופה, העלות הכוללת דווקא עולה בכ-${ils(Math.abs(delta))} לעומת היום, למרות ההחזר החודשי הנמוך יותר</div>`;
     const URGENT_THRESHOLD = 200000;
     const urgentNote = (delta) => delta >= URGENT_THRESHOLD
@@ -1097,42 +1148,37 @@
       bestKey,
     };
 
-    const noBenefitCard = (label, color) => `
+    const noBenefitCard = (title, sub) => `
         <div class="scen">
-          <div class="label"><span class="dot" style="background:${color}"></span>${label}</div>
+          <div class="s-title">${title}</div>
+          <div class="s-sub">${sub}</div>
           <div class="diff">${noBenefitMsg}</div>
         </div>`;
 
     const cards = {
       payment: pBenefit ? `
         <div class="scen">
-          <div class="label"><span class="tag-row"><span class="dot" style="background:var(--turq)"></span>מינימום החזר חודשי ${recBadge('payment')}</span></div>
+          <div class="s-title">החזר חודשי נמוך יותר ${recBadge('payment')}</div>
+          <div class="s-sub">משלמים פחות כל חודש</div>
           <div class="num">${ils(pPayment)} <small>/ לחודש</small></div>
-          <div class="diff">לעומת ${ils(payment)} היום — הקטנה של ${ils(payment-pPayment)} בחודש</div>
+          <div class="diff">במקום ${ils(payment)} היום, ${ils(payment-pPayment)} פחות בכל חודש</div>
           ${costNote(pTotalSavings)}${urgentNote(pTotalSavings)}
-          <div class="mini">${mbar('היום', payment, Math.max(payment,pPayment), 'var(--text-2)') + mbar('חדש', pPayment, Math.max(payment,pPayment), 'var(--turq)')}</div>
-        </div>` : noBenefitCard('מינימום החזר חודשי', 'var(--turq)'),
+        </div>` : noBenefitCard('החזר חודשי נמוך יותר', 'משלמים פחות כל חודש'),
       total: tFeasible ? `
         <div class="scen">
-          <div class="label"><span class="tag-row"><span class="dot" style="background:var(--amber)"></span>מינימום עלות כוללת ${recBadge('total')}</span></div>
-          <div class="num">${ils(tTotalSavings)} <small>חיסכון כולל משוער (קרן + ריבית לאורך התקופה)</small></div>
-          <div class="diff">באותו החזר חודשי בערך — מסיימים לשלם כ-${((currentYearsM-tMonths)/12).toFixed(1)} שנים מוקדם יותר</div>
+          <div class="s-title">מסיימים לשלם מוקדם יותר ${recBadge('total')}</div>
+          <div class="s-sub">אותו החזר חודשי, פחות שנים</div>
+          <div class="num">${ils(tTotalSavings)} <small>חיסכון כולל</small></div>
+          <div class="diff">מסיימים כ-${((currentYearsM-tMonths)/12).toFixed(1)} שנים מוקדם יותר</div>
           ${urgentNote(tTotalSavings)}
-          <div class="mini">${mbar('עלות כוללת היום', currentTotal, Math.max(currentTotal, tTotal), 'var(--text-2)') + mbar('עלות כוללת חדשה', tTotal, Math.max(currentTotal, tTotal), 'var(--amber)')}
-            <div class="timeline"><div class="fill" style="width:${(tMonths/currentYearsM*100).toFixed(1)}%"></div></div>
-            <div class="timeline-lbl"><span>0</span><span>מסיימים בשנה ${(tMonths/12).toFixed(1)}</span><span>${years} (היום)</span></div>
-          </div>
-        </div>` : noBenefitCard('מינימום עלות כוללת', 'var(--amber)'),
+        </div>` : noBenefitCard('מסיימים לשלם מוקדם יותר', 'אותו החזר חודשי, פחות שנים'),
       both: bBenefit ? `
         <div class="scen">
-          <div class="label"><span class="tag-row"><span class="dot" style="background:var(--azure)"></span>איזון בין השניים ${recBadge('both')}</span></div>
+          <div class="s-title">איזון בין השניים ${recBadge('both')}</div>
+          <div class="s-sub">קצת פחות בחודש, וגם פחות בסך הכול</div>
           <div class="num">${ils(bPayment)} <small>/ לחודש</small></div>
           ${costNote(bSavings)}${urgentNote(bSavings)}
-          <div class="mini">${mbar('החזר היום', payment, Math.max(payment,bPayment), 'var(--text-2)') + mbar('החזר חדש', bPayment, Math.max(payment,bPayment), 'var(--azure)')}
-            <div class="timeline"><div class="fill" style="width:${(years/bTerm*100).toFixed(1)}%;background:var(--azure)"></div></div>
-            <div class="timeline-lbl"><span>0</span><span>תקופה חדשה: ${bTerm} שנה</span></div>
-          </div>
-        </div>` : noBenefitCard('איזון בין השניים', 'var(--azure)'),
+        </div>` : noBenefitCard('איזון בין השניים', 'קצת פחות בחודש, וגם פחות בסך הכול'),
     };
 
     const order = data.pref === 'payment' ? ['payment','both','total']
@@ -1141,7 +1187,7 @@
 
     const anyBenefit = pBenefit || tFeasible || bBenefit;
     document.getElementById('caution-frame').hidden = anyBenefit;
-    const explainer = `<div class="diff" style="margin-bottom:10px">"עלות כוללת" למטה = כל התשלומים העתידיים (קרן + ריבית) לאורך התקופה — לא יתרת הקרן הנוכחית (${ils(balance)}). על פני עשרות שנים סכום זה תמיד גדול משמעותית מהיתרה, זה תקין.</div>`;
+    const explainer = '';
     const lead = explainer + (anyBenefit ? '' :
       `<div class="warn-box">לא מצאנו חיסכון ברור בנתונים שהוזנו מול ריבית השוק הממוצעת. ייתכן שהריבית שאתה משלם כיום כבר טובה, או שיש טעות באחד הנתונים — כדאי לוודא זאת איתנו בשיחה קצרה.</div>`);
 
