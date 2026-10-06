@@ -91,10 +91,10 @@
       "box-shadow:0 6px 24px rgba(0,0,0,.25);display:flex;gap:12px;align-items:center;flex-wrap:wrap;max-width:720px;margin:0 auto";
     bar.innerHTML =
       '<p style="margin:0;flex:1 1 260px">אנחנו משתמשים בעוגיות למדידה ולפרסום (Meta, Google) רק אם תאשרו. ' +
-      '<a href="/cookies" style="color:#4FB3A2">מדיניות העוגיות</a></p>' +
+      '<a href="/cookies" style="color:#4FB3A2;text-decoration:underline">מדיניות העוגיות</a></p>' +
       '<div style="display:flex;gap:8px">' +
-      '<button type="button" data-c="declined" style="background:transparent;color:#F5F3EE;border:1px solid #7C8794;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer">דחייה</button>' +
-      '<button type="button" data-c="accepted" style="background:#11978A;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer">אישור</button>' +
+      '<button type="button" data-c="declined" style="background:transparent;color:#F5F3EE;border:1px solid #5E6875;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer">דחייה</button>' +
+      '<button type="button" data-c="accepted" style="background:#0C7268;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer">אישור</button>' +
       "</div>";
     bar.addEventListener("click", function (e) {
       var v = e.target && e.target.getAttribute("data-c");
