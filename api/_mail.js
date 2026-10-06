@@ -83,12 +83,12 @@ function preciseEmail(name, link) {
 <p style="margin:0 0 14px">${esc(hello)}</p>
 <p style="margin:0 0 14px">תודה שבדקתם את המשכנתה אצלנו. ההערכה שקיבלתם מבוססת על ממוצעים. כדי לקבל <b>מספר מדויק</b>, העלו את דוח היתרות לסילוק מהבנק (PDF או צילום מסך).</p>
 <p style="margin:0 0 22px">הבדיקה קוראת את הדוח לבד ומתעדכנת לפי המסלולים והריביות האמיתיים שלכם.</p>
-<p style="margin:0 0 22px;text-align:center"><a href="${esc(link)}" style="display:inline-block;background:#11978A;color:#ffffff;text-decoration:none;font-weight:bold;font-size:17px;padding:14px 28px;border-radius:10px">להעלאת דוח היתרות</a></p>
-<p style="margin:0 0 6px;font-size:14px;color:#7C8794">לא בטוחים איך מוציאים את הדוח? בעמוד יש הוראות לפי בנק.</p>
-<p style="margin:0 0 18px;font-size:14px;color:#7C8794">הקישור אישי ותקף ל-${LINK_DAYS} יום.</p>
+<p style="margin:0 0 22px;text-align:center"><a href="${esc(link)}" style="display:inline-block;background:#0C7268;color:#ffffff;text-decoration:none;font-weight:bold;font-size:17px;padding:14px 28px;border-radius:10px">להעלאת דוח היתרות</a></p>
+<p style="margin:0 0 6px;font-size:14px;color:#5E6875">לא בטוחים איך מוציאים את הדוח? בעמוד יש הוראות לפי בנק.</p>
+<p style="margin:0 0 18px;font-size:14px;color:#5E6875">הקישור אישי ותקף ל-${LINK_DAYS} יום.</p>
 <p style="margin:0;font-weight:bold">אם לא משתלם, נגיד.</p>
 </td></tr>
-<tr><td style="padding:14px 24px 20px;text-align:right;font-size:12px;color:#7C8794;border-top:1px solid #DCD8CF">ברור משכנתאות · <a href="${SITE}" style="color:#11978A">barur-mashkanta.co.il</a></td></tr>
+<tr><td style="padding:14px 24px 20px;text-align:right;font-size:12px;color:#5E6875;border-top:1px solid #DCD8CF">ברור משכנתאות · <a href="${SITE}" style="color:#0C7268">barur-mashkanta.co.il</a></td></tr>
 </table></td></tr></table></body></html>`;
   return { subject, text, html };
 }

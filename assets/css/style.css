@@ -8,8 +8,8 @@
 @font-face{font-family:"Plex He";src:url(../fonts/plex-la-700.woff2) format("woff2");font-weight:700;font-display:swap;unicode-range:U+0000-00FF,U+2000-20FF}
 
 :root{
-  --navy:#0F2A47; --navy-2:#1B3F63; --navy-tint:#E8ECF1; --teal:#11978A; --teal-dark:#0D7A70; --teal-light:#4FB3A2;
-  --paper:#F5F3EE; --soft:#DCEFEB; --stone:#7C8794; --line:#DCD8CF; --ink:#2B3A4A; --white:#FFFFFF;
+  --navy:#0F2A47; --navy-2:#1B3F63; --navy-tint:#E8ECF1; --teal:#0C7268; --teal-dark:#0D7A70; --teal-light:#4FB3A2;
+  --paper:#F5F3EE; --soft:#DCEFEB; --stone:#5E6875; --line:#DCD8CF; --ink:#2B3A4A; --white:#FFFFFF;
   --max:1120px; --radius:14px; --error:#B3261E; --cookie-bar-h:0px;
 }
 *{box-sizing:border-box}
@@ -194,7 +194,7 @@ p{margin:0 0 1em;text-wrap:pretty}
 .site-footer{background:var(--navy);color:#C9CFD6;padding:40px 0 28px;margin-top:0}
 .site-footer .wrap{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:32px}
 .site-footer .logo img{height:40px}
-.site-footer h4{color:#fff;margin:0 0 12px;font-size:15px;letter-spacing:.08em}
+.site-footer h4,.site-footer .footer-title{color:#fff;margin:0 0 12px;font-size:15px;line-height:1.4;font-weight:700;letter-spacing:.08em}
 .site-footer a{color:#C9CFD6;display:block;padding:4px 0;font-size:15px}
 .site-footer a:hover{color:#fff}
 .site-footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.12);padding-top:20px;font-size:13px;color:#8A9099}
@@ -212,7 +212,7 @@ p{margin:0 0 1em;text-wrap:pretty}
 .cookie-bar.show{display:block;transform:translateY(0)}
 .cookie-bar-inner{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .cookie-bar p{margin:0;color:#C9CFD6;font-size:14px}
-.cookie-bar a{color:var(--teal-light)}
+.cookie-bar a{color:var(--teal-light);text-decoration:underline;text-underline-offset:2px}
 .cookie-bar-actions{display:flex;gap:10px;flex-wrap:wrap}
 .cookie-bar .btn{min-height:42px;padding:0 18px;font-size:14px}
 .btn-ghost{background:transparent;color:#C9CFD6;border-color:rgba(255,255,255,.25)}
