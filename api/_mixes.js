@@ -79,7 +79,9 @@ function currentState(lead, r) {
     if (bal > 0) {
       return {
         balance: Number(lead.balance) > 0 ? Number(lead.balance) : bal,
-        payment: Number(lead.payment) > 0 ? Number(lead.payment) : pay,
+        // From the tracks' current rates: the report's "last charge" can predate a rate reset.
+        payment: pay,
+        reportedPayment: Number(lead.payment) > 0 ? Number(lead.payment) : null,
         total,
         years: Number(lead.years) > 0 ? Number(lead.years) : Math.max(...tracks.map(t => t.term)) / 12,
         fromTracks: true,
@@ -142,7 +144,10 @@ function mixLines(lead, r = RATES) {
     const mixes = buildMixes(cur.balance, cur.years, r);
     const best = pick(mixes, cur);
     const out = [' ', `🧮 תמהילים (3 מסלולים שווים, שליש כל אחד) — נבדקו ${mixes.length.toLocaleString('he-IL')} שילובים. רק אצלך, הלקוח לא רואה.`];
-    out.push(`היום: החזר ${ils(cur.payment)} | עלות כוללת משוערת ${ils(cur.total)}${cur.fromTracks ? ' (לפי המסלולים מהדוח)' : ' (לפי החזר × שנים שנותרו)'}`);
+    out.push(`היום: החזר ${ils(cur.payment)} | עלות כוללת משוערת ${ils(cur.total)}${cur.fromTracks ? ' (לפי הריביות הנוכחיות של המסלולים בדוח)' : ' (לפי החזר × שנים שנותרו)'}`);
+    if (cur.reportedPayment && Math.abs(cur.reportedPayment - cur.payment) > 50) {
+      out.push(`  (החיוב האחרון בדוח: ${ils(cur.reportedPayment)}. ההפרש בדרך כלל משינוי ריבית במסלול משתנה)`);
+    }
     const titles = { payment: 'החזר חודשי מינימלי', both: 'שילוב', total: 'עלות כוללת מינימלית' };
     for (const key of ['payment', 'both', 'total']) {
       const m = best[key];
