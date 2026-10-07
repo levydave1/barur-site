@@ -10,6 +10,7 @@
 
 const crypto = require('crypto');
 const { readToken, uploadLink, sendPreciseEmail } = require('./_mail');
+const { mixLines } = require('./_mixes');
 const META_PIXEL_ID = '1776166563647834';
 const META_API_VERSION = 'v21.0';
 
@@ -175,6 +176,8 @@ module.exports = async (req, res) => {
     `החזר חודשי נוכחי: ${ils(lead.payment)}`,
     lead.years ? `שנים שנותרו: ${lead.years}` : null,
     ...debugLines(lead),
+    // Internal: best 3-equal-track mixes per goal. Telegram only, never shown to the customer.
+    ...(lead.emailUpdate ? [] : mixLines(lead)),
   ].filter(Boolean);
 
   // Email with the personal upload link: automatically for every lead that
