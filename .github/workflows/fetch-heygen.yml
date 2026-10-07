@@ -1,0 +1,61 @@
+name: Fetch HeyGen videos
+
+# Claude adds lines to social/heygen/queue.txt in the form:
+#   <file-name>|<signed HeyGen video URL>
+# This workflow downloads every queued video that isn't in the repo yet
+# into social/heygen/raw/<file-name>.mp4 so it can be edited and published.
+
+on:
+  push:
+    paths:
+      - 'social/heygen/queue.txt'
+  workflow_dispatch: {}
+
+concurrency:
+  group: fetch-heygen
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download queued videos
+        run: |
+          mkdir -p social/heygen/raw
+          touch social/heygen/queue.txt
+          while IFS='|' read -r name url; do
+            name="$(echo "$name" | tr -d '[:space:]')"
+            url="$(echo "$url" | tr -d '[:space:]')"
+            [ -z "$name" ] && continue
+            case "$name" in \#*) continue;; esac
+            out="social/heygen/raw/${name}.mp4"
+            if [ -f "$out" ]; then
+              echo "skip $name (already here)"
+              continue
+            fi
+            echo "downloading $name"
+            if curl -fsSL --retry 3 -o "$out.part" "$url"; then
+              mv "$out.part" "$out"
+              ls -la "$out"
+            else
+              echo "::warning::failed to download $name (link may have expired)"
+              rm -f "$out.part"
+            fi
+          done < social/heygen/queue.txt
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add social/heygen/raw
+          if git diff --cached --quiet; then
+            echo "Nothing new"
+          else
+            git commit -m "chore: add HeyGen renders"
+            git pull --rebase
+            git push
+          fi
