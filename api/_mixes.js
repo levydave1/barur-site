@@ -123,7 +123,7 @@ function buildMixes(balance, years, r) {
 function pick(mixes, cur) {
   const minBy = (arr, f) => arr.reduce((best, m) => (best == null || f(m) < f(best) ? m : best), null);
   const payment = minBy(mixes, m => m.payment + m.total * 1e-9);
-  const total = minBy(mixes.filter(m => m.payment <= cur.payment), m => m.total);
+  const total = minBy(mixes.filter(m => m.payment <= cur.payment && m.total < cur.total), m => m.total);
   const both = minBy(
     mixes.filter(m => m.payment <= cur.payment * 0.98 && m.total <= cur.total),
     m => m.payment / cur.payment + m.total / cur.total
