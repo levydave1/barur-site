@@ -180,10 +180,49 @@
       }
     },
     {
+      "id": "2026-10-09-dk01",
+      "publish_at": "2026-10-09T13:00",
+      "text": "רגע, זה לא באמת דוד. זה דוד 2.0, הגרסה הדיגיטלית של דוד לוי, יועץ משכנתאות.\n\nכל יום דקה אחת ברורה על משכנתה ונדל״ן, בלי מילים גבוהות. ואת הייעוץ עצמו? עושים מול המקור.\n\nדקה ברורה · טיפ #1\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk01.mp4",
+      "image": "social/video/dk01-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
+      "id": "2026-10-10-dk02",
+      "publish_at": "2026-10-10T13:00",
+      "text": "הריבית ירדה, וההחזר כמעט לא זז? זה לא באג.\n\nרק החלק שצמוד לפריים מרגיש את הירידה. הקבועה נשארת במקום, והחלק הצמוד למדד יכול אפילו לעלות.\n\nבדיקה ב-2 דקות: barur-mashkanta.co.il/check\n\nדקה ברורה · טיפ #2\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk02.mp4",
+      "image": "social/video/dk02-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
       "id": "2026-10-10-reel-restaurant",
       "publish_at": "2026-10-10T20:30",
       "text": "במסעדה זה נשמע מטומטם.\n\nבמשכנתה קוראים לזה מחזור.\n\nאותו בית, אותה משכנתה. רק בודקים אם היום מקבלים תנאים טובים יותר ממה שחתמת עליהם פעם. 3 דקות, בלי מסמכים. ואם לא משתלם לזוז, נגיד לך.\n\nbarur-mashkanta.co.il/check\n\nהסרטון נוצר ב-AI. הסיפור אמיתי.",
       "video": "ads/restaurant.mp4",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
+      "id": "2026-10-11-dk03",
+      "publish_at": "2026-10-11T13:00",
+      "text": "שפיצר: מה הוא נותן, ומה הוא לוקח.\n\nאותו תשלום כל חודש, אבל בשנים הראשונות רובו הולך לריבית. לא טוב ולא רע. כדאי לדעת לפני שחותמים.\n\nדקה ברורה · טיפ #3\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk03.mp4",
+      "image": "social/video/dk03-cover.jpg",
       "platforms": [
         "facebook",
         "instagram"
@@ -215,11 +254,37 @@
       }
     },
     {
+      "id": "2026-10-12-dk04",
+      "publish_at": "2026-10-12T13:00",
+      "text": "קיבלתם הצעה למחזר, וההחזר יורד? רגע לפני שחוגגים.\n\nיש שני מספרים שצריך לראות ביחד: כמה משלמים כל חודש, וכמה משלמים בסך הכול.\n\nבדיקה ב-2 דקות: barur-mashkanta.co.il/check\n\nדקה ברורה · טיפ #4\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk04.mp4",
+      "image": "social/video/dk04-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
       "id": "2026-10-12-reel-negotiation",
       "publish_at": "2026-10-12T20:30",
       "text": "על 20 שקל הוא התמקח עד הסוף.\n\nועל המשכנתה? \"סבבה\".\n\nרובנו נלחמים על כל שקל בשוק, ומשאירים את ההוצאה הכי גדולה בחיים בלי בדיקה. 3 דקות, ואתה יודע אם יש פה כסף על השולחן.\n\nbarur-mashkanta.co.il/check\n\nהסרטון נוצר ב-AI. הסיפור אמיתי.",
       "video": "ads/negotiation_v1.mp4",
       "image": "ads/negotiation_cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
+      "id": "2026-10-13-dk05",
+      "publish_at": "2026-10-13T13:00",
+      "text": "לפני שקונים דירה, פתאום כולם מומחים.\n\nיש הבדל בין דעה לעצה. תקשיבו לכולם, ותתייעצו עם מי שעשה את זה הרבה פעמים.\n\nתשלחו את זה למי שעומד לקנות דירה.\n\nדקה ברורה · טיפ #5\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk05.mp4",
+      "image": "social/video/dk05-cover.jpg",
       "platforms": [
         "facebook",
         "instagram"
@@ -255,6 +320,19 @@
       }
     },
     {
+      "id": "2026-10-14-dk06",
+      "publish_at": "2026-10-14T13:00",
+      "text": "לא חייבים למחזר את כל המשכנתה. לפעמים רק חלק אחד יקר, ואפשר לטפל רק בו.\n\nאיך יודעים איזה? בדוח יתרות לסילוק: טוב, רע ומכוער.\n\nבדיקה ב-2 דקות: barur-mashkanta.co.il/check\n\nדקה ברורה · טיפ #6\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk06.mp4",
+      "image": "social/video/dk06-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
       "id": "2026-10-14-how",
       "publish_at": "2026-10-14T20:30",
       "text": "איך עובדת הבדיקה:\n\n1. עונים על כמה שאלות על המשכנתה, או מעלים דוח יתרות מהבנק אם נוח.\n2. רואים מיד כמה אפשר לחסוך, בהחזר החודשי ובעלות הכוללת.\n3. אם שווה לזוז, אנחנו עושים את העבודה מול הבנקים ומביאים אותם להתחרות עליך. אם לא, נגיד לך.\n\nבחינם. בלי מסמכים חובה. בלי נציג שמתקשר לשכנע.\n\nbarur-mashkanta.co.il/check",
@@ -276,6 +354,19 @@
       }
     },
     {
+      "id": "2026-10-15-dk07",
+      "publish_at": "2026-10-15T13:00",
+      "text": "מצאתם דירה והתאהבתם? עצרו.\n\nקודם אישור עקרוני מהבנק: תקציב ברור, ביטחון במשא ומתן, ובלי התחייבות.\n\nדקה ברורה · טיפ #7\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk07.mp4",
+      "image": "social/video/dk07-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
       "id": "2026-10-15-share",
       "publish_at": "2026-10-15T20:30",
       "text": "כולנו מכירים מישהו כזה. לקח משכנתה כשהריבית הייתה בשיא, ומאז לא בדק.\n\nתשלח לו את הפוסט הזה. הבדיקה בחינם, 3 דקות, בלי מסמכים. ואם יתברר שלא משתלם לו לזוז, הוא לא יקבל שיחת מכירה.\n\nbarur-mashkanta.co.il/check",
@@ -291,6 +382,32 @@
         "title": "מכיר מישהו\nשהמשכנתה שלו\nמ-2023?",
         "body": "3 דקות. תעביר."
       }
+    },
+    {
+      "id": "2026-10-16-dk08",
+      "publish_at": "2026-10-16T13:00",
+      "text": "ביטוח משכנתה לא חייבים לעשות דרך הבנק.\n\nאפשר בכל חברה שעומדת בדרישות הבנק, ובהרבה מקרים זה חיסכון יפה כל חודש. גם אם כבר יש לכם משכנתה, לא מאוחר.\n\nדקה ברורה · טיפ #8\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk08.mp4",
+      "image": "social/video/dk08-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
+      "id": "2026-10-17-dk09",
+      "publish_at": "2026-10-17T13:00",
+      "text": "משכנתה ל-20 שנה או ל-30? אין תשובה אחת, יש שני צדדים.\n\nומה שהשכן לקח לא בהכרח מתאים לכם. יש לכם שאלה על משכנתה? כתבו בתגובות.\n\nדקה ברורה · טיפ #9\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk09.mp4",
+      "image": "social/video/dk09-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
     },
     {
       "id": "2026-10-17-reel-clinic",
