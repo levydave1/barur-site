@@ -11,6 +11,7 @@
 const crypto = require('crypto');
 const { readToken, uploadLink, sendPreciseEmail } = require('./_mail');
 const { mixLines } = require('./_mixes');
+const { fileLead } = require('./_drive');
 const META_PIXEL_ID = '1776166563647834';
 const META_API_VERSION = 'v21.0';
 
@@ -194,6 +195,11 @@ module.exports = async (req, res) => {
   if (lead.reportUpdate) lines.push(fromLink ? '✔️ הגיע מקישור אישי (מאומת)' : 'הגיע מאותו ביקור באתר');
   if (mail) lines.push(mail.ok ? `📧 נשלח מייל עם קישור ל-${email}` : `⚠️ המייל לא נשלח (${mail.reason})`);
   if (link) lines.push('', 'קישור אישי להעלאת דוח (אפשר לשלוח גם בווטסאפ):', link);
+  // Uploaded report -> its own Drive folder, with a copy of this message.
+  if (lead.reportFile) {
+    const folderUrl = await fileLead({ ref: lead.reportFile, name, phone, text: lines.join('\n') });
+    lines.push('', folderUrl ? `📁 הדוח נשמר בדרייב:\n${folderUrl}` : '⚠️ הדוח לא נשמר בדרייב');
+  }
   const replyMarkup = email && !lead.reportUpdate
     ? { inline_keyboard: [[{ text: '📧 שלח שוב קישור במייל', callback_data: 'mail' }]] } : undefined;
 

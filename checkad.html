@@ -844,7 +844,7 @@
       const payment = computedPayment || Number(extracted.payment) || 0;
 
       const prev = leadInfo || {};
-      data = { payment, years, value: null, source: 'upload', tracks, balance };
+      data = { payment, years, value: null, source: 'upload', tracks, balance, reportFile: extracted.fileRef || null };
       if (leadInfo) { afterReport(prev); }
       else { goTo('step-1'); }
     } catch (err) {

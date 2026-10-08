@@ -6,6 +6,8 @@
 // project (Project Settings -> Environment Variables). Never hard-code the
 // key here and never send it to the client.
 
+const { stageReport } = require('./_drive');
+
 const MODEL = 'gemini-3.5-flash-lite';
 
 const EXTRACTION_PROMPT = `אתה מקבל דוח יתרות לסילוק של משכנתא מבנק ישראלי (PDF או תמונה סרוקה).
@@ -66,6 +68,9 @@ module.exports = async (req, res) => {
   if (data.length > 20 * 1024 * 1024) {
     return res.status(413).json({ error: 'file_too_large' });
   }
+
+  // Saved to Drive in parallel with the extraction; kept only if a lead follows.
+  const staged = stageReport(data, mimeType);
 
   try {
     const geminiRes = await fetch(
@@ -129,6 +134,7 @@ module.exports = async (req, res) => {
     // Telegram debug lines while we're still validating the extraction.
     console.log('extract-report success', JSON.stringify(parsed));
 
+    parsed.fileRef = await staged;
     return res.status(200).json(parsed);
   } catch (err) {
     console.error('extract-report failed', err);
