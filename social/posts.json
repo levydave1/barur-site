@@ -212,8 +212,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "2194803254800285",
+          "at": "2026-10-10T18:50+03:00"
+        },
+        "instagram": {
+          "id": "18105600476357006",
+          "at": "2026-10-10T18:52+03:00"
+        }
+      }
     },
     {
       "id": "2026-10-10-reel-restaurant",
