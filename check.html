@@ -313,6 +313,8 @@
 </style>
 
 <script src="/assets/js/track.js" defer></script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -520,28 +522,30 @@
       </div>
     </fieldset>
 
+    <form id="lead-form" action="/check" method="post" autocomplete="on" novalidate onsubmit="event.preventDefault(); submitLead();">
     <div class="field">
       <label for="f-name">שם מלא</label>
-      <input type="text" id="f-name" placeholder="השם שלך">
+      <input type="text" id="f-name" name="name" autocomplete="name" autocapitalize="words" enterkeyhint="next" placeholder="השם שלך">
     </div>
     <div class="field">
       <label for="f-phone">טלפון</label>
-      <input type="tel" id="f-phone" inputmode="tel" placeholder="050-0000000">
+      <input type="tel" id="f-phone" name="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="050-0000000">
       <div class="err" id="err-phone">מספר טלפון לא תקין</div>
     </div>
     <div class="field">
       <label for="f-email">אימייל (לא חובה)</label>
-      <input type="email" id="f-email" inputmode="email" placeholder="name@example.com">
+      <input type="email" id="f-email" name="email" inputmode="email" autocomplete="email" enterkeyhint="done" placeholder="name@example.com">
       <div class="err" id="err-email">כתובת אימייל לא תקינה</div>
     </div>
 
     <p class="sub" style="margin:4px 0 12px">אם לא משתלם, נגיד לך.</p>
     <label class="consent">
-      <input type="checkbox" id="f-consent">
+      <input type="checkbox" id="f-consent" name="consent">
       <span>קראתי ואני מסכים/ה <button class="btn-link" type="button" onclick="goTo('step-privacy')" style="font-size:13.5px">למדיניות הפרטיות ותנאי השימוש</button></span>
     </label>
 
-    <button class="btn" id="lead-submit" onclick="submitLead()">קבל הערכת חיסכון</button>
+    <button class="btn" id="lead-submit" type="submit">קבל הערכת חיסכון</button>
+    </form>
     <div style="margin-top:14px">
       <button class="btn-link" onclick="goTo('step-3')">חזרה</button>
     </div>
