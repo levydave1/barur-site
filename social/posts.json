@@ -313,8 +313,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1413740280268393",
+          "at": "2026-10-12T13:37+03:00"
+        },
+        "instagram": {
+          "id": "18136034831497223",
+          "at": "2026-10-12T13:38+03:00"
+        }
+      }
     },
     {
       "id": "2026-10-12-reel-negotiation",
