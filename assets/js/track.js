@@ -86,15 +86,18 @@
     bar.id = "barur-consent";
     bar.setAttribute("role", "region");
     bar.setAttribute("aria-label", "הודעה על עוגיות");
-    bar.style.cssText = "position:fixed;inset-inline:12px;bottom:12px;z-index:9999;background:#0F2A47;color:#F5F3EE;" +
-      "border-radius:12px;padding:14px 16px;font:400 14px/1.5 'IBM Plex Sans Hebrew',Arial,sans-serif;" +
-      "box-shadow:0 6px 24px rgba(0,0,0,.25);display:flex;gap:12px;align-items:center;flex-wrap:wrap;max-width:720px;margin:0 auto";
+    // Compact strip pinned to the bottom edge, so it doesn't sit on top of the
+    // page's main button on a phone; the page gets matching bottom padding so
+    // nothing ends up hidden behind it.
+    bar.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#0F2A47;color:#F5F3EE;" +
+      "padding:8px 12px calc(8px + env(safe-area-inset-bottom));font:400 13px/1.4 'IBM Plex Sans Hebrew',Arial,sans-serif;" +
+      "box-shadow:0 -4px 16px rgba(0,0,0,.18);display:flex;gap:10px;align-items:center;justify-content:center";
     bar.innerHTML =
-      '<p style="margin:0;flex:1 1 260px">אנחנו משתמשים בעוגיות למדידה ולפרסום (Meta, Google) רק אם תאשרו. ' +
-      '<a href="/cookies" style="color:#4FB3A2;text-decoration:underline">מדיניות העוגיות</a></p>' +
-      '<div style="display:flex;gap:8px">' +
-      '<button type="button" data-c="declined" style="background:transparent;color:#F5F3EE;border:1px solid #5E6875;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer">דחייה</button>' +
-      '<button type="button" data-c="accepted" style="background:#0C7268;color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer">אישור</button>' +
+      '<p style="margin:0;flex:1 1 auto;max-width:520px">עוגיות למדידה ולפרסום (Meta, Google), רק באישור. ' +
+      '<a href="/cookies" style="color:#4FB3A2;text-decoration:underline">מדיניות</a></p>' +
+      '<div style="display:flex;gap:6px;flex:none">' +
+      '<button type="button" data-c="declined" style="background:transparent;color:#F5F3EE;border:1px solid #5E6875;border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer">דחייה</button>' +
+      '<button type="button" data-c="accepted" style="background:#0C7268;color:#fff;border:0;border-radius:8px;padding:6px 12px;font:inherit;font-weight:600;cursor:pointer">אישור</button>' +
       "</div>";
     bar.addEventListener("click", function (e) {
       var v = e.target && e.target.getAttribute("data-c");
@@ -102,9 +105,11 @@
       try { localStorage.setItem("cookie-consent", v); } catch (err) {}
       window.cookieConsent = v;
       bar.remove();
+      document.body.style.paddingBottom = "";
       if (v === "accepted") load(); else queue = [];
     });
     document.body.appendChild(bar);
+    document.body.style.paddingBottom = bar.offsetHeight + "px";
   }
 
   function init() {
