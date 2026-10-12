@@ -8,10 +8,17 @@
 <link rel="icon" href="/assets/img/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/img/icon-180.png">
 <meta name="description" content="דף נחיתה לפרסום — בדיקת כדאיות מיחזור משכנתה, עם או בלי דוח יתרות, לפני השארת פרטים">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="/assets/fonts/plex-he-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/plex-he-700.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+@font-face{font-family:"IBM Plex Sans Hebrew";src:url(/assets/fonts/plex-he-400.woff2) format("woff2");font-weight:400;font-display:swap;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:"IBM Plex Sans Hebrew";src:url(/assets/fonts/plex-he-500.woff2) format("woff2");font-weight:500;font-display:swap;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:"IBM Plex Sans Hebrew";src:url(/assets/fonts/plex-he-600.woff2) format("woff2");font-weight:600;font-display:swap;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:"IBM Plex Sans Hebrew";src:url(/assets/fonts/plex-he-700.woff2) format("woff2");font-weight:700;font-display:swap;unicode-range:U+0590-05FF,U+FB1D-FB4F}
+@font-face{font-family:"IBM Plex Sans Hebrew";src:url(/assets/fonts/plex-la-400.woff2) format("woff2");font-weight:400;font-display:swap;unicode-range:U+0000-00FF,U+2000-20FF}
+@font-face{font-family:"IBM Plex Sans Hebrew";src:url(/assets/fonts/plex-la-600.woff2) format("woff2");font-weight:500 600;font-display:swap;unicode-range:U+0000-00FF,U+2000-20FF}
+@font-face{font-family:"IBM Plex Sans Hebrew";src:url(/assets/fonts/plex-la-700.woff2) format("woff2");font-weight:700;font-display:swap;unicode-range:U+0000-00FF,U+2000-20FF}
+
   :root{
     --night:#0F2A47;
     --night-2:#16324f;
@@ -330,6 +337,8 @@
 </style>
 
 <script src="/assets/js/track.js" defer></script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -435,28 +444,28 @@
       <button class="btn-link" onclick="goTo('step-1')">לתיקון הנתונים</button>
     </div>
 
-    <div id="lead-form">
+    <form id="lead-form" action="/checkad" method="post" autocomplete="on" novalidate onsubmit="event.preventDefault(); submitLead();">
       <div class="field">
         <label for="f-name">שם</label>
-        <input type="text" id="f-name" autocomplete="name" placeholder="השם שלכם">
+        <input type="text" id="f-name" name="name" autocomplete="name" autocapitalize="words" enterkeyhint="next" placeholder="השם שלכם">
       </div>
       <div class="field">
         <label for="f-phone">טלפון</label>
-        <input type="tel" id="f-phone" inputmode="tel" autocomplete="tel" placeholder="050-0000000">
+        <input type="tel" id="f-phone" name="tel" inputmode="tel" autocomplete="tel" enterkeyhint="next" placeholder="050-0000000">
         <div class="err" id="err-phone">מספר טלפון לא תקין</div>
       </div>
       <div class="field">
         <label for="f-email">אימייל <span style="font-weight:400;color:var(--text-2)">(לא חובה, לשליחת קישור לבדיקה מדויקת)</span></label>
-        <input type="email" id="f-email" inputmode="email" autocomplete="email" placeholder="name@example.com">
+        <input type="email" id="f-email" name="email" inputmode="email" autocomplete="email" enterkeyhint="done" placeholder="name@example.com">
         <div class="err" id="err-email">כתובת אימייל לא תקינה</div>
       </div>
       <label class="consent">
-        <input type="checkbox" id="f-consent">
+        <input type="checkbox" id="f-consent" name="consent">
         <span>קראתי ואני מסכים/ה <button class="btn-link" type="button" onclick="goTo('step-privacy')" style="font-size:13.5px">למדיניות הפרטיות ותנאי השימוש</button></span>
       </label>
-      <button class="btn" id="lead-submit" onclick="submitLead()">הראו לי את הפירוט</button>
+      <button class="btn" id="lead-submit" type="submit">הראו לי את הפירוט</button>
       <p class="fine-note" id="teaser-fine">* הערכה לפי ריביות ממוצעות בשוק היום, לאותה תקופה שנותרה לכם, לפני עמלות פירעון ועלויות מחזור. לא הצעה ולא ייעוץ. המספר המדויק נקבע רק מול הבנקים.</p>
-    </div>
+    </form>
     <div style="margin-top:14px">
       <button class="btn-link" onclick="goTo('step-1')">שינוי הנתונים</button>
     </div>
