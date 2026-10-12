@@ -878,6 +878,10 @@
   }
 
   // ---- Teaser (before lead) -------------------------------------------------
+  // Visitors who arrive from the Meta instant form (?src=fb-form) already left
+  // their name and phone there. Here they get the result with no form at all;
+  // the numbers go to Telegram without details, matched to the form lead by time.
+  const FB_FORM = new URLSearchParams(location.search).get('src') === 'fb-form';
   let leadInfo = null; // name/phone once the lead was sent, kept across a later report upload
   const r50 = n => Math.round(n/50)*50;
   const r1k = n => Math.round(n/1000)*1000;
@@ -930,7 +934,24 @@
       hot.hidden = false; cold.hidden = true;
       document.getElementById('lead-submit').textContent = 'הראו לי את הפירוט';
     }
+    if (FB_FORM) { showFbFormResult(); return; }
     goTo('step-3');
+  }
+
+  function showFbFormResult(){
+    data.fbForm = true; data.name = ''; data.phone = ''; data.email = ''; data.pref = 'payment';
+    data.pageUrl = location.href;
+    document.getElementById('precise-box').style.display = 'none';
+    if (data.leadType === 'cold'){
+      sendLeadToBackend(data);
+      track('FbFormCheck', {content_name:'refinance_check', variant:'checkad', result:'cold'});
+      goTo('step-cold');
+      return;
+    }
+    renderResults(); // computes data.scenarios as a side effect, needed below
+    sendLeadToBackend(data);
+    track('FbFormCheck', {content_name:'refinance_check', variant:'checkad', result:'hot'});
+    goTo('step-5');
   }
 
   // After the lead: a report uploaded from the results page refines the same lead.
