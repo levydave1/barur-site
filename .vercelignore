@@ -1,0 +1,16 @@
+# Keep heavy media out of the Vercel deployment (the website doesn't use it).
+# Videos for TikTok are pulled by Metricool from raw.githubusercontent.com.
+social/heygen/
+*.mp4
+*.mov
+
+# Exception: Meta (Facebook/Instagram) posts still pending in social/posts.json
+# fetch their video from the live site. Remove each line once that post is published.
+!social/video/dk04.mp4
+!social/video/dk05.mp4
+!social/video/dk06.mp4
+!social/video/dk07.mp4
+!social/video/dk08.mp4
+!social/video/dk09.mp4
+!ads/negotiation_v1.mp4
+!ads/clinic_v1.mp4
