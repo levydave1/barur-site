@@ -16,6 +16,12 @@
 //   https://barur-mashkanta.co.il/api/fb-lead?setup=1&key=<FB_VERIFY_TOKEN>
 // Status check (no secrets shown):
 //   https://barur-mashkanta.co.il/api/fb-lead?status=1&key=<FB_VERIFY_TOKEN>
+//
+// Polling (used while the Meta app is unpublished, because unpublished apps get
+// no real webhooks): GitHub Actions calls, every few minutes,
+//   GET /api/fb-lead?poll=1&since=<unix seconds>   header x-poll-key: <FB_VERIFY_TOKEN>
+// We read new leads from every active form on the Page, send each to Telegram,
+// and answer {"next": <unix seconds>} for the next call. The caller keeps "next".
 
 const crypto = require('crypto');
 
@@ -129,44 +135,86 @@ async function telegram(text) {
   if (!r.ok) throw new Error('telegram_' + r.status + ' ' + (await r.text()).slice(0, 200));
 }
 
+const LEAD_FIELDS = 'id,created_time,field_data,ad_name,form_id,platform,is_organic';
+
+function formatLead(lead) {
+  const lines = ['📋 ליד חדש מטופס פייסבוק — ברור משכנתאות', ''];
+  const fields = Array.isArray(lead.field_data) ? lead.field_data : [];
+  const contact = [];
+  const answers = [];
+  for (const f of fields) {
+    const val = (f.values || []).map(prettyValue).join(', ');
+    if (f.name === 'phone_number') contact.push(`טלפון: ${localPhone(f.values && f.values[0])}`);
+    else if (LABELS[f.name]) contact.push(`${LABELS[f.name]}: ${val}`);
+    else answers.push(`• ${prettyKey(f.name)} ${val}`);
+  }
+  lines.push(...contact);
+  if (answers.length) lines.push('', ...answers);
+  lines.push('');
+  lines.push(`שעה: ${ilTime(lead.created_time)}`);
+  if (lead.ad_name) lines.push(`מודעה: ${lead.ad_name}`);
+  if (lead.platform) lines.push(`פלטפורמה: ${lead.platform === 'ig' ? 'אינסטגרם' : lead.platform === 'fb' ? 'פייסבוק' : lead.platform}`);
+  if (lead.is_organic) lines.push('אורגני (לא ממודעה)');
+  lines.push('', 'אם הלקוח עשה גם בדיקה באתר, תגיע הודעה "🔗 בדיקה מהאתר" עם שעה קרובה.');
+  return lines.join('\n');
+}
+
+// Webhook path (works once the Meta app is published).
 async function handleLead(change) {
   const v = change.value || {};
   const leadId = v.leadgen_id;
-  const lines = ['📋 ליד חדש מטופס פייסבוק — ברור משכנתאות', ''];
+  let text;
   try {
     const tok = await pageToken();
-    const lead = await graph(
-      `${leadId}?fields=created_time,field_data,ad_name,adset_name,campaign_name,form_id,platform,is_organic`,
-      tok,
-    );
-    const fields = Array.isArray(lead.field_data) ? lead.field_data : [];
-    const contact = [];
-    const answers = [];
-    for (const f of fields) {
-      const val = (f.values || []).map(prettyValue).join(', ');
-      if (f.name === 'phone_number') contact.push(`טלפון: ${localPhone(f.values && f.values[0])}`);
-      else if (LABELS[f.name]) contact.push(`${LABELS[f.name]}: ${val}`);
-      else answers.push(`• ${prettyKey(f.name)} ${val}`);
-    }
-    lines.push(...contact);
-    if (answers.length) lines.push('', ...answers);
-    lines.push('');
-    lines.push(`שעה: ${ilTime(lead.created_time)}`);
-    if (lead.ad_name) lines.push(`מודעה: ${lead.ad_name}`);
-    if (lead.platform) lines.push(`פלטפורמה: ${lead.platform === 'ig' ? 'אינסטגרם' : lead.platform === 'fb' ? 'פייסבוק' : lead.platform}`);
-    if (lead.is_organic) lines.push('אורגני (לא ממודעה)');
-    lines.push('', 'אם הלקוח עשה גם בדיקה באתר, תגיע הודעה "🔗 בדיקה מהאתר" עם שעה קרובה.');
+    text = formatLead(await graph(`${leadId}?fields=${LEAD_FIELDS}`, tok));
   } catch (e) {
     console.error('lead fetch failed', leadId, e.message);
-    lines.push(
+    text = [
+      '📋 ליד חדש מטופס פייסבוק — ברור משכנתאות', '',
       '⚠️ נכנס ליד, אבל לא הצלחתי למשוך את הפרטים ממטא.',
       `סיבה: ${e.message}`,
       `שעה: ${ilTime(v.created_time ? new Date(v.created_time * 1000).toISOString() : null)}`,
       'הפרטים נמצאים ב-Leads Center:',
       'https://business.facebook.com/latest/leads_center',
-    );
+    ].join('\n');
   }
-  await telegram(lines.join('\n'));
+  await telegram(text);
+}
+
+// Polling path: new leads from all active forms since `since` (unix seconds).
+async function pollLeads(since) {
+  const tok = await pageToken();
+  const forms = await graph(`${PAGE_ID}/leadgen_forms?fields=id,status&limit=100`, tok);
+  const active = (forms.data || []).filter((f) => !f.status || f.status === 'ACTIVE');
+  const filtering = encodeURIComponent(JSON.stringify([{ field: 'time_created', operator: 'GREATER_THAN', value: since }]));
+  const leads = [];
+  for (const f of active) {
+    let j = await graph(`${f.id}/leads?fields=${LEAD_FIELDS}&filtering=${filtering}&limit=100`, tok);
+    leads.push(...(j.data || []));
+    for (let page = 0; page < 5 && j.paging && j.paging.next; page++) {
+      const r = await fetch(j.paging.next); // Meta's "next" URL already carries the token
+      j = await r.json().catch(() => ({}));
+      if (j.error) throw new Error(j.error.message || 'paging_failed');
+      leads.push(...(j.data || []));
+    }
+  }
+  const ts = (l) => Math.floor(new Date(l.created_time).getTime() / 1000);
+  leads.sort((a, b) => ts(a) - ts(b));
+  let next = since;
+  let sent = 0;
+  let error;
+  for (const l of leads) {
+    if (ts(l) <= since) continue;
+    try {
+      await telegram(formatLead(l));
+    } catch (e) {
+      error = e.message; // stop; the next run starts from the last lead that was sent
+      break;
+    }
+    next = Math.max(next, ts(l));
+    sent++;
+  }
+  return { next, sent, forms: active.length, ...(error ? { error } : {}) };
 }
 
 module.exports = async (req, res) => {
@@ -191,6 +239,23 @@ module.exports = async (req, res) => {
         return res.status(200).json({ subscribed: sub, apps: (list.data || []).map((a) => ({ name: a.name, fields: a.subscribed_fields })) });
       } catch (e) {
         return res.status(500).json({ error: e.message });
+      }
+    }
+
+    // Polling (see header)
+    if (q.poll) {
+      const key = req.headers['x-poll-key'] || q.key;
+      if (!keyOk({ key })) return res.status(403).json({ error: 'forbidden' });
+      const now = Math.floor(Date.now() / 1000);
+      let since = parseInt(q.since, 10);
+      // First run, or a stale value: look back 30 minutes only, never flood old leads.
+      if (!Number.isFinite(since) || since <= 0 || since < now - 3 * 86400) since = now - 1800;
+      try {
+        const out = await pollLeads(since);
+        return res.status(200).json(out);
+      } catch (e) {
+        console.error('fb-lead poll failed', e.message);
+        return res.status(502).json({ error: e.message, next: since });
       }
     }
 
