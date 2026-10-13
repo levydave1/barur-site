@@ -1,0 +1,44 @@
+# Checks the Facebook instant form for new leads every 5 minutes and sends them
+# to Telegram (via /api/fb-lead?poll=1). Needed while the Meta app is unpublished.
+# Secret: Settings -> Secrets and variables -> Actions -> FB_POLL_KEY
+#         (the same string as FB_VERIFY_TOKEN in Vercel).
+name: fb-leads-poll
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: fb-leads-poll
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Restore last position
+        uses: actions/cache/restore@v4
+        with:
+          path: state
+          key: fbpoll-${{ github.run_id }}
+          restore-keys: fbpoll-
+
+      - name: Poll leads
+        env:
+          KEY: ${{ secrets.FB_POLL_KEY }}
+        run: |
+          SINCE=$(cat state/since 2>/dev/null || echo 0)
+          RESP=$(curl -sS --max-time 60 -H "x-poll-key: $KEY" \
+            "https://barur-mashkanta.co.il/api/fb-lead?poll=1&since=$SINCE")
+          echo "$RESP"
+          NEXT=$(echo "$RESP" | jq -r '.next // empty')
+          if [ -z "$NEXT" ]; then echo "no position returned"; exit 1; fi
+          mkdir -p state && echo "$NEXT" > state/since
+
+      - name: Save position
+        uses: actions/cache/save@v4
+        with:
+          path: state
+          key: fbpoll-${{ github.run_id }}
