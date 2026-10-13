@@ -359,8 +359,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1100949299146301",
+          "at": "2026-10-13T20:06+03:00"
+        },
+        "instagram": {
+          "id": "17913766056524595",
+          "at": "2026-10-13T20:07+03:00"
+        }
+      }
     },
     {
       "id": "2026-10-13-rates",
