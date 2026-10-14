@@ -1,9 +1,9 @@
 {
-  "low": 3.41,
-  "mid": 3.5,
-  "high": 4.5,
-  "linkedRate": 3.41,
-  "unlinkedRate": 3.5,
-  "source": "boi.org.il (linked + unlinked mortgage rate files)",
-  "updatedAt": "2026-10-12"
+  "low": 3.29,
+  "mid": 4.62,
+  "high": 5.62,
+  "linkedRate": 3.29,
+  "unlinkedRate": 4.62,
+  "source": "Bank of Israel, new mortgages Aug 2026 (fixed linked / fixed unlinked) — set manually 2026-10-14",
+  "updatedAt": "2026-10-14"
 }

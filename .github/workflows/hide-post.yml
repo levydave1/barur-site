@@ -1,0 +1,28 @@
+name: Hide Facebook post
+
+on:
+  workflow_dispatch:
+    inputs:
+      post_id:
+        description: 'Facebook page post id (PAGEID_POSTID)'
+        required: true
+      unhide:
+        description: 'Show the post again instead of hiding it'
+        type: boolean
+        default: false
+
+jobs:
+  hide:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Hide post
+        env:
+          META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
+          POST_ID: ${{ inputs.post_id }}
+          UNHIDE: ${{ inputs.unhide }}
+        run: python scripts/hide_post.py

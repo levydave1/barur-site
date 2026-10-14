@@ -1,11 +1,13 @@
 name: Update mortgage rates
 
 on:
-  schedule:
+  # Weekly schedule paused 2026-10-14: the parser picked a wrong unlinked rate
+  # (3.5% instead of ~4.6%). Re-enable after fixing scripts/update_mortgage_rates.py.
+  # schedule:
     # Every Monday 06:00 UTC. Bank of Israel publishes monthly, on a date
     # that isn't fixed in advance, so we check weekly and only commit when
     # a new plausible value is actually found (see scripts/update_mortgage_rates.py).
-    - cron: '0 6 * * 1'
+    # - cron: '0 6 * * 1'
   workflow_dispatch: {}
 
 jobs:
