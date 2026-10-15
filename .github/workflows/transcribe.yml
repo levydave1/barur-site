@@ -10,6 +10,9 @@ on:
     paths:
       - 'social/heygen/transcribe.txt'
   workflow_dispatch: {}
+  workflow_run:
+    workflows: ['Fetch HeyGen videos']
+    types: [completed]
 
 concurrency:
   group: transcribe
