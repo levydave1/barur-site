@@ -510,8 +510,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "2035134560520883",
+          "at": "2026-10-15T15:49+03:00"
+        },
+        "instagram": {
+          "id": "18464512609186243",
+          "at": "2026-10-15T15:50+03:00"
+        }
+      }
     },
     {
       "id": "2026-10-15-share",
