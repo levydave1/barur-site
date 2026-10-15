@@ -136,7 +136,7 @@ def frame(t,face):
     return base
 
 if __name__=='__main__':
-    crop=(190,330,720)
+    crop=(0,200,1080)  # wide: head + shoulders + hands, like the 9-17.10 videos
     if PREVIEW:
         faces=read_frames(RAW,crop); fl=[]
         ts=[float(x) for x in PREVIEW.split(',')]

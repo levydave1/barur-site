@@ -111,7 +111,7 @@ class Header:
         fc=face.resize((2*R,2*R),Image.LANCZOS).convert('RGBA'); fc.putalpha(self.mask)
         base.alpha_composite(fc,(self.cx-R,self.cy-R))
         paste(base,self.name,self.cx,self.cy+R+40); paste(base,self.title,self.cx,self.cy+R+78)
-        paste(base,self.logo,W-70,self.cy-22,anchor='r'); paste(base,self.ai,W-74,self.cy+62,anchor='r')
+        paste(base,self.logo,W-70,self.cy,anchor='r')
 
 class Background:
     def __init__(self,seed=3):
