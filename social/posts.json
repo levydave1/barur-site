@@ -775,11 +775,50 @@
       "format": "reel"
     },
     {
+      "id": "2026-10-29-dk21",
+      "publish_at": "2026-10-29T13:00",
+      "text": "משדרגים דירה? השאלה הגדולה: קודם לקנות, או קודם למכור.\n\nשתי הדרכים עובדות. מה שחשוב זה לתכנן את המימון מראש.\n\nדקה ברורה · טיפ #21\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk21.mp4",
+      "image": "social/video/dk21-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
+      "id": "2026-10-30-dk22",
+      "publish_at": "2026-10-30T13:00",
+      "text": "יש מסלול אחד שכדאי שיהיה כמעט בכל משכנתה: חלק גמיש.\n\nהחיים משתנים. חלק שאפשר להחזיר מוקדם בלי קנס גדול נותן חופש.\n\nדקה ברורה · טיפ #22\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk22.mp4",
+      "image": "social/video/dk22-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
       "id": "2026-10-30-mil-pharaoh",
       "publish_at": "2026-10-30T20:30",
       "text": "אני מת כבר הרבה זמן. המשכנתה? חיה ובועטת.\nמחזור משכנתה לא צריך לחכות מילניום. בדיקה ב-2 דקות:\nbarur-mashkanta.co.il/check\n\nהסרטון נוצר באמצעות AI.",
       "video": "social/video/pharaoh.mp4",
       "image": "social/video/pharaoh-cover.jpg",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "status": "pending",
+      "format": "reel"
+    },
+    {
+      "id": "2026-10-31-dk23",
+      "publish_at": "2026-10-31T13:00",
+      "text": "יועץ משכנתאות. צריך, או לא? תשובה כנה: לא תמיד.\n\nיש לכם שאלה? כתבו בתגובות.\n\nדקה ברורה · טיפ #23\nהסרטון נוצר באמצעות AI.",
+      "video": "social/video/dk23.mp4",
+      "image": "social/video/dk23-cover.jpg",
       "platforms": [
         "facebook",
         "instagram"
