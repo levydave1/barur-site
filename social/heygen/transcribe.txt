@@ -12,3 +12,7 @@ dk20-nonotice
 dk21-buysell
 dk22-flex
 dk23-advisor
+ref-hooks-a|en
+ref-hooks-b|en
+ref-hooks-c|en
+ref-hooks-d|en

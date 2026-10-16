@@ -40,6 +40,7 @@ jobs:
           import json, os
           from faster_whisper import WhisperModel
           names=[l.strip() for l in open('social/heygen/transcribe.txt',encoding='utf-8') if l.strip() and not l.startswith('#')]
+          langs={n.split('|')[0]:(n.split('|')[1] if '|' in n else 'he') for n in names}; names=[n.split('|')[0] for n in names]
           todo=[]
           for n in names:
               out=f'social/heygen/words/{n}.json'
@@ -50,7 +51,8 @@ jobs:
           if not todo: print('nothing to do'); raise SystemExit
           m=WhisperModel('ivrit-ai/whisper-large-v3-turbo-ct2', device='cpu', compute_type='int8')
           for n,src,out in todo:
-              segs,info=m.transcribe(src, language='he', word_timestamps=True, beam_size=5, vad_filter=False)
+              lg=langs.get(n,'he'); mm=m if lg=='he' else (globals().get('_mx') or globals().setdefault('_mx',WhisperModel('large-v3', device='cpu', compute_type='int8')))
+              segs,info=mm.transcribe(src, language=(None if lg=='auto' else lg), word_timestamps=True, beam_size=5, vad_filter=False)
               words=[]; text=[]
               for s in segs:
                   text.append(s.text)
