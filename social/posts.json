@@ -560,8 +560,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "3017610555260353",
+          "at": "2026-10-16T17:11+03:00"
+        },
+        "instagram": {
+          "id": "17901941184378021",
+          "at": "2026-10-16T17:12+03:00"
+        }
+      }
     },
     {
       "id": "2026-10-16-mil-inca",
