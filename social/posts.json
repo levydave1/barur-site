@@ -606,8 +606,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1691932965688523",
+          "at": "2026-10-17T15:54+03:00"
+        },
+        "instagram": {
+          "id": "18113858450028061",
+          "at": "2026-10-17T15:55+03:00"
+        }
+      }
     },
     {
       "id": "2026-10-17-reel-clinic",
