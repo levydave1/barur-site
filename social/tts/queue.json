@@ -1,26 +1,35 @@
 [
  {
-  "name": "test-sarah-v4",
-  "voice_id": "EXAVITQu4vr4xLyK5bWa",
-  "model": "eleven_v4",
-  "text": "לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם."
- },
- {
-  "name": "test-matilda-v4",
-  "voice_id": "XrExE9yKIg1WjnnlVkGX",
-  "model": "eleven_v4",
-  "text": "לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם."
- },
- {
-  "name": "test-alice-v4",
-  "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
-  "model": "eleven_v4",
-  "text": "לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם."
- },
- {
-  "name": "test-lily-v4",
+  "name": "lily-a-playful",
   "voice_id": "pFZP5JQG7iQjIQuC4Bku",
   "model": "eleven_v4",
-  "text": "לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם."
+  "text": "[playful] לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם. [warm] העלויות הנסתרות במשכנתה לא תמיד נראות לעין. אנחנו יודעים איפה לחפש.",
+  "settings": {
+   "stability": 0.35,
+   "similarity_boost": 0.75,
+   "style": 0.45
+  }
+ },
+ {
+  "name": "lily-b-rushed",
+  "voice_id": "pFZP5JQG7iQjIQuC4Bku",
+  "model": "eleven_v4",
+  "text": "[rushed] לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם. העלויות הנסתרות במשכנתה לא תמיד נראות לעין. אנחנו יודעים איפה לחפש.",
+  "settings": {
+   "stability": 0.4,
+   "similarity_boost": 0.75,
+   "style": 0.3
+  }
+ },
+ {
+  "name": "lily-c-sly",
+  "voice_id": "pFZP5JQG7iQjIQuC4Bku",
+  "model": "eleven_v4",
+  "text": "[mischievously] לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם. [confident] העלויות הנסתרות במשכנתה לא תמיד נראות לעין. אנחנו יודעים איפה לחפש.",
+  "settings": {
+   "stability": 0.3,
+   "similarity_boost": 0.75,
+   "style": 0.6
+  }
  }
 ]
