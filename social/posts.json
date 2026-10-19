@@ -675,8 +675,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1478038174246986",
+          "at": "2026-10-19T14:10+03:00"
+        },
+        "instagram": {
+          "id": "18022623368930979",
+          "at": "2026-10-19T14:11+03:00"
+        }
+      }
     },
     {
       "id": "2026-10-19-mil-caesar",
