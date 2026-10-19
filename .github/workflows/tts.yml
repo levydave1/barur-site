@@ -29,7 +29,11 @@ jobs:
         run: |
           mkdir -p social/tts/out
           python3 - <<'PY'
-          import json, os, urllib.request
+          import json, os, urllib.request, urllib.error, datetime
+          LOG = open('social/tts/log.txt', 'w')
+          def log(*a):
+              print(*a); print(*a, file=LOG, flush=True)
+          log('run', datetime.datetime.utcnow().isoformat())
           key = os.environ.get('XI')
           if not key: raise SystemExit('::error::ELEVENLABS_API_KEY secret is missing')
           H = {'xi-api-key': key}
@@ -40,9 +44,11 @@ jobs:
               voices = [{'voice_id': x['voice_id'], 'name': x['name'], 'category': x.get('category'),
                          'labels': x.get('labels')} for x in v.get('voices', [])]
               json.dump(voices, open('social/tts/voices.json', 'w'), ensure_ascii=False, indent=1)
-              print('voices:', len(voices))
+              log('voices:', len(voices))
+          except urllib.error.HTTPError as e:
+              log('voices error', e.code, e.read().decode()[:400])
           except Exception as e:
-              print('::warning::could not list voices:', e)
+              log('voices error', repr(e))
           q = json.load(open('social/tts/queue.json', encoding='utf-8')) if os.path.exists('social/tts/queue.json') else []
           for it in q:
               out = f"social/tts/out/{it['name']}.mp3"
@@ -54,9 +60,9 @@ jobs:
                   f"https://api.elevenlabs.io/v1/text-to-speech/{it['voice_id']}?output_format=mp3_44100_192",
                   data=json.dumps(body).encode(), headers={**H, 'Content-Type': 'application/json'})
               try:
-                  open(out, 'wb').write(urllib.request.urlopen(req).read()); print('ok', out)
+                  open(out, 'wb').write(urllib.request.urlopen(req).read()); log('ok', out)
               except urllib.error.HTTPError as e:
-                  print('::error::', it['name'], e.code, e.read().decode()[:500])
+                  log('error', it['name'], e.code, e.read().decode()[:500])
           PY
       - name: Commit
         run: |
