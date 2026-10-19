@@ -31,5 +31,16 @@
    "style": 0.6
   },
   "text": "[mischievously] לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם. [confident] העלויות הנסתרות במשכנתה לא תמיד נראות לעין. אבל אנחנו [pause] יודעים איפה לחפש."
+ },
+ {
+  "name": "lily-intro2",
+  "voice_id": "pFZP5JQG7iQjIQuC4Bku",
+  "model": "eleven_v4",
+  "settings": {
+   "stability": 0.3,
+   "similarity_boost": 0.75,
+   "style": 0.6
+  },
+  "text": "[mischievously] יכולים למצוא את השדון בתמונה?"
  }
 ]
