@@ -1,3 +1,6 @@
-run 2026-10-19T17:32:49.272838
-voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"0dc20cad3ee9705b4088f457acbef031"}}
-ok social/tts/out/test-adam-v3.mp3 57303
+run 2026-10-19T17:38:43.434726
+voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"89725a1934fe266e251d9bc5f24933ed"}}
+error test-sarah-v4 404 {"detail":{"type":"not_found","code":"voice_not_found","message":"A voice with voice_id 'EXAVITQu4vr4xLyK5bWa' was not found.","status":"voice_not_found","request_id":"fca29c75963da4755c991ee8c4062d29"}}
+ok social/tts/out/test-matilda-v4.mp3 63990
+ok social/tts/out/test-alice-v4.mp3 57303
+ok social/tts/out/test-lily-v4.mp3 63990
