@@ -1,5 +1,3 @@
-run 2026-10-19T17:51:31.470483
-voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"448f943fed4e1ed8d2a0946663dddc2f"}}
-ok social/tts/out/lily-intro.mp3 123758
-ok social/tts/out/lily-end-dots.mp3 172660
-ok social/tts/out/lily-end-pause.mp3 173914
+run 2026-10-19T17:57:45.404010
+voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"25114228c622c277869327cc53f382fb"}}
+ok social/tts/out/lily-intro2.mp3 43510
