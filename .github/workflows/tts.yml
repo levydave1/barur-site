@@ -1,0 +1,68 @@
+name: ElevenLabs TTS
+
+# Claude edits social/tts/queue.json: a list of
+#   {"name": "...", "voice_id": "...", "text": "...", "model": "eleven_v3", "settings": {...}}
+# This workflow renders every item whose social/tts/out/<name>.mp3 is missing and commits the files.
+# It also refreshes social/tts/voices.json (the account's voices) on every run.
+# Needs the repository secret ELEVENLABS_API_KEY.
+
+on:
+  push:
+    paths:
+      - 'social/tts/queue.json'
+  workflow_dispatch: {}
+
+concurrency:
+  group: tts
+  cancel-in-progress: false
+
+jobs:
+  tts:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Render
+        env:
+          XI: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: |
+          mkdir -p social/tts/out
+          python3 - <<'PY'
+          import json, os, urllib.request
+          key = os.environ.get('XI')
+          if not key: raise SystemExit('::error::ELEVENLABS_API_KEY secret is missing')
+          H = {'xi-api-key': key}
+          def get(url):
+              return json.load(urllib.request.urlopen(urllib.request.Request(url, headers=H)))
+          try:
+              v = get('https://api.elevenlabs.io/v2/voices?page_size=100')
+              voices = [{'voice_id': x['voice_id'], 'name': x['name'], 'category': x.get('category'),
+                         'labels': x.get('labels')} for x in v.get('voices', [])]
+              json.dump(voices, open('social/tts/voices.json', 'w'), ensure_ascii=False, indent=1)
+              print('voices:', len(voices))
+          except Exception as e:
+              print('::warning::could not list voices:', e)
+          q = json.load(open('social/tts/queue.json', encoding='utf-8')) if os.path.exists('social/tts/queue.json') else []
+          for it in q:
+              out = f"social/tts/out/{it['name']}.mp3"
+              if os.path.exists(out): continue
+              body = {'text': it['text'], 'model_id': it.get('model', 'eleven_v3')}
+              if it.get('settings'): body['voice_settings'] = it['settings']
+              if it.get('language'): body['language_code'] = it['language']
+              req = urllib.request.Request(
+                  f"https://api.elevenlabs.io/v1/text-to-speech/{it['voice_id']}?output_format=mp3_44100_192",
+                  data=json.dumps(body).encode(), headers={**H, 'Content-Type': 'application/json'})
+              try:
+                  open(out, 'wb').write(urllib.request.urlopen(req).read()); print('ok', out)
+              except urllib.error.HTTPError as e:
+                  print('::error::', it['name'], e.code, e.read().decode()[:500])
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add social/tts
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: ElevenLabs renders"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
