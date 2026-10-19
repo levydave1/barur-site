@@ -1,2 +1,3 @@
-run 2026-10-19T17:28:51.399526
-voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"63b6a22dba94e40478e7e3f8a00577eb"}}
+run 2026-10-19T17:30:56.285348
+voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"b2d6755987fea3868db93c3478f09a6f"}}
+error test-adam-v3 403 {"detail":{"type":"authorization_error","code":"subscription_required","message":"Output format 'mp3_44100_192' is only available on the Creator tier and above.","status":"output_format_not_allowed","request_id":"89e955ed3f9caaeb6c46bd341194c4cc"}}
