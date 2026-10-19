@@ -1,3 +1,3 @@
-run 2026-10-19T17:30:56.285348
-voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"b2d6755987fea3868db93c3478f09a6f"}}
-error test-adam-v3 403 {"detail":{"type":"authorization_error","code":"subscription_required","message":"Output format 'mp3_44100_192' is only available on the Creator tier and above.","status":"output_format_not_allowed","request_id":"89e955ed3f9caaeb6c46bd341194c4cc"}}
+run 2026-10-19T17:32:49.272838
+voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"0dc20cad3ee9705b4088f457acbef031"}}
+ok social/tts/out/test-adam-v3.mp3 57303
