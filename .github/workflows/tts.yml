@@ -52,15 +52,15 @@ jobs:
           q = json.load(open('social/tts/queue.json', encoding='utf-8')) if os.path.exists('social/tts/queue.json') else []
           for it in q:
               out = f"social/tts/out/{it['name']}.mp3"
-              if os.path.exists(out): continue
+              if os.path.exists(out) and os.path.getsize(out) > 0: continue
               body = {'text': it['text'], 'model_id': it.get('model', 'eleven_v3')}
               if it.get('settings'): body['voice_settings'] = it['settings']
               if it.get('language'): body['language_code'] = it['language']
               req = urllib.request.Request(
-                  f"https://api.elevenlabs.io/v1/text-to-speech/{it['voice_id']}?output_format=mp3_44100_192",
+                  f"https://api.elevenlabs.io/v1/text-to-speech/{it['voice_id']}?output_format=mp3_44100_128",
                   data=json.dumps(body).encode(), headers={**H, 'Content-Type': 'application/json'})
               try:
-                  open(out, 'wb').write(urllib.request.urlopen(req).read()); log('ok', out)
+                  data = urllib.request.urlopen(req).read(); open(out, 'wb').write(data); log('ok', out, len(data))
               except urllib.error.HTTPError as e:
                   log('error', it['name'], e.code, e.read().decode()[:500])
           PY
