@@ -1,4 +1,26 @@
 [
- {"name": "test-adam-v3", "voice_id": "pNInz6obpgDQGcFmaJgB", "model": "eleven_v3",
-  "text": "לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם."}
+ {
+  "name": "test-sarah-v4",
+  "voice_id": "EXAVITQu4vr4xLyK5bWa",
+  "model": "eleven_v4",
+  "text": "לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם."
+ },
+ {
+  "name": "test-matilda-v4",
+  "voice_id": "XrExE9yKIg1WjnnlVkGX",
+  "model": "eleven_v4",
+  "text": "לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם."
+ },
+ {
+  "name": "test-alice-v4",
+  "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
+  "model": "eleven_v4",
+  "text": "לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם."
+ },
+ {
+  "name": "test-lily-v4",
+  "voice_id": "pFZP5JQG7iQjIQuC4Bku",
+  "model": "eleven_v4",
+  "text": "לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם."
+ }
 ]
