@@ -1,35 +1,35 @@
 [
  {
-  "name": "lily-a-playful",
+  "name": "lily-intro",
   "voice_id": "pFZP5JQG7iQjIQuC4Bku",
   "model": "eleven_v4",
-  "text": "[playful] לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם. [warm] העלויות הנסתרות במשכנתה לא תמיד נראות לעין. אנחנו יודעים איפה לחפש.",
-  "settings": {
-   "stability": 0.35,
-   "similarity_boost": 0.75,
-   "style": 0.45
-  }
- },
- {
-  "name": "lily-b-rushed",
-  "voice_id": "pFZP5JQG7iQjIQuC4Bku",
-  "model": "eleven_v4",
-  "text": "[rushed] לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם. העלויות הנסתרות במשכנתה לא תמיד נראות לעין. אנחנו יודעים איפה לחפש.",
-  "settings": {
-   "stability": 0.4,
-   "similarity_boost": 0.75,
-   "style": 0.3
-  }
- },
- {
-  "name": "lily-c-sly",
-  "voice_id": "pFZP5JQG7iQjIQuC4Bku",
-  "model": "eleven_v4",
-  "text": "[mischievously] לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם. [confident] העלויות הנסתרות במשכנתה לא תמיד נראות לעין. אנחנו יודעים איפה לחפש.",
   "settings": {
    "stability": 0.3,
    "similarity_boost": 0.75,
    "style": 0.6
-  }
+  },
+  "text": "[mischievously] משחק קצר: מצאו את שדון הריבית בתמונה. הוא מתחבא מאחורי המרווח. יש לכם שבע שניות."
+ },
+ {
+  "name": "lily-end-dots",
+  "voice_id": "pFZP5JQG7iQjIQuC4Bku",
+  "model": "eleven_v4",
+  "settings": {
+   "stability": 0.3,
+   "similarity_boost": 0.75,
+   "style": 0.6
+  },
+  "text": "[mischievously] לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם. [confident] העלויות הנסתרות במשכנתה לא תמיד נראות לעין. אבל אנחנו... יודעים איפה לחפש."
+ },
+ {
+  "name": "lily-end-pause",
+  "voice_id": "pFZP5JQG7iQjIQuC4Bku",
+  "model": "eleven_v4",
+  "settings": {
+   "stability": 0.3,
+   "similarity_boost": 0.75,
+   "style": 0.6
+  },
+  "text": "[mischievously] לא מצאתם אותו? בדיוק בגלל זה הוא עדיין שם. [confident] העלויות הנסתרות במשכנתה לא תמיד נראות לעין. אבל אנחנו [pause] יודעים איפה לחפש."
  }
 ]
