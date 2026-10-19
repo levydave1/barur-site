@@ -1,0 +1,2 @@
+run 2026-10-19T17:28:51.399526
+voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"63b6a22dba94e40478e7e3f8a00577eb"}}
