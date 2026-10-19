@@ -35,13 +35,17 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests cryptography
 
       - name: Publish due posts
         env:
           META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          TIKTOK_MODE: ${{ vars.TIKTOK_MODE }}
           DRY_RUN: ${{ inputs.dry_run }}
         run: python scripts/publish_social.py
 
@@ -50,6 +54,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add social/posts.json
+          if [ -f social/tiktok-token.enc ]; then git add social/tiktok-token.enc; fi
           if git diff --cached --quiet; then
             echo "No status changes"
           else

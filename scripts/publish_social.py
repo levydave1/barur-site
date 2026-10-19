@@ -24,6 +24,7 @@ Secrets (GitHub → Settings → Secrets and variables → Actions):
   META_PAGE_TOKEN     system-user token with pages_manage_posts + instagram_content_publish
   TELEGRAM_BOT_TOKEN  optional, for success/failure notices
   TELEGRAM_CHAT_ID    optional
+  TIKTOK_CLIENT_KEY, TIKTOK_CLIENT_SECRET, TIKTOK_REFRESH_TOKEN, TIKTOK_MODE   see scripts/tiktok.py
 """
 
 import json
@@ -35,6 +36,8 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import requests
+
+import tiktok
 
 GRAPH = "https://graph.facebook.com/v21.0"
 PAGE_ID = "1311897388675254"  # ברור משכנתאות
@@ -60,6 +63,7 @@ def notify(text):
     if not bot or not chat:
         return
     try:
+        text = tiktok.scrub(text)
         requests.post(f"https://api.telegram.org/bot{bot}/sendMessage",
                       json={"chat_id": chat, "text": text}, timeout=20)
     except Exception as e:  # never let a notice break publishing
@@ -139,13 +143,15 @@ def validate(post):
     except Exception:
         problems.append(f"bad publish_at: {post.get('publish_at')!r}")
     plats = post.get("platforms") or []
-    if not plats or any(p not in ("facebook", "instagram") for p in plats):
+    if not plats or any(p not in ("facebook", "instagram", "tiktok") for p in plats):
         problems.append(f"bad platforms: {plats}")
     if "instagram" in plats:
         if not post.get("image") and not post.get("video"):
             problems.append("instagram needs an image or a video")
         if len(post.get("text", "")) > IG_CAPTION_MAX:
             problems.append("caption longer than 2200 chars")
+    if "tiktok" in plats and not post.get("video"):
+        problems.append("tiktok needs a video")
     return problems
 
 
@@ -231,7 +237,8 @@ def post_instagram(post):
     return graph("POST", f"{ig}/media_publish", tok, creation_id=container)["id"]
 
 
-PUBLISHERS = {"facebook": post_facebook, "instagram": post_instagram}
+PUBLISHERS = {"facebook": post_facebook, "instagram": post_instagram,
+              "tiktok": lambda post: tiktok.publish(post, notify)}
 
 
 # ---------- connection check (no posting) ----------
@@ -301,6 +308,8 @@ def main():
             return 1
     queue = json.loads(QUEUE.read_text(encoding="utf-8"))
     live = bool(queue.get("live")) and not FORCE_DRY
+    if live and "tiktok" in json.dumps([p.get("platforms") for p in queue.get("posts", []) if p.get("status") == "pending"]) and not tiktok.configured():
+        log("note: tiktok posts are queued but TIKTOK_* secrets are not set; they will fail")
     if live and not TOKEN:
         log("live=true but META_PAGE_TOKEN is not set; running as dry run")
         live = False
@@ -337,7 +346,9 @@ def main():
             log("    " + post["text"][:120].replace("\n", " ") + ("…" if len(post["text"]) > 120 else ""))
             continue
 
-        media = [u for u in (image_url(post), video_url(post)) if u]
+        # Meta pulls media from the live site; TikTok gets the file straight from the repo.
+        meta = any(p in ("facebook", "instagram") for p in post["platforms"])
+        media = [u for u in (image_url(post), video_url(post)) if u] if meta else []
         if any(not wait_for_image(u) for u in media):
             log(f"[{post['id']}] media not reachable yet ({media}); will retry next run")
             annotate("warning", f"{post['id']}: media not reachable yet, retrying next run")
@@ -353,9 +364,10 @@ def main():
                 results[plat] = {"id": pid, "at": datetime.now(TZ).isoformat(timespec="minutes")}
                 log(f"[{post['id']}] {plat}: published {pid}")
             except Exception as e:
-                results[plat] = {"error": scrub(e)}
-                errors.append(f"{plat}: {scrub(e)}")
-                log(f"[{post['id']}] {plat}: FAILED {scrub(e)}")
+                msg = tiktok.scrub(scrub(e))
+                results[plat] = {"error": msg}
+                errors.append(f"{plat}: {msg}")
+                log(f"[{post['id']}] {plat}: FAILED {msg}")
         changed = True
         for plat, res in results.items():
             annotate("error" if "error" in res else "notice", f"{post['id']} {plat}: {res.get('error') or 'published ' + str(res.get('id'))}")
