@@ -1,6 +1,5 @@
-run 2026-10-19T17:38:43.434726
-voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"89725a1934fe266e251d9bc5f24933ed"}}
-error test-sarah-v4 404 {"detail":{"type":"not_found","code":"voice_not_found","message":"A voice with voice_id 'EXAVITQu4vr4xLyK5bWa' was not found.","status":"voice_not_found","request_id":"fca29c75963da4755c991ee8c4062d29"}}
-ok social/tts/out/test-matilda-v4.mp3 63990
-ok social/tts/out/test-alice-v4.mp3 57303
-ok social/tts/out/test-lily-v4.mp3 63990
+run 2026-10-19T17:42:56.314797
+voices error 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request_id":"3a16e0418017eb677122a4af4b942bbe"}}
+ok social/tts/out/lily-a-playful.mp3 155941
+ok social/tts/out/lily-b-rushed.mp3 147164
+ok social/tts/out/lily-c-sly.mp3 154687
