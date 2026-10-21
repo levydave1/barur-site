@@ -197,6 +197,9 @@ p{margin:0 0 1em;text-wrap:pretty}
 .site-footer h4,.site-footer .footer-title{color:#fff;margin:0 0 12px;font-size:15px;line-height:1.4;font-weight:700;letter-spacing:.08em}
 .site-footer a{color:#C9CFD6;display:block;padding:4px 0;font-size:15px}
 .site-footer a:hover{color:#fff}
+.site-footer .footer-social{display:flex;gap:10px;margin-top:18px}
+.site-footer .footer-social a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.22);color:#C9CFD6}
+.site-footer .footer-social a:hover{color:#fff;border-color:#fff}
 .site-footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.12);padding-top:20px;font-size:13px;color:#8A9099}
 .site-footer .fine-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .site-footer .fine-links a{display:inline;padding:0;color:#8A9099}
