@@ -2,6 +2,7 @@
 plate (empty office) -> keyed David (scaled/placed to match avatar eyes) -> desk foreground (from plate).
 """
 import numpy as np
+import cv2
 from PIL import Image, ImageFilter
 
 W, H = 1080, 1920
@@ -37,25 +38,26 @@ def person_mask(rgb):
     global _sess
     from rembg import new_session, remove
     if _sess is None: _sess = new_session('u2net_human_seg')
-    small = Image.fromarray(rgb.astype(np.uint8)).resize((540, 960), Image.BILINEAR)
-    m = remove(small, session=_sess, only_mask=True)
-    m = m.resize((W, H), Image.BILINEAR).point(lambda v: 255 if v > 150 else 0)
-    m = m.filter(ImageFilter.GaussianBlur(2))
-    return np.asarray(m).astype(np.float32) / 255
+    small = Image.fromarray(rgb.astype(np.uint8)).resize((360, 640), Image.BILINEAR)
+    m = np.asarray(remove(small, session=_sess, only_mask=True))
+    m = cv2.resize(m, (W, H), interpolation=cv2.INTER_LINEAR)
+    m = np.where(m > 150, 255, 0).astype(np.uint8)
+    m = cv2.GaussianBlur(m, (0, 0), 2)
+    return m.astype(np.float32) / 255
 
 def key(rgb, use_person=True):
     """rgb float32 HxWx3 (0-255). returns alpha 0..1 and despilled rgb."""
     r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
     d = g - np.maximum(r, b)                      # green excess: bg ~ +12, skin/shirt/beard <= -4
     a = np.clip((7.0 - d) / 6.0, 0, 1)
-    am = Image.fromarray((a * 255).astype(np.uint8))
-    am = am.filter(ImageFilter.MedianFilter(5)).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(1.2))
-    a = np.asarray(am).astype(np.float32) / 255
+    am = (a * 255).astype(np.uint8)
+    am = cv2.medianBlur(am, 5); am = cv2.erode(am, np.ones((3, 3), np.uint8)); am = cv2.GaussianBlur(am, (0, 0), 1.2)
+    a = am.astype(np.float32) / 255
     if use_person: a = a * person_mask(rgb)   # drops the chair and anything else that isn't David
     # garbage matte: chair corners peek beside the body in the last ~90px above the desk
     gm = np.ones_like(a)
     gm[1395:, :70] = 0; gm[1395:, 1000:] = 0; gm[1430:, :150] = 0; gm[1430:, 930:] = 0
-    gm = np.asarray(Image.fromarray((gm * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(6))).astype(np.float32) / 255
+    gm = cv2.GaussianBlur(gm, (0, 0), 6)
     a = a * gm
     # despill: clamp green to the max of red/blue
     out = rgb.copy(); lim = np.maximum(r, b) + 2
