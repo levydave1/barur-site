@@ -790,8 +790,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1414157263764931",
+          "at": "2026-10-23T14:59+03:00"
+        },
+        "instagram": {
+          "id": "17961711816239599",
+          "at": "2026-10-23T15:00+03:00"
+        }
+      }
     },
     {
       "id": "2026-10-23-mil-noah",
