@@ -128,7 +128,7 @@ class Background:
             paste(im,wi,W/2+math.sin(t*0.2)*30,1000)
         return im
 
-def caption_img(parts,size=44):
+def caption_img(parts,size=56):  # 56 since 23.10.2026 (David: bigger captions in all new videos)
     t=rich_line(parts,size,700); bw=t.width+56; bh=int(size*1.75)
     im=Image.new('RGBA',(bw,bh),(0,0,0,0)); ImageDraw.Draw(im).rounded_rectangle([0,0,bw-1,bh-1],14,fill=NAVY+(255,))
     im.alpha_composite(t,(28,(bh-t.height)//2+3)); return im

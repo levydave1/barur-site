@@ -13,7 +13,7 @@ from dkengine import (W, H, FPS, SAFE_TOP, NAVY, TQ, TQD, TQL, PAPER, STONE, AMB
 WK = sys.argv[1]; OUT = sys.argv[2]; PREVIEW = len(sys.argv) > 3
 REPO = '/home/claude/barur-site/social/heygen/'
 DAV = '/mnt/user-data/uploads/פרסום/20261023_101326.mp4'; DAV_SS = 2.0
-DAV_VF = 'eq=contrast=1.07:saturation=1.10:gamma=0.98,colorbalance=rm=0.03:bm=-0.03:rh=0.02:bh=-0.02'
+DAV_VF = 'eq=contrast=1.07:saturation=1.10:gamma=0.98,colorbalance=rm=0.03:bm=-0.03:rh=0.02:bh=-0.02,scale=iw*1.12:-1:flags=lanczos,crop=1080:1920:(iw-1080)/2:0'  # 12% zoom from the top: hides laptop/cloth at the bottom
 AV = REPO + 'raw/dk00-handoff-v2.mp4'
 
 X = 25.36                  # handoff moment (output clock == David clock before it)
@@ -193,7 +193,7 @@ def avatar_frame(face, ta, t_out):
     paste(base, AI, W - 40, SAFE_TOP + 330 if ta >= SH1 else SAFE_TOP + 40, anchor='r', alpha=0.95)
     return base
 
-D_EYE, A_EYE, D_S = (546, 565), (543, 542), 135 / 102
+D_EYE, A_EYE, D_S = (547, 633), (543, 542), 135 / 114
 PUSH0 = X - 1.1
 def david_frame(f, t):
     p = ease(prog(t, PUSH0, X - PUSH0))
@@ -203,7 +203,7 @@ def david_frame(f, t):
     else:
         img = f.convert('RGBA')
     q = ease(prog(t, 0.4, 0.4)) * (1 - ease(prog(t, 4.6, 0.4)))
-    if q > 0: paste(img, TAG, W / 2, SAFE_TOP + 1130, scale=0.8 + 0.2 * back(prog(t, 0.4, 0.4)), alpha=q)
+    if q > 0: paste(img, TAG, W / 2, SAFE_TOP + 70, scale=0.8 + 0.2 * back(prog(t, 0.4, 0.4)), alpha=q)
     draw_caps(img, DCAPS, t)
     return img
 
@@ -325,7 +325,7 @@ def main():
     global REAL
     REAL = circle_face(grab(DAV, DAV_SS + X - 0.3, DAV_VF), R=105)
     if PREVIEW:
-        ts = [1.0, 11.5, 24.5, 25.0, 25.3, 25.5, 25.9, 27.5, X + 8.0, X + 9.5, X + 12.8, X + 16.5, X + 20.2, X + 22.3, X + 26.0, X + 28.0, END0 + 1.5]
+        ts = [1.0, 11.5, 24.5, 25.3, 25.9, X + 9.0, X + 15.0]
         out = [compose(t, grab(DAV, DAV_SS + t, DAV_VF) if t < XF1 else None, grab(AV, min(max(0, t - X), AV_LEN - 0.1)) if t >= XF0 else None) for t in ts]
         S = Image.new('RGB', (270 * len(out), 480), 'white')
         for k, im in enumerate(out): S.paste(im.convert('RGB').resize((270, 480)), (k * 270, 0))
