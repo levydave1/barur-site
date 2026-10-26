@@ -882,8 +882,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1151072287495231",
+          "at": "2026-10-26T18:55+02:00"
+        },
+        "instagram": {
+          "id": "18121605451981391",
+          "at": "2026-10-26T18:56+02:00"
+        }
+      }
     },
     {
       "id": "2026-10-26-mil-pisa",
