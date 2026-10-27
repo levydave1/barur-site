@@ -928,8 +928,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1085094707860215",
+          "at": "2026-10-27T14:36+02:00"
+        },
+        "instagram": {
+          "id": "18130984259509432",
+          "at": "2026-10-27T14:37+02:00"
+        }
+      }
     },
     {
       "id": "2026-10-28-dk20",
