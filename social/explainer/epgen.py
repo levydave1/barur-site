@@ -12,10 +12,10 @@ PUNCT=',.?:!;"\'״׳…-–'
 def norm(w): return w.strip().strip(PUNCT).strip()
 
 SCRIPTS=json.load(open('/home/claude/dk/batch/scripts.json'))
-def align(ww,num):
+def align(ww,num,txt=None):
     """Put the approved script text on Whisper's timings (Whisper sometimes mishears)."""
     import difflib
-    txt=SCRIPTS.get(str(num))
+    txt=txt or SCRIPTS.get(str(num))
     if not txt: return ww
     toks=txt.replace('״','"').split(); toks=[t.replace('"','״') for t in toks]
     A=[norm(t) for t in toks]; B=[norm(w['w']) for w in ww]
@@ -40,7 +40,7 @@ def align(ww,num):
 class Ep:
     def __init__(self,spec):
         self.sp=spec
-        self.words=align(json.load(open(spec.WORDS))['words'],spec.NUM)
+        self.words=align(json.load(open(spec.WORDS))['words'],spec.NUM,getattr(spec,'SCRIPT',None))
         self.N=[norm(w['w']) for w in self.words]
         self.end=self.words[-1]['e']; self.HOLD=self.end+0.9; self.TOTAL=self.HOLD+1.7
     def idx(self,a):
@@ -220,17 +220,16 @@ def closing(ep):
     st=ep.idx(ep.sp.END_FROM)
     i_cm=find({'תכתבו'},st); i_fo=find({'תעקבו','ותעקבו'},st); i_sh=find({'ותשלחו','תשלחו','שתפו'},st)
     i_tm=find({'ומחר'},st)
-    i_tz=i_tm+1 if i_tm is not None and N[i_tm]=='ומחר' else None
-    if i_tz is None:  # "ומחר אני עונה..." variants
-        i_tm=find({'ומחר'},st); i_tz=i_tm+1
-    sub=[(i,ws[i]) for i in range(i_fo+1,i_tm) if i!=i_tm] if i_fo is not None else []
+    i_tz=i_tm+1 if i_tm is not None else None   # reply videos: no teaser
+    sub=[(i,ws[i]) for i in range(i_fo+1,i_tm if i_tm is not None else len(ws))] if i_fo is not None else []
     # drop the share sentence from the subline if share pill shown
-    teaser=[(i,ws[i].rstrip(':')) for i in range(i_tz,len(ws))]
+    teaser=[(i,ws[i].rstrip(':')) for i in range(i_tz,len(ws))] if i_tz is not None else []
     return dict(cm=i_cm,fo=i_fo,sh=i_sh,tm=i_tm,sub=sub,tz=teaser,start=ep.S(st))
 def draw_closing(ep,cl,base,t):
     y=760
     if cl['cm'] is not None:
         el_bubble(ep,base,t,cl['cm'],'תכתבו *בתגובות*',y=720); y=870
+    if cl['fo'] is None: return
     p=prog(t,ep.words[cl['fo']]['s'],0.35); paste(base,FOLLOW,W/2,y,scale=0.6+0.4*back(p),alpha=ease(p))
     if p>0.5:
         tap=(math.sin(t*5)+1)/2; paste(base,HAND,W/2+175,y+55+14*tap,alpha=ease(prog(t,ep.words[cl['fo']]['s']+0.2,0.3)))
@@ -244,6 +243,7 @@ def draw_closing(ep,cl,base,t):
             im=C(('sub',txt),lambda:text_img(txt,44,STONE,600)); paste(base,im,W/2,y2,scale=fit(im),alpha=ease(q)); y2+=68
         y2+=12
     # teaser card
+    if cl['tm'] is None: return
     pc=prog(t,ep.words[cl['tm']]['s'],0.4)
     if pc>0:
         lines=wrap(cl['tz'],24); cw=880; chh=110+62*len(lines)
@@ -277,7 +277,7 @@ def captions(ep):
 # ---------------- main ----------------
 def build(spec):
     ep=Ep(spec); HD=Header(); BG=Background(seed=spec.NUM)
-    stamp=pill([(f"דקה ברורה · טיפ #{spec.NUM}",TQ)],36,bg=(255,255,255),shadow=False).rotate(4,expand=True,resample=Image.BICUBIC)
+    stamp=pill([(getattr(spec,'STAMP',None) or f"דקה ברורה · טיפ #{spec.NUM}",TQ)],36,bg=(255,255,255),shadow=False).rotate(4,expand=True,resample=Image.BICUBIC)
     sc=[];
     for k,s in enumerate(spec.SCENES):
         t0=0 if k==0 else ep.S(s['at'])-0.05
