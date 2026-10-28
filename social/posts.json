@@ -951,8 +951,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1637992917728893",
+          "at": "2026-10-28T16:23+02:00"
+        },
+        "instagram": {
+          "id": "18152980546548727",
+          "at": "2026-10-28T16:25+02:00"
+        }
+      }
     },
     {
       "id": "2026-10-29-dk21",
