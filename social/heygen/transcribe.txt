@@ -23,3 +23,13 @@ dk00-david-voice
 dk00-david-voice2
 cleo
 reply01-fixed-vs-prime
+dk24-margin
+dk25-equal-principal
+dk26-mix
+dk27-prepay
+dk29-pti
+dk30-statements
+dk31-guarantor
+dk32-eligibility
+dk33-offer-payment
+dk34-offer-total
