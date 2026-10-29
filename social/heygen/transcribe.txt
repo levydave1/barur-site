@@ -33,3 +33,6 @@ dk31-guarantor
 dk32-eligibility
 dk33-offer-payment
 dk34-offer-total
+dk35-any-purpose
+dk36-reverse
+dk37-three-questions
