@@ -16,3 +16,7 @@ Spec-driven renderer. One small spec per episode (`specs/epNN.py`): scenes start
 onto Whisper's word timings, so captions show the script even when Whisper mishears.
 Run: `PREVIEW=auto python3 -I epgen.py epNN` (stills per scene) or `python3 -I epgen.py epNN out.mp4`.
 `stage.py N..` copies a render into social/video, makes the cover, adds the FB/IG post and the .vercelignore line.
+
+## mill.py / gremlin.py (30.10.2026)
+- `mill.py spec.json`: מילניום בלי תלות בתיקיית pharaoh. כתוביות דרך Playwright (74px, תיבה כחולה), שקופית "לא צריך לחכות מילניום" (slogan.png) ומסך סיום (endcard.png, נחתך מקליאו). spec: {src,out,L,caps:[[start,end,[[text,"w"|"t"]]]]}.
+- `gremlin.py <image> <out> <hint_html> <place>`: פרק "שדון הריבית" חדש מתמונה. משתמש בפתיח, ב"תפסנו אותך", במסך הסיום ובפסקול של פרק 3 (שדון הריבית 3 - העמלה.mp4), מכסה את שורת הרמז הישנה בכתובית חדשה, מדביק את ראש השדון (series_assets/head.png) בתמונה ומייצר ספירה לאחור, עיגול אדום וזום. place: ring:cx,cy,rin,rout,dx,dy,w (מציץ מאחורי טבעת) או win:x0,y0,x1,y1,w (מציץ מחלון). הנתיבים בקוד הם של /home/claude/mil.
