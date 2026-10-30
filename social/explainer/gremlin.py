@@ -1,4 +1,4 @@
-"""Interest-gremlin episode builder, reusing the intro/caught/end segments of episode 3.
+"""Interest-gremlin episode builder: clean intro/caught clips (raw/esc.mp4, raw/peek.mp4) + end card and soundtrack of episode 3.
 usage: python3 gremlin.py <image.png> <out.mp4> <hint_html> <place>
 place: "ring:cx,cy,rin,rout,dx,dy,w"  (head peeks from behind a ring, coords in image px)
        "win:x0,y0,x1,y1,w"            (head peeks up from the bottom of a window)
@@ -56,17 +56,59 @@ gx = (hx if kind == "ring" else (x0 + x1) / 2) * W / iw
 gy = centre_y * H / ih
 canvas = np.asarray(comp.resize((W, H), Image.LANCZOS), np.float32)
 
-# ---- overlays: hint pill, timer badges
+# ---- text overlays in the gremlin series style (yellow/white, heavy dark stroke)
+TXT = [  # key, text, colour, font px, glyph top
+    ("q1", "יכולים למצוא", "#FDD540", 96, 1294),
+    ("q2", "את השדון בתמונה?", "#FDD540", 96, 1406),
+    ("hint", hint, "#FFFFFF", 56, 1555),
+    ("sec", "יש לכם 7 שניות", "#FFFFFF", 62, 1668),
+    ("top", "תפסנו אותך", "#FDD540", 70, 300),
+    ("lm", "לא מצאתם אותו?", "#FFFFFF", 80, 1346),
+    ("bd", "בדיוק בגלל זה", "#FDD540", 88, 1468),
+    ("hs", "הוא עדיין שם.", "#FDD540", 88, 1594),
+]
+OV = {}
 with sync_playwright() as pw:
     b = pw.chromium.launch(); pg = b.new_page(viewport={"width": W, "height": H})
-    pg.set_content(f"""<html><head><meta charset="utf-8"><style>{edit.FONTS}
-.c{{position:absolute;left:0;right:0;top:1578px;transform:translateY(-50%);display:flex;justify-content:center}}
-.c div{{background:rgba(15,42,71,.94);color:#fff;font-weight:700;font-size:54px;padding:12px 40px 20px;border-radius:28px}}
-em{{font-style:normal;color:#4FB3A2}}</style></head><body><div class="c"><div>{hint}</div></div></body></html>""")
-    pg.evaluate("document.fonts.ready"); pg.wait_for_timeout(80)
-    pg.screenshot(path="/home/claude/mil/hint.png", omit_background=True)
+    for key, text, col, fs, gt in TXT:
+        pg.set_content(f"""<html><head><meta charset="utf-8"><style>{edit.FONTS}
+.t{{position:absolute;left:0;right:0;top:{gt - 0.2 * fs:.0f}px;text-align:center;font-weight:700;font-size:{fs}px;line-height:1;color:{col};
+-webkit-text-stroke:{max(8, fs * 0.13):.0f}px #1b1a22;paint-order:stroke fill;text-shadow:0 4px 10px rgba(0,0,0,.35)}}
+em{{font-style:normal;color:#FDD540}}</style></head><body><div class="t">{text}</div></body></html>""")
+        pg.evaluate("document.fonts.ready"); pg.wait_for_timeout(60)
+        pg.screenshot(path=f"/home/claude/mil/ov_{key}.png", omit_background=True)
+        OV[key] = np.asarray(Image.open(f"/home/claude/mil/ov_{key}.png").convert("RGBA"), np.float32)
     b.close()
-hint_img = np.asarray(Image.open("/home/claude/mil/hint.png").convert("RGBA"), np.float32)
+
+
+def pop(f, key, t, t0, d=0.18):
+    if t < t0:
+        return f
+    k = min(1, (t - t0) / d)
+    o = OV[key]
+    if k < 1:
+        sc = 0.85 + 0.15 * k
+        im = Image.fromarray(o.astype(np.uint8))
+        bb = im.getbbox()
+        if bb:
+            cx, cy = (bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2
+            sm = im.resize((int(W * sc), int(H * sc)), Image.LANCZOS)
+            canvas_ = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            canvas_.alpha_composite(sm, (int(cx - cx * sc), int(cy - cy * sc)))
+            o = np.asarray(canvas_, np.float32).copy()
+        o = o.copy(); o[..., 3] *= k
+    return over(f, o, 0, 0)
+
+
+def clip_frames(path):
+    p = subprocess.Popen(["ffmpeg", "-v", "error", "-i", path, "-vf", f"scale={W}:{H}:flags=lanczos,fps={FPS}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
+    out_ = []
+    while True:
+        bb_ = p.stdout.read(W * H * 3)
+        if len(bb_) < W * H * 3:
+            break
+        out_.append(np.frombuffer(bb_, np.uint8).reshape(H, W, 3))
+    return out_
 
 
 def badge(d, frac):
@@ -144,36 +186,28 @@ def ring_layer(cx, cy, r, alpha):
 
 
 # ---- render 0..T_CUT
-dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", SRC, "-t", f"{T_INTRO_END + 0.5}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
-intro = []
+intro = clip_frames("/home/claude/mil/raw/esc.mp4")
+caught = clip_frames("/home/claude/mil/raw/peek.mp4")
+T_FL3, T_CAUGHT, T_END = 13.45, 13.53, 19.47
 fb = W * H * 3
-while True:
-    bb_ = dec.stdout.read(fb)
-    if len(bb_) < fb:
-        break
-    intro.append(np.frombuffer(bb_, np.uint8).reshape(H, W, 3))
-dec.wait()
 
 enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
                         "-c:v", "libx264", "-crf", "17", "-preset", "fast", "-pix_fmt", "yuv420p", "/home/claude/mil/_head.mp4"], stdin=subprocess.PIPE)
-N = round(T_CUT * FPS)
+N = round(T_END * FPS)
 white = np.full((H, W, 3), 255, np.float32)
 R0 = 70
 for i in range(N):
     t = i / FPS
     if t < T_INTRO_END:
         f = intro[min(i, len(intro) - 1)].astype(np.float32)
-        if t >= HINT_T:
-            a = min(1, (t - HINT_T) / 0.12)
-            hi = hint_img.copy(); hi[..., 3] *= a
-            f = over(f, hi, 0, 0)
-        if t > T_INTRO_END - 0.0:
-            pass
+        f = pop(f, "q1", t, 0.35); f = pop(f, "q2", t, 0.7); f = pop(f, "hint", t, HINT_T); f = pop(f, "sec", t, 2.55, 0.25)
     elif t < T_CD0:
         # white flash: intro -> white -> image
         if t < FLASH1:
             k = (t - T_INTRO_END) / (FLASH1 - T_INTRO_END)
             f0 = intro[min(i, len(intro) - 1)].astype(np.float32)
+            for kk, tt in (("q1", 0.35), ("q2", 0.7), ("hint", HINT_T), ("sec", 2.55)):
+                f0 = pop(f0, kk, t, tt)
             f = f0 * (1 - k) + white * k
         else:
             k = (t - FLASH1) / (T_CD0 - FLASH1)
@@ -193,6 +227,21 @@ for i in range(N):
         k = min(1, (t - T_REV) / 0.25)
         r = R0 * (1.6 - 0.6 * ease(k))
         f = over(img, ring_layer(x, y, r, k), 0, 0)
+    elif t >= T_CUT:
+        j = min(len(caught) - 1, int((t - T_CAUGHT) * FPS)) if t >= T_CAUGHT else 0
+        g = caught[max(0, j)].astype(np.float32)
+        if t >= T_CAUGHT:
+            g = pop(g, "top", t, 13.63) if t < 14.63 else g
+            g = pop(g, "lm", t, 15.45); g = pop(g, "bd", t, 17.0); g = pop(g, "hs", t, 18.0)
+        if t < T_FL3:
+            k = (t - T_CUT) / (T_FL3 - T_CUT)
+            img, m = view(2.62, gx, gy)
+            f = img * (1 - k) + white * k
+        elif t < T_CAUGHT:
+            k = (t - T_FL3) / (T_CAUGHT - T_FL3)
+            f = white * (1 - k) + g * k
+        else:
+            f = g
     else:
         k = ease((t - T_ZOOM0) / (T_CUT - T_ZOOM0 - 0.1))
         z = 1.02 + 1.6 * k
@@ -203,7 +252,7 @@ for i in range(N):
 enc.stdin.close(); enc.wait()
 
 # tail of the reference episode (flash, "caught", end card) + the reference audio track
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{T_CUT}", "-i", SRC, "-an", "-c:v", "libx264", "-crf", "17", "-preset", "fast",
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{T_END}", "-i", SRC, "-an", "-c:v", "libx264", "-crf", "17", "-preset", "fast",
                 "-pix_fmt", "yuv420p", "-r", "30", "/home/claude/mil/_tail.mp4"], check=True)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", "/home/claude/mil/_head.mp4", "-i", "/home/claude/mil/_tail.mp4", "-i", SRC,
                 "-filter_complex", "[0:v][1:v]concat=n=2:v=1:a=0[v]", "-map", "[v]", "-map", "2:a", "-c:v", "libx264", "-crf", "19",
