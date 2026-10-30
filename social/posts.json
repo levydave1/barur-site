@@ -997,8 +997,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "4484133708522134",
+          "at": "2026-10-30T17:49+02:00"
+        },
+        "instagram": {
+          "id": "18160417372540897",
+          "at": "2026-10-30T17:51+02:00"
+        }
+      }
     },
     {
       "id": "2026-10-30-mil-pharaoh",
