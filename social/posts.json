@@ -1043,8 +1043,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1067329139677416",
+          "at": "2026-10-31T15:34+02:00"
+        },
+        "instagram": {
+          "id": "18119999332974692",
+          "at": "2026-10-31T15:35+02:00"
+        }
+      }
     },
     {
       "id": "2026-11-02-mil-louis",
