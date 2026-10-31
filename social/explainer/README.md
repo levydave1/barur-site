@@ -20,3 +20,6 @@ Run: `PREVIEW=auto python3 -I epgen.py epNN` (stills per scene) or `python3 -I e
 ## mill.py / gremlin.py (30.10.2026)
 - `mill.py spec.json`: מילניום בלי תלות בתיקיית pharaoh. כתוביות דרך Playwright (74px, תיבה כחולה), שקופית "לא צריך לחכות מילניום" (slogan.png) ומסך סיום (endcard.png, נחתך מקליאו). spec: {src,out,L,caps:[[start,end,[[text,"w"|"t"]]]]}.
 - `gremlin.py <image> <out> <hint_html> <place>`: פרק "שדון הריבית" חדש מתמונה. משתמש בפתיח, ב"תפסנו אותך", במסך הסיום ובפסקול של פרק 3 (שדון הריבית 3 - העמלה.mp4), מכסה את שורת הרמז הישנה בכתובית חדשה, מדביק את ראש השדון (series_assets/head.png) בתמונה ומייצר ספירה לאחור, עיגול אדום וזום. place: ring:cx,cy,rin,rout,dx,dy,w (מציץ מאחורי טבעת) או win:x0,y0,x1,y1,w (מציץ מחלון). הנתיבים בקוד הם של /home/claude/mil.
+
+## hook_phone.py (1.11.2026)
+הוק של דוד עם טלפון ירוק: `python3 hook_phone.py <hook.mp4> <tip_short.mp4> <out.mp4> 0 <cut> "<caption or empty>"`. מתחילים תמיד מ-0 (גם אם דוד לא בפריים, זה בכוונה). cut = הרגע שהמסך מכסה ~95%% מהפריים. המפתוח תופס ירוק, תכלת ומסך לבן שרוף, ולוקח את הרכיב הגדול ביותר.
