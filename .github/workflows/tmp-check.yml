@@ -1,0 +1,11 @@
+name: tmp media check
+on:
+  push:
+    paths: ['.github/workflows/tmp-check.yml']
+jobs:
+  c:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for f in dk22.mp4 dk23.mp4 dk23-cover.jpg louis.mp4 dk24.mp4 dk25-cover.jpg dk26.mp4 dk26-cover.jpg gremlin4.mp4 china.mp4; do
+            echo "== $f"; curl -sI https://barur-mashkanta.co.il/social/video/$f | grep -iE "^HTTP|content-type|content-length|x-vercel|location"; done
