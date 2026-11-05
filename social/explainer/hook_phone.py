@@ -63,12 +63,27 @@ n = 0
 for f in frames(hook, T0, TC - T0):
     x = f.astype(np.float32)
     r, g, b = x[..., 0], x[..., 1], x[..., 2]
-    mm = ((g > 110) & (g > r * 1.35) & (b < g * 1.08)) | (np.minimum(np.minimum(r, g), b) > 215) | ((g > 180) & (b > 180) & (r < g * 0.92))
+    import os
+    if os.environ.get('KEY') == 'dark':
+        mm = (g > 70) & (g > r * 1.55) & (g > b * 1.5)
+    else:
+      mm = ((g > 110) & (g > r * 1.35) & (b < g * 1.08)) | (np.minimum(np.minimum(r, g), b) > 215) | ((g > 180) & (b > 180) & (r < g * 0.92))
     from scipy import ndimage
     lab, nl = ndimage.label(mm)
     if nl > 1:
-        sizes = ndimage.sum(mm, lab, range(1, nl + 1)); mm = lab == (1 + int(np.argmax(sizes)))
+        sizes = ndimage.sum(mm, lab, range(1, nl + 1))
+        if os.environ.get('HULL'):
+            keep = [i + 1 for i, sz in enumerate(sizes) if sz > 0.08 * sizes.max()]
+            mm = np.isin(lab, keep)
+        else:
+            mm = lab == (1 + int(np.argmax(sizes)))
     mm = ndimage.binary_fill_holes(mm)
+    if os.environ.get('HULL') and mm.sum() > 2000:
+        from scipy.spatial import ConvexHull
+        ys_, xs_ = np.nonzero(mm[::4, ::4]); pts = np.stack([xs_ * 4, ys_ * 4], 1)
+        hp = pts[ConvexHull(pts).vertices]
+        hi = Image.new('L', (W, H), 0); ImageDraw.Draw(hi).polygon([tuple(p) for p in hp], fill=1)
+        mm = np.asarray(hi).astype(bool)
     m = mm.astype(np.uint8) * 255
     mi = Image.fromarray(m).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(1.2))
     a = (np.asarray(mi, np.float32) / 255.0)[..., None]
