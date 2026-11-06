@@ -1112,8 +1112,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "2107491406564800",
+          "at": "2026-11-06T19:24+02:00"
+        },
+        "instagram": {
+          "id": "18132789415871416",
+          "at": "2026-11-06T19:25+02:00"
+        }
+      }
     },
     {
       "id": "2026-11-06-mil-china",
