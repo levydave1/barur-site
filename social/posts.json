@@ -1181,8 +1181,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1574431821107387",
+          "at": "2026-11-08T15:14+02:00"
+        },
+        "instagram": {
+          "id": "17977140249154453",
+          "at": "2026-11-08T15:15+02:00"
+        }
+      }
     },
     {
       "id": "2026-11-03-gremlin4",
