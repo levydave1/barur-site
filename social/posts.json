@@ -1227,8 +1227,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1138293298954819",
+          "at": "2026-11-09T22:02+02:00"
+        },
+        "instagram": {
+          "id": "18456749665123669",
+          "at": "2026-11-09T22:03+02:00"
+        }
+      }
     },
     {
       "id": "2026-11-09-mil-eiffel",
@@ -1240,8 +1250,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1667079564917083",
+          "at": "2026-11-09T22:03+02:00"
+        },
+        "instagram": {
+          "id": "18650230996035083",
+          "at": "2026-11-09T22:04+02:00"
+        }
+      }
     },
     {
       "id": "2026-11-07-dk29",
