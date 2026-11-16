@@ -39,3 +39,17 @@ dk37-three-questions
 dk28-ltv
 reply04-plot-construction
 reply02-anchor-update
+dk38-bank-said-no
+dk39-prices
+dk40-unsold
+dk41-2080
+dk42-handover
+dk43-discount
+dk44-rent-up
+dk45-buy-or-rent
+dk46-dira-behanacha
+dk47-price-floor
+dk48-leveraged
+dk49-many-markets
+dk50-boi-rate
+dk51-scenarios
