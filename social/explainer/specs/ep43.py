@@ -2,7 +2,7 @@ from dkengine import W,CORAL,TQ,NAVY
 R='/home/claude/barur-site/social/heygen/'
 NUM=43; RAW=R+"raw/dk43-discount.mp4"; WORDS=R+"words/dk43-discount.json"
 HL=['במחיר','לתמיד','מימון','בשקלים','אצבע']
-END_FROM='מה'
+END_FROM='הייתם'
 SCENES=[
  {'word':'הטבה','els':[('head',0,'קבלן מציע *הטבה*',84,780),('cards',[('הדירה','*הנחה במחיר*','coin',True),('ריבית','*הלוואה בלי ריבית*','percent',True)],1000,'או','או')]},
  {'at':'הנחה#2','word':'לתמיד','els':[('title','לתמיד','הנחה במחיר: *לתמיד*','check',TQ,780),('chips',[('משכנתה','פחות *משכנתה*','down'),('ריבית#2','פחות *ריבית*','down')],980,140)]},
