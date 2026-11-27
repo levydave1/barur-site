@@ -1664,8 +1664,18 @@
         "facebook",
         "instagram"
       ],
-      "status": "pending",
-      "format": "reel"
+      "status": "published",
+      "format": "reel",
+      "results": {
+        "facebook": {
+          "id": "1900313441143487",
+          "at": "2026-11-27T15:45+02:00"
+        },
+        "instagram": {
+          "id": "17916470757476893",
+          "at": "2026-11-27T15:46+02:00"
+        }
+      }
     },
     {
       "id": "2026-11-28-dk47",
